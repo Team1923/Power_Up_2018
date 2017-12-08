@@ -232,7 +232,7 @@ public class Controller extends Joystick {
     }
 
     public void setRumble(Hand hand, double intensity) {
-        final float amount = new Float(intensity);
+        final float amount = (float)intensity;
 
         if (hand == Hand.LEFT) {
         	this.controller.setRumble(RumbleType.kLeftRumble, amount);
@@ -242,7 +242,7 @@ public class Controller extends Joystick {
     }
 
     public void setRumble(double intensity) {
-        final float amount = new Float(intensity);
+        final float amount = (float)intensity;
 
         this.controller.setRumble(RumbleType.kLeftRumble, amount);
         this.controller.setRumble(RumbleType.kRightRumble, amount);
