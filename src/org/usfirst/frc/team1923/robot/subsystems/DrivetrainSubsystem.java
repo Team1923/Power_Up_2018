@@ -4,6 +4,8 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+import org.usfirst.frc.team1923.RobotMap;
+
 public class DrivetrainSubsystem extends Subsystem {
 
     private static final double WHEEL_DIAMETER = 6;
