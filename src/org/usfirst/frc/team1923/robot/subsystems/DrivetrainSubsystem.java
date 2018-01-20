@@ -20,10 +20,10 @@ public class DrivetrainSubsystem extends Subsystem {
         this.rightTalons = new TalonSRX[RobotMap.LEFT_TALON_PORTS.length];
 
         for (int i = 0; i < leftTalons.length; i++) {
-            leftTalons[i] = new TalonSRX(i + 1);
+            leftTalons[i] = new TalonSRX(RobotMap.LEFT_TALON_PORTS[i]);
         }
-        for (int i = 3; i < leftTalons.length; i++) {
-            rightTalons[i] = new TalonSRX(i + 1);
+        for (int i = 0; i < leftTalons.length; i++) {
+            rightTalons[i] = new TalonSRX(RobotMap.RIGHT_TALON_PORTS[i]);
         }
     }
 
