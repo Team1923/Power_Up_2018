@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class DrivetrainSubsystem extends Subsystem {
 
     private static final int WHEEL_DIAMETER = 6; // inches
+    private ControlMode controlMode = ControlMode.PercentOutput;
 
     private TalonSRX[] leftTalons;
     private TalonSRX[] rightTalons;
@@ -18,7 +19,6 @@ public class DrivetrainSubsystem extends Subsystem {
         // Initialize talons
         this.leftTalons = new TalonSRX[RobotMap.LEFT_TALON_PORTS.length];
         this.rightTalons = new TalonSRX[RobotMap.LEFT_TALON_PORTS.length];
-
         for (int i = 0; i < leftTalons.length; i++) {
             leftTalons[i] = new TalonSRX(RobotMap.LEFT_TALON_PORTS[i]);
         }
@@ -28,12 +28,12 @@ public class DrivetrainSubsystem extends Subsystem {
     }
 
     public void drive(double left, double right) {
-        this.leftTalons[0].set(this.leftTalons[0].getControlMode(), left);
-        this.rightTalons[0].set(this.rightTalons[0].getControlMode(), right);
+        this.leftTalons[0].set(this.controlMode, left);
+        this.rightTalons[0].set(this.controlMode, right);
     }
 
     public void setControlMode(ControlMode mode) {
-        setControlMode(mode);
+        this.controlMode = mode;
     }
 
     public void stop() {
