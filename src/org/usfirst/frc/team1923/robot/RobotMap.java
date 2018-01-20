@@ -7,4 +7,12 @@ public class RobotMap {
     public static final int[] LEFT_TALON_PORTS = {};
     public static final int[] RIGHT_TALON_PORTS = {};
 
+	public static final int[] LEFT_TALON_PORTS = {
+			1, 2, 3
+	};
+
+	public static final int[] RIGHT_TALON_PORTS = {
+			4, 5, 6
+	};
+
 }
