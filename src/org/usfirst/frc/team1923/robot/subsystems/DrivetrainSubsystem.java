@@ -18,7 +18,7 @@ public class DrivetrainSubsystem extends Subsystem {
     private ControlMode controlMode = ControlMode.Velocity;
 
     public DrivetrainSubsystem() {
-        int id;
+        int id = 0;
         for (int i = 0; i < this.leftTalons.length; ++i) {
             this.leftTalons[i] = new TalonSRX(RobotMap.LEFT_TALON_PORTS[i]);
             if (i > 0) {
