@@ -11,15 +11,15 @@ public class DrivetrainSubsystem extends Subsystem {
     private static final double WHEEL_DIAMETER = 6;
     private static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
 
-    private TalonSRX[] leftTalons = new TalonSRX[RobotMap.LEFT_DRIVE_PORTS.length];
-    private TalonSRX[] rightTalons = new TalonSRX[RobotMap.RIGHT_DRIVE_PORTS.length];
+    private TalonSRX[] leftTalons = new TalonSRX[RobotMap.LEFT_TALON_PORTS.length];
+    private TalonSRX[] rightTalons = new TalonSRX[RobotMap.RIGHT_TALON_PORTS.length];
 
     private ControlMode controlMode = ControlMode.Velocity;
 
     public DrivetrainSubsystem() {
         int id;
         for (int i = 0; i < this.leftTalons.length; ++i) {
-            this.leftTalons[i] = new TalonSRX(RobotMap.LEFT_DRIVE_PORTS[i]);
+            this.leftTalons[i] = new TalonSRX(RobotMap.LEFT_TALON_PORTS[i]);
             if (i > 0) {
                 this.leftTalons[i].set(ControlMode.Follower, id);
             } else {
@@ -27,7 +27,7 @@ public class DrivetrainSubsystem extends Subsystem {
             }
         }
         for (int i = 0; i < this.rightTalons.length; ++i) {
-            this.rightTalons[i] = new TalonSRX(RobotMap.RIGHT_DRIVE_PORTS[i]);
+            this.rightTalons[i] = new TalonSRX(RobotMap.RIGHT_TALON_PORTS[i]);
             if (i > 0) {
                 this.rightTalons[i].set(ControlMode.Follower, id);
             } else {
