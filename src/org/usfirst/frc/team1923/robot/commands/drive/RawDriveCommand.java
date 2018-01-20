@@ -1,18 +1,13 @@
 package org.usfirst.frc.team1923.robot.commands.drive;
 
-import org.usfirst.frc.team1923.robot.Robot;
-
 import edu.wpi.first.wpilibj.command.Command;
+
+import org.usfirst.frc.team1923.robot.Robot;
 
 public class RawDriveCommand extends Command {
 
     public RawDriveCommand() {
         requires(Robot.driveSubSys);
-    }
-
-    @Override
-    public void initialize() {
-
     }
 
     @Override

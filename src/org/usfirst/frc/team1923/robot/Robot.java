@@ -19,16 +19,11 @@ public class Robot extends IterativeRobot {
 
     @Override
     public void robotInit() {
-        oi = new OI();
+        this.driveSubSys = new DrivetrainSubsystem();
 
-        driveSubSys = new DrivetrainSubsystem();
-        
-        SmartDashboard.putData("Autonomous Mode", chooser);
-    }
+        this.oi = new OI();
 
-    @Override
-    public void disabledInit() {
-
+        SmartDashboard.putData("Autonomous Mode", this.chooser);
     }
 
     @Override
@@ -38,7 +33,7 @@ public class Robot extends IterativeRobot {
 
     @Override
     public void autonomousInit() {
-        this.autonomousCommand = chooser.getSelected();
+        this.autonomousCommand = this.chooser.getSelected();
 
         if (this.autonomousCommand != null) {
             this.autonomousCommand.start();
@@ -66,5 +61,5 @@ public class Robot extends IterativeRobot {
     public void testPeriodic() {
         LiveWindow.run();
     }
-    
+
 }
