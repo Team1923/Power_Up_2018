@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1923.robot.subsystems;
 
+import org.usfirst.frc.team1923.robot.RobotMap;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -14,8 +16,15 @@ public class DrivetrainSubsystem extends Subsystem {
 
     public DrivetrainSubsystem() {
         // Initialize talons
-        this.leftTalons = new TalonSRX[3];
-        this.rightTalons = new TalonSRX[3];
+        this.leftTalons = new TalonSRX[RobotMap.LEFT_TALON_PORTS.length];
+        this.rightTalons = new TalonSRX[RobotMap.LEFT_TALON_PORTS.length];
+
+        for (int i = 0; i < leftTalons.length; i++) {
+            leftTalons[i] = new TalonSRX(i + 1);
+        }
+        for (int i = 3; i < leftTalons.length; i++) {
+            rightTalons[i] = new TalonSRX(i + 1);
+        }
     }
 
     public void drive(double left, double right) {
