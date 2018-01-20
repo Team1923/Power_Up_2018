@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-import org.usfirst.frc.team1923.RobotMap;
+import org.usfirst.frc.team1923.robot.RobotMap;
 
 public class DrivetrainSubsystem extends Subsystem {
 
