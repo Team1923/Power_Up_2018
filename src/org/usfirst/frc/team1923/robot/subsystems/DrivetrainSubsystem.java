@@ -6,6 +6,7 @@ import org.usfirst.frc.team1923.robot.commands.drive.RawDriveCommand;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -16,6 +17,7 @@ public class DrivetrainSubsystem extends Subsystem {
 
     private TalonSRX[] leftTalons = new TalonSRX[RobotMap.LEFT_DRIVE_PORTS.length];
     private TalonSRX[] rightTalons = new TalonSRX[RobotMap.RIGHT_DRIVE_PORTS.length];
+    private PigeonIMU imu;
 
     private ControlMode controlMode = ControlMode.Velocity;
 
@@ -105,5 +107,9 @@ public class DrivetrainSubsystem extends Subsystem {
 
         this.leftTalons[0].configMotionCruiseVelocity(800, Constants.kTimeoutMs);
         this.rightTalons[0].configMotionCruiseVelocity(800, Constants.kTimeoutMs);
+    }
+
+    public PigeonIMU getIMU() {
+        return this.imu;
     }
 }
