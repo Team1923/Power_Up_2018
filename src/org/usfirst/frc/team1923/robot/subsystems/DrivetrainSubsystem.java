@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1923.robot.subsystems;
 
-import org.usfirst.frc.team1923.robot.Constants;
 import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.commands.drive.RawDriveCommand;
 
@@ -73,16 +72,16 @@ public class DrivetrainSubsystem extends Subsystem {
      * position of the robot.
      */
     public void resetPosition() {
-        this.leftTalons[0].setSelectedSensorPosition(0, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
-        this.rightTalons[0].setSelectedSensorPosition(0, Constants.kPIDLoopIdx, Constants.kTimeoutMs);
+        this.leftTalons[0].setSelectedSensorPosition(0, RobotMap.kPIDLoopIdx, RobotMap.kTimeoutMs);
+        this.rightTalons[0].setSelectedSensorPosition(0, RobotMap.kPIDLoopIdx, RobotMap.kTimeoutMs);
     }
 
     public double getLeftPosition() {
-        return this.leftTalons[0].getSelectedSensorPosition(Constants.kPIDLoopIdx);
+        return this.leftTalons[0].getSelectedSensorPosition(RobotMap.kPIDLoopIdx);
     }
 
     public double getRightPosition() {
-        return this.rightTalons[0].getSelectedSensorPosition(Constants.kPIDLoopIdx);
+        return this.rightTalons[0].getSelectedSensorPosition(RobotMap.kPIDLoopIdx);
     }
 
     public int getLeftEncPosition() {
@@ -94,19 +93,19 @@ public class DrivetrainSubsystem extends Subsystem {
     }
 
     public double getLeftError() {
-        return this.leftTalons[0].getClosedLoopError(Constants.kPIDLoopIdx);
+        return this.leftTalons[0].getClosedLoopError(RobotMap.kPIDLoopIdx);
     }
 
     public double getRightError() {
-        return this.rightTalons[0].getClosedLoopError(Constants.kPIDLoopIdx);
+        return this.rightTalons[0].getClosedLoopError(RobotMap.kPIDLoopIdx);
     }
 
     public void configMM() {
-        this.leftTalons[0].configMotionAcceleration(500, Constants.kTimeoutMs);
-        this.rightTalons[0].configMotionAcceleration(500, Constants.kTimeoutMs);
+        this.leftTalons[0].configMotionAcceleration(500, RobotMap.kTimeoutMs);
+        this.rightTalons[0].configMotionAcceleration(500, RobotMap.kTimeoutMs);
 
-        this.leftTalons[0].configMotionCruiseVelocity(800, Constants.kTimeoutMs);
-        this.rightTalons[0].configMotionCruiseVelocity(800, Constants.kTimeoutMs);
+        this.leftTalons[0].configMotionCruiseVelocity(800, RobotMap.kTimeoutMs);
+        this.rightTalons[0].configMotionCruiseVelocity(800, RobotMap.kTimeoutMs);
     }
 
     public PigeonIMU getIMU() {
