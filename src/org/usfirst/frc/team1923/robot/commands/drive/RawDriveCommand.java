@@ -1,8 +1,8 @@
 package org.usfirst.frc.team1923.robot.commands.drive;
 
-import org.usfirst.frc.team1923.robot.Robot;
-
 import edu.wpi.first.wpilibj.command.Command;
+
+import org.usfirst.frc.team1923.robot.Robot;
 
 public class RawDriveCommand extends Command {
 
@@ -14,12 +14,9 @@ public class RawDriveCommand extends Command {
     public void initialize() {
 
     }
-
-    @Override
+    
     public void execute() {
-        // Robot.driveSubSys.drive(Robot.oi.driver.getLeftY(),
-        // Robot.oi.driver.getRightY());
-        // commented because oi isnt done yet
+        Robot.driveSubSys.drive(Robot.oi.driver.getLeftY(), Robot.oi.driver.getRightY());
     }
 
     @Override
