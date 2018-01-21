@@ -235,9 +235,9 @@ public class Controller extends Joystick {
         final float amount = (float) intensity;
 
         if (hand == Hand.LEFT) {
-        	this.controller.setRumble(RumbleType.kLeftRumble, amount);
+            this.controller.setRumble(RumbleType.kLeftRumble, amount);
         } else {
-        	this.controller.setRumble(RumbleType.kRightRumble, amount);
+            this.controller.setRumble(RumbleType.kRightRumble, amount);
         }
     }
 

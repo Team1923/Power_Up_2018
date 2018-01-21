@@ -8,20 +8,27 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team1923.robot.subsystems.DrivetrainSubsystem;
+import org.usfirst.frc.team1923.robot.subsystems.ElevatorSubsystem;
+import org.usfirst.frc.team1923.robot.subsystems.LEDSubsystem;
 
 public class Robot extends IterativeRobot {
 
-    public static DrivetrainSubsystem driveSubSys;        
     public static OI oi;
+
+    public static ElevatorSubsystem elevatorSubsystem;
+    public static DrivetrainSubsystem drivetrainSubsystem;
+    public static LEDSubsystem ledSubsystem;
 
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
 
     @Override
     public void robotInit() {
-        this.driveSubSys = new DrivetrainSubsystem();
+        oi = new OI();
 
-        this.oi = new OI();
+        elevatorSubsystem = new ElevatorSubsystem();
+        drivetrainSubsystem = new DrivetrainSubsystem();
+        ledSubsystem = new LEDSubsystem();
 
         SmartDashboard.putData("Autonomous Mode", this.chooser);
     }

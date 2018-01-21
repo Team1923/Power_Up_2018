@@ -1,4 +1,12 @@
 package org.usfirst.frc.team1923.robot.subsystems;
 
-public class ElevatorSubsystem {
+import edu.wpi.first.wpilibj.command.Subsystem;
+
+public class ElevatorSubsystem extends Subsystem {
+
+    @Override
+    protected void initDefaultCommand() {
+
+    }
+
 }
