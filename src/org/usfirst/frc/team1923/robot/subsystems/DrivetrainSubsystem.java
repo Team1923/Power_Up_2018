@@ -50,12 +50,50 @@ public class DrivetrainSubsystem extends Subsystem {
         setDefaultCommand(new RawDriveCommand());
     }
 
-    private double distanceToRotations(double distance) {
-        return distance / WHEEL_CIRCUMFERENCE;
+    public static double distanceToRotations(double distance) {
+        return distance / WHEEL_CIRCUMFERENCE * Math.PI;
     }
 
-    private double rotationsToDistance(double rotations) {
+    public static double rotationsToDistance(double rotations) {
         return rotations * WHEEL_CIRCUMFERENCE;
+    }
+
+    public void resetPosition() {
+        this.leftTalons[0].setSelectedSensorPosition(0, RobotMap.kPIDLoopIdx, RobotMap.kTimeoutMs);
+        this.rightTalons[0].setSelectedSensorPosition(0, RobotMap.kPIDLoopIdx, RobotMap.kTimeoutMs);
+    }
+
+    public double getLeftPosition() {
+        return this.leftTalons[0].getSelectedSensorPosition(RobotMap.kPIDLoopIdx);
+
+    }
+
+    public double getRightPosition() {
+        return this.rightTalons[0].getSelectedSensorPosition(RobotMap.kPIDLoopIdx);
+    }
+
+    public int getLeftEncPosition() {
+        return this.leftTalons[0].getSensorCollection().getPulseWidthPosition();
+    }
+
+    public int getRightEncPosition() {
+        return this.rightTalons[0].getSensorCollection().getPulseWidthPosition();
+    }
+
+    public double getLeftError() {
+        return this.leftTalons[0].getClosedLoopError(RobotMap.kPIDLoopIdx);
+    }
+
+    public double getRightError() {
+        return this.rightTalons[0].getClosedLoopError(RobotMap.kPIDLoopIdx);
+    }
+
+    public void configMotionMagic() {
+        this.leftTalons[0].configMotionAcceleration(500, RobotMap.kTimeoutMs);
+        this.rightTalons[0].configMotionAcceleration(500, RobotMap.kTimeoutMs);
+
+        this.leftTalons[0].configMotionCruiseVelocity(800, RobotMap.kTimeoutMs);
+        this.rightTalons[0].configMotionCruiseVelocity(800, RobotMap.kTimeoutMs);
     }
 
 }

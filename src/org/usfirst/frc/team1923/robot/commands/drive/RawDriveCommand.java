@@ -11,6 +11,10 @@ public class RawDriveCommand extends Command {
     }
 
     @Override
+    public void initialize() {
+
+    }
+    
     public void execute() {
         Robot.driveSubSys.drive(Robot.oi.driver.getLeftY(), Robot.oi.driver.getRightY());
     }
