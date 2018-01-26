@@ -36,7 +36,6 @@ public class DrivetrainSubsystem extends Subsystem {
                 this.leftTalons[0].configNominalOutputReverse(0, 0);
                 this.leftTalons[0].configPeakOutputForward(12, 0);
                 this.leftTalons[0].configPeakOutputReverse(-12, 0);
-
             }
             this.leftTalons[i].setInverted(true);
         }
