@@ -24,11 +24,11 @@ public class Robot extends IterativeRobot {
 
     @Override
     public void robotInit() {
-        oi = new OI();
-
         elevatorSubsystem = new ElevatorSubsystem();
         drivetrainSubsystem = new DrivetrainSubsystem();
         ledSubsystem = new LEDSubsystem();
+
+        oi = new OI();
 
         SmartDashboard.putData("Autonomous Mode", this.chooser);
     }
