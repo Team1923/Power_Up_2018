@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1923.robot.commands;
+package org.usfirst.frc.team1923.robot.commands.led;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -15,19 +15,19 @@ public class LEDCommand extends Command {
     @Override
     public void execute() {
         boolean newPressed = Robot.oi.driver.square.get();
-        if (newPressed == (Robot.ledSubsystem.currentMode == LEDSubsystem.Mode.Off)) {
-            Robot.ledSubsystem.setMode(newPressed ? LEDSubsystem.Mode.On : LEDSubsystem.Mode.Off);
+        if (newPressed == (Robot.ledSubsystem.getCurrentMode() == LEDSubsystem.Mode.OFF)) {
+            Robot.ledSubsystem.setMode(newPressed ? LEDSubsystem.Mode.ON : LEDSubsystem.Mode.OFF);
         }
     }
 
     @Override
     public void end() {
-        Robot.ledSubsystem.setMode(LEDSubsystem.Mode.Off);
+        Robot.ledSubsystem.setMode(LEDSubsystem.Mode.OFF);
     }
 
     @Override
     public void interrupted() {
-        Robot.ledSubsystem.setMode(LEDSubsystem.Mode.Off);
+        Robot.ledSubsystem.setMode(LEDSubsystem.Mode.OFF);
     }
 
     @Override

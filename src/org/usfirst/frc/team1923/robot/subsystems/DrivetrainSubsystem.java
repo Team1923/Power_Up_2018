@@ -32,13 +32,9 @@ public class DrivetrainSubsystem extends Subsystem {
 
             if (i > 0) {
                 this.leftTalons[i].set(ControlMode.Follower, RobotMap.LEFT_TALON_PORTS[0]);
-            } else {
-                this.leftTalons[0].configNominalOutputForward(0, 0);
-                this.leftTalons[0].configNominalOutputReverse(0, 0);
-                this.leftTalons[0].configPeakOutputForward(12, 0);
-                this.leftTalons[0].configPeakOutputReverse(-12, 0);
             }
-            this.leftTalons[i].setInverted(true);
+
+            this.configureTalon(this.leftTalons[i]);
         }
 
         for (int i = 0; i < this.rightTalons.length; i++) {
@@ -46,12 +42,10 @@ public class DrivetrainSubsystem extends Subsystem {
 
             if (i > 0) {
                 this.rightTalons[i].set(ControlMode.Follower, RobotMap.RIGHT_TALON_PORTS[0]);
-            } else {
-                this.rightTalons[0].configNominalOutputForward(0, 0);
-                this.rightTalons[0].configNominalOutputReverse(0, 0);
-                this.rightTalons[0].configPeakOutputForward(12, 0);
-                this.rightTalons[0].configPeakOutputReverse(-12, 0);
             }
+
+            this.rightTalons[i].setInverted(true);
+            this.configureTalon(this.rightTalons[i]);
         }
 
         // TODO: Reverse one set of Talons
@@ -124,6 +118,13 @@ public class DrivetrainSubsystem extends Subsystem {
 
     private double rotationsToDistance(double rotations) {
         return rotations * WHEEL_CIRCUMFERENCE;
+    }
+
+    private void configureTalon(TalonSRX talon) {
+        talon.configNominalOutputForward(0, 10);
+        talon.configNominalOutputReverse(0, 10);
+        talon.configPeakOutputForward(12, 0);
+        talon.configPeakOutputReverse(-12, 0);
     }
 
 }

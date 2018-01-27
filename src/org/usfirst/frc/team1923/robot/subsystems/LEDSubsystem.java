@@ -3,26 +3,54 @@ package org.usfirst.frc.team1923.robot.subsystems;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.SerialPort;
 
-import org.usfirst.frc.team1923.robot.commands.LEDCommand;
+import org.usfirst.frc.team1923.robot.commands.led.LEDCommand;
 
 public class LEDSubsystem extends Subsystem {
 
     public enum Mode {
-        On, Off
+        OFF("B"),
+        ON("A");
+
+        private String data;
+
+        private Mode(String data) {
+            this.data = data;
+        }
+
+        public String getData() {
+            return this.data;
+        }
     }
 
     private SerialPort arduino;
-    public Mode currentMode = Mode.Off;
+    private Mode mode;
+
+    public LEDSubsystem() {
+        this.mode = Mode.OFF;
+
+        try {
+            this.arduino = new SerialPort(9600, SerialPort.Port.kUSB);
+        } catch (Exception e) {
+            this.arduino = null;
+        }
+    }
 
     @Override
     protected void initDefaultCommand() {
-        arduino = new SerialPort(9600, SerialPort.Port.kUSB);
-        setDefaultCommand(new LEDCommand());
+        this.setDefaultCommand(new LEDCommand());
     }
 
     public void setMode(Mode mode) {
-        currentMode = mode;
-        arduino.writeString(mode == Mode.On ? "A" : "B");
-        arduino.flush();
+        this.mode = mode;
+
+        if (this.arduino != null) {
+            this.arduino.writeString(this.mode.getData());
+            this.arduino.flush();
+        }
     }
+
+    public Mode getCurrentMode() {
+        return this.mode;
+    }
+
 }
