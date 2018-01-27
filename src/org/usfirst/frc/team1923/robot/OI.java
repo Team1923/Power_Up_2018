@@ -2,6 +2,7 @@ package org.usfirst.frc.team1923.robot;
 
 import org.usfirst.frc.team1923.robot.utils.controller.PS4Controller;
 import org.usfirst.frc.team1923.robot.utils.controller.XboxController;
+import org.usfirst.frc.team1923.robot.commands.drive.DriveTimeCommand;
 
 public class OI {
 
@@ -11,6 +12,8 @@ public class OI {
     public OI() {
         this.driver.lt.setTriggerSensitivity(0.5);
         this.driver.rt.setTriggerSensitivity(0.5);
+
+        this.driver.circle.whenPressed(new DriveTimeCommand(0.5, 5));
     }
 
 }

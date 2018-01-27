@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1923.robot.subsystems.DrivetrainSubsystem;
 import org.usfirst.frc.team1923.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team1923.robot.subsystems.LEDSubsystem;
+import org.usfirst.frc.team1923.robot.subsystems.IntakeSubsystem;
 
 public class Robot extends IterativeRobot {
 
@@ -18,18 +19,19 @@ public class Robot extends IterativeRobot {
     public static ElevatorSubsystem elevatorSubsystem;
     public static DrivetrainSubsystem drivetrainSubsystem;
     public static LEDSubsystem ledSubsystem;
+    public static IntakeSubsystem intakeSubsystem;
 
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
 
     @Override
     public void robotInit() {
-        oi = new OI();
-
         elevatorSubsystem = new ElevatorSubsystem();
         drivetrainSubsystem = new DrivetrainSubsystem();
         ledSubsystem = new LEDSubsystem();
+        intakeSubsystem = new IntakeSubsystem();
 
+        oi = new OI();
         SmartDashboard.putData("Autonomous Mode", this.chooser);
     }
 

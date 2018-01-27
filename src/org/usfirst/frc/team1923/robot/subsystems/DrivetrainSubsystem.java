@@ -3,6 +3,7 @@ package org.usfirst.frc.team1923.robot.subsystems;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.commands.drive.RawDriveCommand;
@@ -24,14 +25,20 @@ public class DrivetrainSubsystem extends Subsystem {
         this.leftTalons = new TalonSRX[RobotMap.LEFT_TALON_PORTS.length];
         this.rightTalons = new TalonSRX[RobotMap.RIGHT_TALON_PORTS.length];
 
-        this.controlMode = ControlMode.Velocity;
+        this.controlMode = ControlMode.PercentOutput;
 
         for (int i = 0; i < this.leftTalons.length; i++) {
             this.leftTalons[i] = new TalonSRX(RobotMap.LEFT_TALON_PORTS[i]);
 
             if (i > 0) {
                 this.leftTalons[i].set(ControlMode.Follower, RobotMap.LEFT_TALON_PORTS[0]);
+            } else {
+                this.leftTalons[0].configNominalOutputForward(0, 0);
+                this.leftTalons[0].configNominalOutputReverse(0, 0);
+                this.leftTalons[0].configPeakOutputForward(12, 0);
+                this.leftTalons[0].configPeakOutputReverse(-12, 0);
             }
+            this.leftTalons[i].setInverted(true);
         }
 
         for (int i = 0; i < this.rightTalons.length; i++) {
@@ -39,6 +46,11 @@ public class DrivetrainSubsystem extends Subsystem {
 
             if (i > 0) {
                 this.rightTalons[i].set(ControlMode.Follower, RobotMap.RIGHT_TALON_PORTS[0]);
+            } else {
+                this.rightTalons[0].configNominalOutputForward(0, 0);
+                this.rightTalons[0].configNominalOutputReverse(0, 0);
+                this.rightTalons[0].configPeakOutputForward(12, 0);
+                this.rightTalons[0].configPeakOutputReverse(-12, 0);
             }
         }
 
