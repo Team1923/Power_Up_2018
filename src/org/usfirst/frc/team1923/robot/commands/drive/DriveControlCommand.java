@@ -7,9 +7,9 @@ import org.usfirst.frc.team1923.robot.Robot;
 /**
  * Drive the robot based on driver joystick values.
  */
-public class RawDriveCommand extends Command {
+public class DriveControlCommand extends Command {
 
-    public RawDriveCommand() {
+    public DriveControlCommand() {
         this.requires(Robot.drivetrainSubsystem);
     }
 
