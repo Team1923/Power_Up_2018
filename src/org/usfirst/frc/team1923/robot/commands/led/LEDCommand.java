@@ -24,7 +24,7 @@ public class LEDCommand extends Command {
             return;
         }
 
-        Robot.ledSubsystem.getArduino().write(Robot.ledSubsystem.getProfile().getNext(), 1);
+        Robot.ledSubsystem.getArduino().write(Robot.ledSubsystem.getProfile().getNext(), 180);
         Robot.ledSubsystem.getArduino().flush();
     }
 
