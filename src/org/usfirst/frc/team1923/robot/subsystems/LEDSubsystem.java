@@ -55,9 +55,9 @@ public class LEDSubsystem extends Subsystem {
         }
     }
 
-    public  LEDMode currentMode;
     private LEDMode     setMode;
-
+    private LEDMode currentMode;
+    private boolean modified;
     private int tick;
 
     private SerialPort arduino;
@@ -68,6 +68,7 @@ public class LEDSubsystem extends Subsystem {
         } catch (Exception e) {}
 
         this.tick = 0;
+        this.modified = true;
         this.currentMode = LEDMode.OFF;
     }
 
@@ -81,14 +82,24 @@ public class LEDSubsystem extends Subsystem {
         if (this.arduino != null) {
             if (this.tick == 0) {
                 this.tick = 5;
-                if (!this.currentMode.equals(this.setMode)) {
+                if (this.modified && !this.currentMode.equals(this.setMode)) {
                     this.setMode = this.currentMode;
                     byte[] data = this.setMode.toData();
                     this.arduino.write(data, data.length);
                     this.arduino.flush(); // dont know if this is needed
                 }
+                this.modified = false;
             }
             --this.tick;
         }
+    }
+
+    public void setMode(LEDMode newMode) {
+        this.modified = true;
+        this.currentMode = newMode;
+    }
+
+    public LEDMode getMode() {
+        return this.currentMode;
     }
 }

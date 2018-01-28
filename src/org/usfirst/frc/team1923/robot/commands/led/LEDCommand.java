@@ -17,18 +17,17 @@ public class LEDCommand extends Command {
 
     @Override
     public void execute() {
-        boolean isPressed = Robot.oi.driver.square.get();
-        Robot.ledSubsystem.currentMode = isPressed ? LEDMode.ON : LEDMode.OFF;
+        Robot.ledSubsystem.setMode(Robot.oi.driver.square.get() ? LEDMode.ON : LEDMode.OFF);
     }
 
     @Override
     public void end() {
-        Robot.ledSubsystem.currentMode = LEDMode.OFF;
+        Robot.ledSubsystem.setMode(LEDMode.OFF);
     }
 
     @Override
     public void interrupted() {
-        Robot.ledSubsystem.currentMode = LEDMode.OFF;
+        Robot.ledSubsystem.setMode(LEDMode.OFF);
     }
 
     @Override
