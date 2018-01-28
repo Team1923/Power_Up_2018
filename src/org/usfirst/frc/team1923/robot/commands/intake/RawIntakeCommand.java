@@ -1,16 +1,26 @@
 package org.usfirst.frc.team1923.robot.commands.intake;
 
-import org.usfirst.frc.team1923.robot.Robot;
 import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team1923.robot.Robot;
 
+/**
+ * Set intake wheel speed based on operator control.
+ */
 public class RawIntakeCommand extends Command {
-	public RawIntakeCommand() {
-        requires(Robot.intakeSubsystem);
+
+    public RawIntakeCommand() {
+        this.requires(Robot.intakeSubsystem);
+    }
+
+    @Override
+    public void initialize() {
+
     }
 
     @Override
     public void execute() {
-        Robot.intakeSubsystem.pickupItem();
+        Robot.intakeSubsystem.intakeLeft(Robot.oi.operator.getLeftTrigger());
+        Robot.intakeSubsystem.intakeRight(Robot.oi.operator.getRightTrigger());
     }
 
     @Override
@@ -27,4 +37,5 @@ public class RawIntakeCommand extends Command {
     public boolean isFinished() {
         return false;
     }
+
 }
