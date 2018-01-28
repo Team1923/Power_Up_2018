@@ -1,23 +1,22 @@
 package org.usfirst.frc.team1923.robot.commands.intake;
 
-import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team1923.robot.Robot;
+import edu.wpi.first.wpilibj.command.Command;
 
-public class RawIntakeCommand extends Command {
+public class AutoIntakeCommand extends Command {
 
-    public RawIntakeCommand() {
+	public AutoIntakeCommand() {
         this.requires(Robot.intakeSubsystem);
     }
 
     @Override
     public void initialize() {
-
+	    Robot.intakeSubsystem.intake(0.8);
     }
 
     @Override
     public void execute() {
-        Robot.intakeSubsystem.intakeLeft(Robot.oi.operator.getLeftY());
-        Robot.intakeSubsystem.intakeRight(Robot.oi.operator.getRightY());
+
     }
 
     @Override
@@ -32,7 +31,9 @@ public class RawIntakeCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
+	    // TODO: Return true if operator manual control values are over a limit (ie. 0.4)
+
+        return !Robot.intakeSubsystem.isSecure() || this.isTimedOut();
     }
 
 }

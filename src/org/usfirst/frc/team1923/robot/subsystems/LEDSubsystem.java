@@ -13,7 +13,7 @@ public class LEDSubsystem extends Subsystem {
 
         private String data;
 
-        private Mode(String data) {
+        Mode(String data) {
             this.data = data;
         }
 

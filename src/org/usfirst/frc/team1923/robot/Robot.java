@@ -26,12 +26,13 @@ public class Robot extends IterativeRobot {
 
     @Override
     public void robotInit() {
-        elevatorSubsystem = new ElevatorSubsystem();
         drivetrainSubsystem = new DrivetrainSubsystem();
-        ledSubsystem = new LEDSubsystem();
+        elevatorSubsystem = new ElevatorSubsystem();
         intakeSubsystem = new IntakeSubsystem();
+        ledSubsystem = new LEDSubsystem();
 
         oi = new OI();
+
         SmartDashboard.putData("Autonomous Mode", this.chooser);
     }
 
@@ -64,6 +65,8 @@ public class Robot extends IterativeRobot {
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+
+        intakeSubsystem.refreshSensors();
     }
 
     @Override
