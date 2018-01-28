@@ -99,4 +99,12 @@ public class XboxController extends Controller {
         return Math.abs(val) > TRIGGER_DEADZONE ? val : 0;
     }
 
+    public double getLeftTrigger() {
+        return (this.leftTrigger.getX() + 1) / 2;
+    }
+
+    public double getRightTrigger() {
+        return (this.rightTrigger.getX() + 1) / 2;
+    }
+
 }

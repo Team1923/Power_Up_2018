@@ -5,10 +5,13 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team1923.robot.Robot;
 import org.usfirst.frc.team1923.robot.subsystems.LEDSubsystem;
 
+/**
+ * Test command to output LED profiles to Arduino.
+ */
 public class LEDCommand extends Command {
 
     public LEDCommand() {
-        requires(Robot.ledSubsystem);
+        this.requires(Robot.ledSubsystem);
     }
 
     @Override

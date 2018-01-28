@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.Ultrasonic.Unit;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import org.usfirst.frc.team1923.robot.commands.intake.RawIntakeCommand;
 
 public class IntakeSubsystem extends Subsystem {
 
@@ -66,7 +67,7 @@ public class IntakeSubsystem extends Subsystem {
 
     @Override
     protected void initDefaultCommand() {
-
+        this.setDefaultCommand(new RawIntakeCommand());
     }
     
     public void stop() {

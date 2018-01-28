@@ -4,10 +4,13 @@ import edu.wpi.first.wpilibj.command.Command;
 
 import org.usfirst.frc.team1923.robot.Robot;
 
+/**
+ * Drive the robot based on driver joystick values.
+ */
 public class RawDriveCommand extends Command {
 
     public RawDriveCommand() {
-        requires(Robot.drivetrainSubsystem);
+        this.requires(Robot.drivetrainSubsystem);
     }
 
     @Override
