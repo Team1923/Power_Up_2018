@@ -64,17 +64,17 @@ public class IntakeSubsystem extends Subsystem {
         this.rightTalon.set(this.controlMode, speed);
     }
 
-	@Override
-	protected void initDefaultCommand() {
+    @Override
+    protected void initDefaultCommand() {
 
-	}
-	
-	public void stop() {
-		this.leftTalon.set(this.controlMode, 0);
+    }
+    
+    public void stop() {
+        this.leftTalon.set(this.controlMode, 0);
         this.rightTalon.set(this.controlMode, 0);
-	}
+    }
 
-	public void refreshSensors() {
+    public void refreshSensors() {
         if (this.leftUltrasonic.getRangeInches() < 2.0 && this.rightUltrasonic.getRangeInches() < 2.0) {
             if (this.startTime == 0) {
                 this.startTime = System.currentTimeMillis();
@@ -91,7 +91,7 @@ public class IntakeSubsystem extends Subsystem {
         return this.secure;
     }
 
-	private void configureUltrasonic(Ultrasonic ultrasonic) {
+    private void configureUltrasonic(Ultrasonic ultrasonic) {
         ultrasonic.setEnabled(true);
         ultrasonic.setAutomaticMode(true);
         ultrasonic.setDistanceUnits(Unit.kInches);

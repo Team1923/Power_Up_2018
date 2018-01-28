@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class AutoIntakeCommand extends Command {
 
-	public AutoIntakeCommand() {
+    public AutoIntakeCommand() {
         this.requires(Robot.intakeSubsystem);
     }
 
     @Override
     public void initialize() {
-	    Robot.intakeSubsystem.intake(0.8);
+        Robot.intakeSubsystem.intake(0.8);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class AutoIntakeCommand extends Command {
 
     @Override
     public boolean isFinished() {
-	    // TODO: Return true if operator manual control values are over a limit (ie. 0.4)
+        // TODO: Return true if operator manual control values are over a limit (ie. 0.4)
 
         return !Robot.intakeSubsystem.isSecure() || this.isTimedOut();
     }
