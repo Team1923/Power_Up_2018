@@ -10,26 +10,32 @@ import org.usfirst.frc.team1923.robot.subsystems.LEDSubsystem;
  */
 public class LEDCommand extends Command {
 
+    private long lastRun;
+
     public LEDCommand() {
         this.requires(Robot.ledSubsystem);
+
+        this.lastRun = System.currentTimeMillis();
     }
 
     @Override
     public void execute() {
-        boolean newPressed = Robot.oi.driver.square.get();
-        if (newPressed == (Robot.ledSubsystem.getCurrentMode() == LEDSubsystem.Mode.OFF)) {
-            Robot.ledSubsystem.setMode(newPressed ? LEDSubsystem.Mode.ON : LEDSubsystem.Mode.OFF);
+        if (this.lastRun + 90 > System.currentTimeMillis()) {
+            return;
         }
+
+        Robot.ledSubsystem.getArduino().write(Robot.ledSubsystem.getProfile().getNext(), 180);
+        Robot.ledSubsystem.getArduino().flush();
     }
 
     @Override
     public void end() {
-        Robot.ledSubsystem.setMode(LEDSubsystem.Mode.OFF);
+
     }
 
     @Override
     public void interrupted() {
-        Robot.ledSubsystem.setMode(LEDSubsystem.Mode.OFF);
+        this.end();
     }
 
     @Override
