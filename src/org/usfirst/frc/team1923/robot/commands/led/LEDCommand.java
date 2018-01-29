@@ -3,7 +3,6 @@ package org.usfirst.frc.team1923.robot.commands.led;
 import edu.wpi.first.wpilibj.command.Command;
 
 import org.usfirst.frc.team1923.robot.Robot;
-import org.usfirst.frc.team1923.robot.subsystems.LEDSubsystem;
 import org.usfirst.frc.team1923.robot.subsystems.LEDSubsystem.LEDMode;
 
 /**
@@ -11,12 +10,8 @@ import org.usfirst.frc.team1923.robot.subsystems.LEDSubsystem.LEDMode;
  */
 public class LEDCommand extends Command {
 
-    private long lastRun;
-
     public LEDCommand() {
         this.requires(Robot.ledSubsystem);
-
-        this.lastRun = System.currentTimeMillis();
     }
 
     @Override

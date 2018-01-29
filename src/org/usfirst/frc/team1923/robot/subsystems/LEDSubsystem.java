@@ -2,9 +2,7 @@ package org.usfirst.frc.team1923.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.SerialPort;
-
 import org.usfirst.frc.team1923.robot.commands.led.LEDCommand;
-import org.usfirst.frc.team1923.robot.ledprofiles.LEDProfile;
 
 import java.util.Arrays;
 
@@ -73,10 +71,6 @@ public class LEDSubsystem extends Subsystem {
         this.currentMode = LEDMode.OFF;
     }
 
-    public void setProfile(LEDProfile profile) {
-        this.profile = profile;
-    }
-
     @Override
     public void periodic() {
         if (this.arduino != null) {
@@ -102,4 +96,10 @@ public class LEDSubsystem extends Subsystem {
     public LEDMode getMode() {
         return this.currentMode;
     }
+
+    @Override
+    public void initDefaultCommand() {
+        this.setDefaultCommand(new LEDCommand());
+    }
+
 }
