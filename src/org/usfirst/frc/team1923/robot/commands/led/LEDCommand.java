@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 import org.usfirst.frc.team1923.robot.Robot;
 import org.usfirst.frc.team1923.robot.subsystems.LEDSubsystem;
+import org.usfirst.frc.team1923.robot.subsystems.LEDSubsystem.LEDMode;
 
 /**
  * Test command to output LED profiles to Arduino.
@@ -20,22 +21,17 @@ public class LEDCommand extends Command {
 
     @Override
     public void execute() {
-        if (this.lastRun + 90 > System.currentTimeMillis()) {
-            return;
-        }
-
-        Robot.ledSubsystem.getArduino().write(Robot.ledSubsystem.getProfile().getNext(), 180);
-        Robot.ledSubsystem.getArduino().flush();
+        Robot.ledSubsystem.setMode(Robot.oi.driver.square.get() ? LEDMode.ON : LEDMode.OFF);
     }
 
     @Override
     public void end() {
-
+        Robot.ledSubsystem.setMode(LEDMode.OFF);
     }
 
     @Override
     public void interrupted() {
-        this.end();
+        Robot.ledSubsystem.setMode(LEDMode.OFF);
     }
 
     @Override
