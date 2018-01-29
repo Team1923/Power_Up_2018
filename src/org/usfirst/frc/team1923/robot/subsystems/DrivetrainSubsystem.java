@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import org.usfirst.frc.team1923.robot.RobotMap;
-import org.usfirst.frc.team1923.robot.commands.drive.RawDriveCommand;
+import org.usfirst.frc.team1923.robot.commands.drive.DriveControlCommand;
 
 public class DrivetrainSubsystem extends Subsystem {
 
@@ -98,7 +98,7 @@ public class DrivetrainSubsystem extends Subsystem {
 
     @Override
     protected void initDefaultCommand() {
-        setDefaultCommand(new RawDriveCommand());
+        setDefaultCommand(new DriveControlCommand());
     }
 
     private double distanceToRotations(double distance) {

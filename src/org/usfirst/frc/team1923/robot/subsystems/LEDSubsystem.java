@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.SerialPort;
 
 import org.usfirst.frc.team1923.robot.commands.led.LEDCommand;
+import org.usfirst.frc.team1923.robot.ledprofiles.LEDProfile;
 
 import java.util.Arrays;
 
@@ -72,9 +73,8 @@ public class LEDSubsystem extends Subsystem {
         this.currentMode = LEDMode.OFF;
     }
 
-    @Override
-    protected void initDefaultCommand() {
-        this.setDefaultCommand(new LEDCommand());
+    public void setProfile(LEDProfile profile) {
+        this.profile = profile;
     }
 
     @Override

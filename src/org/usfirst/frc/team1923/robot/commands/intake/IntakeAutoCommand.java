@@ -6,13 +6,13 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  * Run intake until cube is secured, command times out, or overridden by operator control whichever comes first.
  */
-public class AutoIntakeCommand extends Command {
+public class IntakeAutoCommand extends Command {
 
-    public AutoIntakeCommand() {
+    public IntakeAutoCommand() {
         this(30);
     }
 
-    public AutoIntakeCommand(double timeout) {
+    public IntakeAutoCommand(double timeout) {
         this.requires(Robot.intakeSubsystem);
 
         this.setTimeout(timeout);
@@ -40,7 +40,7 @@ public class AutoIntakeCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return Robot.oi.operator.getLeftTrigger() > 0.5 || Robot.oi.operator.getRightTrigger() > 0.5 || !Robot.intakeSubsystem.isSecure() || this.isTimedOut();
+        return Robot.oi.operator.getLeftTrigger() > 0.3 || Robot.oi.operator.getRightTrigger() > 0.3 || !Robot.intakeSubsystem.isSecure() || this.isTimedOut();
     }
 
 }
