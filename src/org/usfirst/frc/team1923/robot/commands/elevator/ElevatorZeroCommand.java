@@ -13,15 +13,17 @@ public class ElevatorZeroCommand extends Command {
     }
 
     protected void initialize() {
-
+        Robot.elevatorSubsystem.set(ControlMode.)
     }
 
     protected void execute() {
 
+    protected boolean isFinished() {
+        return talons[0].getSensorCollection().isRevLimitSwitchClosed();;
     }
 
-    protected boolean isFinished() {
-        return false;
+    protected void start() {
+
     }
 
     protected void end() {

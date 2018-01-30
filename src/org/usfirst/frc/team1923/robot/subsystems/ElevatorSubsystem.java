@@ -81,4 +81,7 @@ public class ElevatorSubsystem extends Subsystem {
         this.setDefaultCommand(new ElevatorControlCommand());
     }
 
+    public void getTalons() {
+        return talons;
+    }
 }
