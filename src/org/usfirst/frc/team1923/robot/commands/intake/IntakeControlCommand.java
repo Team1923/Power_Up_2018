@@ -6,9 +6,9 @@ import org.usfirst.frc.team1923.robot.Robot;
 /**
  * Set intake wheel speed based on operator control.
  */
-public class RawIntakeCommand extends Command {
+public class IntakeControlCommand extends Command {
 
-    public RawIntakeCommand() {
+    public IntakeControlCommand() {
         this.requires(Robot.intakeSubsystem);
     }
 
