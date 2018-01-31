@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1923.robot.commands.elevator;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team1923.robot.Robot;
 
@@ -12,21 +13,20 @@ public class ElevatorZeroCommand extends Command {
         this.requires(Robot.elevatorSubsystem);
     }
 
-    protected void initialize() {
-        Robot.elevatorSubsystem.set(ControlMode.)
-    }
+    protected void initialize() {}
 
-    protected void execute() {
-
+    protected void execute() {}
+    
     protected boolean isFinished() {
-        return talons[0].getSensorCollection().isRevLimitSwitchClosed();;
+        return Robot.elevatorSubsystem.isZeroed();
     }
 
     protected void start() {
-
+    		Robot.elevatorSubsystem.set(ControlMode.Velocity, -0.5);
     }
 
     protected void end() {
+        Robot.elevatorSubsystem.getTalons()[0].setPosition(0);
         Robot.elevatorSubsystem.stop();
     }
 

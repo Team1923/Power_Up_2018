@@ -56,7 +56,7 @@ public class ElevatorSubsystem extends Subsystem {
         this.talons[0].config_kF(0, K_F, RobotMap.TALON_COMMAND_TIMEOUT);
         this.talons[0].configAllowableClosedloopError(0, ALLOWABLE_ERROR, RobotMap.TALON_COMMAND_TIMEOUT);
 
-        this.zeroed = this.talons[0].getSensorCollection().isRevLimitSwitchClosed();
+        // this.zeroed = this.talons[0].getSensorCollection().isRevLimitSwitchClosed();
     }
 
     public void stop() {
@@ -68,7 +68,7 @@ public class ElevatorSubsystem extends Subsystem {
     }
 
     public boolean isZeroed() {
-        return this.zeroed;
+        return this.talons[0].getSensorCollection().isRevLimitSwitchClosed();
     }
 
     public void zero() {
@@ -81,7 +81,7 @@ public class ElevatorSubsystem extends Subsystem {
         this.setDefaultCommand(new ElevatorControlCommand());
     }
 
-    public void getTalons() {
+    public TalonSRX[] getTalons() {
         return talons;
     }
 }
