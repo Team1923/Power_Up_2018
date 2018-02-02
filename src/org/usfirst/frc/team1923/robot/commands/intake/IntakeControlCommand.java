@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1923.robot.commands.intake;
 
 import edu.wpi.first.wpilibj.command.Command;
+
 import org.usfirst.frc.team1923.robot.Robot;
 
 /**
@@ -13,29 +14,24 @@ public class IntakeControlCommand extends Command {
     }
 
     @Override
-    public void initialize() {
-
-    }
-
-    @Override
-    public void execute() {
+    protected void execute() {
         Robot.intakeSubsystem.intakeLeft(Robot.oi.operator.getLeftTrigger());
         Robot.intakeSubsystem.intakeRight(Robot.oi.operator.getRightTrigger());
     }
 
     @Override
-    public void end() {
-        Robot.intakeSubsystem.stop();
-    }
-
-    @Override
-    public void interrupted() {
-        Robot.intakeSubsystem.stop();
-    }
-
-    @Override
-    public boolean isFinished() {
+    protected boolean isFinished() {
         return false;
+    }
+
+    @Override
+    protected void end() {
+        Robot.intakeSubsystem.stop();
+    }
+
+    @Override
+    protected void interrupted() {
+        Robot.intakeSubsystem.stop();
     }
 
 }

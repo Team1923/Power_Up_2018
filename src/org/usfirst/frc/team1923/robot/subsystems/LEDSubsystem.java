@@ -2,7 +2,8 @@ package org.usfirst.frc.team1923.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.SerialPort;
-import org.usfirst.frc.team1923.robot.commands.led.LEDCommand;
+
+import org.usfirst.frc.team1923.robot.commands.led.LEDOffCommand;
 
 import java.util.Arrays;
 
@@ -99,7 +100,7 @@ public class LEDSubsystem extends Subsystem {
 
     @Override
     public void initDefaultCommand() {
-        this.setDefaultCommand(new LEDCommand());
+        this.setDefaultCommand(new LEDOffCommand());
     }
 
 }

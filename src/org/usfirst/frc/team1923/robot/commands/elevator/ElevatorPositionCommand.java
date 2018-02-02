@@ -1,7 +1,9 @@
 package org.usfirst.frc.team1923.robot.commands.elevator;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.command.Command;
+
 import org.usfirst.frc.team1923.robot.Robot;
 
 /**
@@ -13,24 +15,27 @@ public class ElevatorPositionCommand extends Command {
         this.requires(Robot.elevatorSubsystem);
     }
 
+    @Override
     protected void initialize() {
-
     }
 
+    @Override
     protected void execute() {
-
     }
 
+    @Override
     protected boolean isFinished() {
-        return Robot.oi.operator.getLeftY() > 0.3;
+        return false;
     }
 
+    @Override
     protected void end() {
         Robot.elevatorSubsystem.stop();
     }
 
+    @Override
     protected void interrupted() {
-        this.end();
+        Robot.elevatorSubsystem.stop();
     }
 
 }

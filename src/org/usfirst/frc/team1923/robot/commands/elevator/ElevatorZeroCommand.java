@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1923.robot.commands.elevator;
 
 import edu.wpi.first.wpilibj.command.Command;
+
 import org.usfirst.frc.team1923.robot.Robot;
 
 /**
@@ -12,24 +13,27 @@ public class ElevatorZeroCommand extends Command {
         this.requires(Robot.elevatorSubsystem);
     }
 
+    @Override
     protected void initialize() {
-
     }
 
+    @Override
     protected void execute() {
-
     }
 
+    @Override
     protected boolean isFinished() {
         return false;
     }
 
+    @Override
     protected void end() {
         Robot.elevatorSubsystem.stop();
     }
 
+    @Override
     protected void interrupted() {
-        this.end();
+        Robot.elevatorSubsystem.stop();
     }
 
 }

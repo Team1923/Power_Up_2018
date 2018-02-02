@@ -75,7 +75,8 @@ public class IntakeSubsystem extends Subsystem {
         this.rightTalon.set(this.controlMode, 0);
     }
 
-    public void refreshSensors() {
+    @Override
+    public void periodic() {
         if (this.leftUltrasonic.getRangeInches() < 2.0 && this.rightUltrasonic.getRangeInches() < 2.0) {
             if (this.startTime == 0) {
                 this.startTime = System.currentTimeMillis();
