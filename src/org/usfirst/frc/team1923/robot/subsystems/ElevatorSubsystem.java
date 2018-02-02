@@ -21,7 +21,7 @@ public class ElevatorSubsystem extends Subsystem {
     private final double K_F = 0.0000;
 
     private final int ALLOWABLE_ERROR = 300;
-    
+
     private TalonSRX[] talons;
     private boolean zeroed;
 

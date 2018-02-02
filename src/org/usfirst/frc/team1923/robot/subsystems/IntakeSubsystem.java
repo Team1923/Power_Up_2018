@@ -20,7 +20,7 @@ public class IntakeSubsystem extends Subsystem {
     private boolean secure;
 
     private DoubleSolenoid solenoid;
-    
+
     private TalonSRX leftTalon;
     private TalonSRX rightTalon;
     private ControlMode controlMode;
@@ -69,7 +69,7 @@ public class IntakeSubsystem extends Subsystem {
     protected void initDefaultCommand() {
         this.setDefaultCommand(new IntakeControlCommand());
     }
-    
+
     public void stop() {
         this.leftTalon.set(this.controlMode, 0);
         this.rightTalon.set(this.controlMode, 0);
