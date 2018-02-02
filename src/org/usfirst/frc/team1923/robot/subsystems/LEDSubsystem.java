@@ -9,26 +9,21 @@ import java.util.Arrays;
 
 public class LEDSubsystem extends Subsystem {
 
-    private final int BAUD = 19200;
+    private static final int BAUD = 19200;
+    private static final int NUM_PIXELS = 60;
 
     public static class LEDMode {
-        // list of colors e.g.
-        // 0xFF0000 is red
-        // 0x00FF00 is green
-        // 0x0000FF is blue
         private int[] colors;
 
-        private final int NUM_LEDS = 60;
-
-        public final static LEDMode OFF = new LEDMode(0x000000);
-        public final static LEDMode ON  = new LEDMode(0xFFFFFF);
+        public static final LEDMode OFF = new LEDMode(0x000000);
+        public static final LEDMode ON = new LEDMode(0xFFFFFF);
 
         public LEDMode(int[] colors) {
             this.colors = colors;
         }
 
         public LEDMode(int color) {
-            this.colors = new int[NUM_LEDS];
+            this.colors = new int[NUM_PIXELS];
             Arrays.fill(this.colors, color);
         }
 
@@ -40,16 +35,15 @@ public class LEDSubsystem extends Subsystem {
             if (!(obj instanceof LEDMode)) {
                 return false;
             }
-            LEDMode mode = (LEDMode) obj;
-            return Arrays.equals(this.colors, mode.colors);
+            return Arrays.equals(this.colors, ((LEDMode) obj).colors);
         }
 
         public byte[] toData() {
-            byte[] data = new byte[colors.length * 3];
-            for (int i = 0; i < colors.length; ++i) {
-                data[i * 3    ] = (byte) (colors[i] >> 16);
-                data[i * 3 + 1] = (byte) (colors[i] >> 8);
-                data[i * 3 + 2] = (byte) colors[i];
+            byte[] data = new byte[this.colors.length * 3];
+            for (int i = 0; i < this.colors.length; ++i) {
+                data[i * 3    ] = (byte) (this.colors[i] >> 16);
+                data[i * 3 + 1] = (byte) (this.colors[i] >> 8);
+                data[i * 3 + 2] = (byte) this.colors[i];
             }
             return data;
         }

@@ -95,12 +95,12 @@ public class DrivetrainSubsystem extends Subsystem {
     }
 
     public void stop() {
-        drive(0, 0);
+        this.drive(0, 0);
     }
 
     @Override
     protected void initDefaultCommand() {
-        setDefaultCommand(new DriveControlCommand());
+        this.setDefaultCommand(new DriveControlCommand());
     }
 
     public double distanceToRotations(double distance) {
