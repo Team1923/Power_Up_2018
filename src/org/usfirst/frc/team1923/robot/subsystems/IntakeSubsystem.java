@@ -3,26 +3,25 @@ package org.usfirst.frc.team1923.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.Ultrasonic;
-import edu.wpi.first.wpilibj.Ultrasonic.Unit;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.commands.intake.IntakeControlCommand;
 
 public class IntakeSubsystem extends Subsystem {
 
+    private static final int SECURE_THRESHOLD = 750;
+
     private Ultrasonic leftUltrasonic;
     private Ultrasonic rightUltrasonic;
     private long startTime;
-    private boolean secure;
 
     private DoubleSolenoid solenoid;
 
     private TalonSRX leftTalon;
     private TalonSRX rightTalon;
-    private ControlMode controlMode;
 
     public IntakeSubsystem() {
         this.solenoid = new DoubleSolenoid(RobotMap.PCM_MODULE_PORT, RobotMap.INTAKE_SOLENOID_FORWARD_PORT, RobotMap.INTAKE_SOLENOID_REVERSE_PORT);
@@ -33,9 +32,6 @@ public class IntakeSubsystem extends Subsystem {
         this.configureTalon(this.rightTalon);
 
         this.startTime = 0;
-        this.secure = false;
-
-        this.controlMode = ControlMode.PercentOutput;
 
         this.leftUltrasonic = new Ultrasonic(RobotMap.INTAKE_LEFT_ULTRASONIC_PING_PORT, RobotMap.INTAKE_LEFT_ULTRASONIC_ECHO_PORT);
         this.rightUltrasonic = new Ultrasonic(RobotMap.INTAKE_RIGHT_ULTRASONIC_PING_PORT, RobotMap.INTAKE_RIGHT_ULTRASONIC_ECHO_PORT);
@@ -57,11 +53,11 @@ public class IntakeSubsystem extends Subsystem {
     }
 
     public void intakeLeft(double speed) {
-        this.leftTalon.set(this.controlMode, speed);
+        this.leftTalon.set(ControlMode.PercentOutput, speed);
     }
 
     public void intakeRight(double speed) {
-        this.rightTalon.set(this.controlMode, speed);
+        this.rightTalon.set(ControlMode.PercentOutput, speed);
     }
 
     @Override
@@ -70,39 +66,36 @@ public class IntakeSubsystem extends Subsystem {
     }
 
     public void stop() {
-        this.leftTalon.set(this.controlMode, 0);
-        this.rightTalon.set(this.controlMode, 0);
+        this.leftTalon.set(ControlMode.PercentOutput, 0);
+        this.rightTalon.set(ControlMode.PercentOutput, 0);
     }
 
     @Override
     public void periodic() {
-        if (this.leftUltrasonic.getRangeInches() < 2.0 && this.rightUltrasonic.getRangeInches() < 2.0) {
+        if (this.leftUltrasonic.getRangeInches() < 2 && this.rightUltrasonic.getRangeInches() < 2) {
             if (this.startTime == 0) {
                 this.startTime = System.currentTimeMillis();
-            } else if (this.startTime + 750L < System.currentTimeMillis()) {
-                this.secure = true;
             }
         } else {
             this.startTime = 0;
-            this.secure = false;
         }
     }
 
     public boolean isSecure() {
-        return this.secure;
+        return this.startTime + SECURE_THRESHOLD < System.currentTimeMillis();
     }
 
     private void configureUltrasonic(Ultrasonic ultrasonic) {
         ultrasonic.setEnabled(true);
         ultrasonic.setAutomaticMode(true);
-        ultrasonic.setDistanceUnits(Unit.kInches);
+        ultrasonic.setDistanceUnits(Ultrasonic.Unit.kInches);
     }
 
     private void configureTalon(TalonSRX talon) {
         talon.configNominalOutputForward(0, RobotMap.TALON_COMMAND_TIMEOUT);
         talon.configNominalOutputReverse(0, RobotMap.TALON_COMMAND_TIMEOUT);
-        talon.configPeakOutputForward(1.0, RobotMap.TALON_COMMAND_TIMEOUT);
-        talon.configPeakOutputReverse(-1.0, RobotMap.TALON_COMMAND_TIMEOUT);
+        talon.configPeakOutputForward(1, RobotMap.TALON_COMMAND_TIMEOUT);
+        talon.configPeakOutputReverse(-1, RobotMap.TALON_COMMAND_TIMEOUT);
     }
 
 }
