@@ -1,7 +1,7 @@
 package org.usfirst.frc.team1923.robot.subsystems;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 import org.usfirst.frc.team1923.robot.commands.led.LEDOffCommand;
 
@@ -55,7 +55,7 @@ public class LEDSubsystem extends Subsystem {
         }
     }
 
-    private LEDMode     setMode;
+    private LEDMode setMode;
     private LEDMode currentMode;
     private boolean modified;
     private int tick;
@@ -81,7 +81,6 @@ public class LEDSubsystem extends Subsystem {
                     this.setMode = this.currentMode;
                     byte[] data = this.setMode.toData();
                     this.arduino.write(data, data.length);
-                    this.arduino.flush(); // dont know if this is needed
                 }
                 this.modified = false;
             }
@@ -99,7 +98,7 @@ public class LEDSubsystem extends Subsystem {
     }
 
     @Override
-    public void initDefaultCommand() {
+    protected void initDefaultCommand() {
         this.setDefaultCommand(new LEDOffCommand());
     }
 

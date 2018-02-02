@@ -1,15 +1,14 @@
 package org.usfirst.frc.team1923.robot.subsystems;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
-
-import org.usfirst.frc.team1923.robot.RobotMap;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.Ultrasonic.Unit;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+
+import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.commands.intake.IntakeControlCommand;
 
 public class IntakeSubsystem extends Subsystem {
