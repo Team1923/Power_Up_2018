@@ -32,6 +32,6 @@ public class RobotMap {
 	 * Variables
 	 */
 	public static final int TALON_COMMAND_TIMEOUT = 10;
-	public static final int IMU_PORT = 37;
+	public static final int IMU_PORT = 37; //TODO fix port
 
 }
