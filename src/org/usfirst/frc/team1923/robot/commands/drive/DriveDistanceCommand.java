@@ -5,38 +5,40 @@ import org.usfirst.frc.team1923.robot.Robot;
 
 public class DriveDistanceCommand extends Command {
 
-	private double left,right;
-    public DriveDistanceCommand() {
-        this(0, 0);
-    }
-    
-    public DriveDistanceCommand(double distance) {
-    	this(distance, distance);
-    }
-    public DriveDistanceCommand(double left, double right) {
-    	this.requires(Robot.drivetrainSubsystem);
-    	this.left = left;
-    	this.right = right;
-    }
+	private double left, right;
 
-    protected void initialize() {
+	public DriveDistanceCommand() {
+		this(0, 0);
+	}
 
-    }
+	public DriveDistanceCommand(double distance) {
+		this(distance, distance);
+	}
 
-    protected void execute() {
+	public DriveDistanceCommand(double left, double right) {
+		this.requires(Robot.drivetrainSubsystem);
+		this.left = left;
+		this.right = right;
+	}
 
-    }
+	protected void initialize() {
 
-    protected boolean isFinished() {
-        return false;
-    }
+	}
 
-    protected void end() {
-        Robot.drivetrainSubsystem.stop();
-    }
+	protected void execute() {
 
-    protected void interrupted() {
-        this.end();
-    }
+	}
+
+	protected boolean isFinished() {
+		return false;
+	}
+
+	protected void end() {
+		Robot.drivetrainSubsystem.stop();
+	}
+
+	protected void interrupted() {
+		this.end();
+	}
 
 }
