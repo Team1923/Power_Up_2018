@@ -3,6 +3,7 @@ package org.usfirst.frc.team1923.robot.subsystems;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.sensors.PigeonIMU;
 
 import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.commands.drive.DriveControlCommand;
@@ -11,6 +12,7 @@ public class DrivetrainSubsystem extends Subsystem {
 
     private static final double WHEEL_DIAMETER = 6;
     private static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
+    private static final double DRIVE_BASE_WIDTH = 27.5;
 
     private TalonSRX[] leftTalons;
     private TalonSRX[] rightTalons;
@@ -19,6 +21,8 @@ public class DrivetrainSubsystem extends Subsystem {
 
     private double leftOutput;
     private double rightOutput;
+    
+    private PigeonIMU imu;
 
     public DrivetrainSubsystem() {
         this.leftTalons = new TalonSRX[RobotMap.DRIVE_LEFT_TALON_PORTS.length];
@@ -46,6 +50,8 @@ public class DrivetrainSubsystem extends Subsystem {
             this.rightTalons[i].setInverted(true);
             this.configureTalon(this.rightTalons[i]);
         }
+        
+        this.imu = new PigeonIMU(new TalonSRX((RobotMap.IMU_PORT)));
     }
 
     public void drive(double leftOutput, double rightOutput) {
@@ -118,5 +124,13 @@ public class DrivetrainSubsystem extends Subsystem {
         talon.configMotionAcceleration(500, RobotMap.TALON_COMMAND_TIMEOUT);
         talon.configMotionCruiseVelocity(800, RobotMap.TALON_COMMAND_TIMEOUT);
     }
+
+	public PigeonIMU getIMU() {
+		return this.imu;
+	}
+	
+	public double angleToDistance(double angle){
+		return DRIVE_BASE_WIDTH * Math.PI * angle / 360;
+	}
 
 }
