@@ -4,8 +4,11 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import org.usfirst.frc.team1923.robot.Robot;
 import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.commands.drive.DriveControlCommand;
+import org.usfirst.frc.team1923.robot.utils.battery.OutputCallback;
+import org.usfirst.frc.team1923.robot.utils.battery.OutputType;
 
 public class DrivetrainSubsystem extends Subsystem {
 
@@ -49,11 +52,25 @@ public class DrivetrainSubsystem extends Subsystem {
     }
 
     public void drive(double leftOutput, double rightOutput) {
-        this.leftTalons[0].set(this.controlMode, leftOutput);
-        this.rightTalons[0].set(this.controlMode, rightOutput);
+        Robot.batteryMonitor.queueAction(OutputType.MINICIM, leftOutput, new OutputCallback() {
 
-        this.leftOutput = leftOutput;
-        this.rightOutput = rightOutput;
+            @Override
+            public void callback(double output) {
+                DrivetrainSubsystem.this.leftTalons[0].set(DrivetrainSubsystem.this.controlMode, output);
+                DrivetrainSubsystem.this.leftOutput = output;
+            }
+
+        }, 10);
+
+        Robot.batteryMonitor.queueAction(OutputType.MINICIM, rightOutput, new OutputCallback() {
+
+            @Override
+            public void callback(double output) {
+                DrivetrainSubsystem.this.rightTalons[0].set(DrivetrainSubsystem.this.controlMode, output);
+                DrivetrainSubsystem.this.rightOutput = output;
+            }
+
+        }, 10);
     }
 
     public void setControlMode(ControlMode mode) {
@@ -69,7 +86,6 @@ public class DrivetrainSubsystem extends Subsystem {
 
     public double getLeftPosition() {
         return this.leftTalons[0].getSelectedSensorPosition(0);
-
     }
 
     public double getRightPosition() {

@@ -36,6 +36,7 @@ public class ElevatorSubsystem extends Subsystem {
             this.talons[i].configPeakOutputReverse(-1, RobotMap.TALON_COMMAND_TIMEOUT);
             this.talons[i].configMotionAcceleration(350, RobotMap.TALON_COMMAND_TIMEOUT);
             this.talons[i].configMotionCruiseVelocity(500, RobotMap.TALON_COMMAND_TIMEOUT);
+            this.talons[i].setInverted(true);
 
             if (i > 0) {
                 this.talons[i].set(ControlMode.Follower, RobotMap.ELEVATOR_TALON_PORTS[0]);

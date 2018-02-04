@@ -11,6 +11,7 @@ import org.usfirst.frc.team1923.robot.subsystems.DrivetrainSubsystem;
 import org.usfirst.frc.team1923.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team1923.robot.subsystems.LEDSubsystem;
 import org.usfirst.frc.team1923.robot.subsystems.IntakeSubsystem;
+import org.usfirst.frc.team1923.robot.utils.battery.BatteryMonitor;
 
 public class Robot extends IterativeRobot {
 
@@ -21,17 +22,21 @@ public class Robot extends IterativeRobot {
     public static LEDSubsystem ledSubsystem;
     public static IntakeSubsystem intakeSubsystem;
 
+    public static BatteryMonitor batteryMonitor;
+
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
 
     @Override
     public void robotInit() {
+        oi = new OI();
+
         drivetrainSubsystem = new DrivetrainSubsystem();
         elevatorSubsystem = new ElevatorSubsystem();
         intakeSubsystem = new IntakeSubsystem();
         ledSubsystem = new LEDSubsystem();
 
-        oi = new OI();
+        batteryMonitor = new BatteryMonitor();
 
         SmartDashboard.putData("Autonomous Mode", this.chooser);
     }
@@ -39,6 +44,8 @@ public class Robot extends IterativeRobot {
     @Override
     public void disabledPeriodic() {
         Scheduler.getInstance().run();
+
+        batteryMonitor.tick();
     }
 
     @Override
@@ -53,6 +60,8 @@ public class Robot extends IterativeRobot {
     @Override
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
+
+        batteryMonitor.tick();
     }
 
     @Override
@@ -67,6 +76,7 @@ public class Robot extends IterativeRobot {
         Scheduler.getInstance().run();
 
         intakeSubsystem.refreshSensors();
+        batteryMonitor.tick();
     }
 
     @Override
