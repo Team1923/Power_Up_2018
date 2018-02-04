@@ -13,7 +13,10 @@ public class LEDCommand extends Command {
 
     @Override
     public void execute() {
+        //Something in color
         Robot.ledSubsystem.setColor();
+        //Something in Pattern
+        Robot.ledSubsystem.setPattern();
     }
 
     @Override
