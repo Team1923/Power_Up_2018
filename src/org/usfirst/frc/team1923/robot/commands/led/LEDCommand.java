@@ -1,13 +1,10 @@
 package org.usfirst.frc.team1923.robot.commands.led;
 
-import edu.wpi.first.wpilibj.command.Command;
-
 import org.usfirst.frc.team1923.robot.Robot;
-import org.usfirst.frc.team1923.robot.subsystems.LEDSubsystem.LEDMode;
 
-/**
- * Test command to output LED profiles to Arduino.
- */
+import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team1923.robot.subsytems.LEDSubsytem;
+
 public class LEDCommand extends Command {
 
     public LEDCommand() {
@@ -16,17 +13,17 @@ public class LEDCommand extends Command {
 
     @Override
     public void execute() {
-        Robot.ledSubsystem.setMode(Robot.oi.driver.square.get() ? LEDMode.ON : LEDMode.OFF);
+        Robot.ledSubsystem.setColor();
     }
 
     @Override
     public void end() {
-        Robot.ledSubsystem.setMode(LEDMode.OFF);
+        Robot.ledSubsystem.setPattern(0);
     }
 
     @Override
     public void interrupted() {
-        Robot.ledSubsystem.setMode(LEDMode.OFF);
+        Robot.ledSubsystem.setPattern(0);
     }
 
     @Override
