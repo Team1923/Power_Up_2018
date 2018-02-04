@@ -52,10 +52,10 @@ public class LEDSubsystem extends Subsystem {
                 this.tick = 5;
                 if (this.modified) {
                     data[0] = (byte) pattern;
-                    for (int inc = 1; inc < 10; inc++) {
+                    for (int inc = 1; inc < 4; inc++) {
                         data[inc] = (byte) colors[inc - 1];
                     }
-                    this.arduino.write(data, 10);
+                    this.arduino.write(data, 4);
                     this.arduino.flush(); // dont know if this is needed
                 }
                 this.modified = false;
