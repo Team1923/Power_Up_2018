@@ -1,74 +1,48 @@
-package org.usfirst.frc.team1923.robot.subsystems;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.SerialPort;
 import org.usfirst.frc.team1923.robot.commands.led.LEDCommand;
 
-import java.util.Arrays;
+import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class LEDSubsystem extends Subsystem {
 
+    private SerialPort arduino;
+    private int tick;
     private final int BAUD = 19200;
+    private boolean modified = false;
+    private byte[] data = new byte[10];;
+    // list of colors e.g.
+    // 0xFF0000 is red
+    // 0x00FF00 is green
+    // 0x0000FF is blue
+    private int[] colors;
 
-    public static class LEDMode {
-        // list of colors e.g.
-        // 0xFF0000 is red
-        // 0x00FF00 is green
-        // 0x0000FF is blue
-        private int[] colors;
+    private int pattern = 1;
 
-        private final int NUM_LEDS = 60;
-
-        public final static LEDMode OFF = new LEDMode(0x000000);
-        public final static LEDMode ON  = new LEDMode(0xFFFFFF);
-
-        public LEDMode(int[] colors) {
-            this.colors = colors;
-        }
-
-        public LEDMode(int color) {
-            this.colors = new int[NUM_LEDS];
-            Arrays.fill(this.colors, color);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (!(obj instanceof LEDMode)) {
-                return false;
-            }
-            LEDMode mode = (LEDMode) obj;
-            return Arrays.equals(this.colors, mode.colors);
-        }
-
-        public byte[] toData() {
-            byte[] data = new byte[colors.length * 3];
-            for (int i = 0; i < colors.length; ++i) {
-                data[i * 3    ] = (byte) (colors[i] >> 16);
-                data[i * 3 + 1] = (byte) (colors[i] >> 8);
-                data[i * 3 + 2] = (byte) colors[i];
-            }
-            return data;
-        }
+    public void setColor(int[] new_colors) {
+        colors = new_colors.clone();
+        this.modified = true;
     }
 
-    private LEDMode     setMode;
-    private LEDMode currentMode;
-    private boolean modified;
-    private int tick;
+    public int[] getColor() {
+        return this.colors;
+    }
 
-    private SerialPort arduino;
+    public void setPattern(int new_pattern) {
+        this.pattern = new_pattern;
+        this.modified = true;
+    }
+
+    public int getPattern() {
+        return this.pattern;
+    }
 
     public LEDSubsystem() {
         try {
             this.arduino = new SerialPort(BAUD, SerialPort.Port.kUSB);
-        } catch (Exception e) {}
-
-        this.tick = 0;
+        } catch (Exception e) {
+        }
         this.modified = true;
-        this.currentMode = LEDMode.OFF;
     }
 
     @Override
@@ -76,10 +50,12 @@ public class LEDSubsystem extends Subsystem {
         if (this.arduino != null) {
             if (this.tick == 0) {
                 this.tick = 5;
-                if (this.modified && !this.currentMode.equals(this.setMode)) {
-                    this.setMode = this.currentMode;
-                    byte[] data = this.setMode.toData();
-                    this.arduino.write(data, data.length);
+                if (this.modified) {
+                    data[0] = (byte) pattern;
+                    for (int inc = 1; inc < 4; inc++) {
+                        data[inc] = (byte) colors[inc - 1];
+                    }
+                    this.arduino.write(data, 4);
                     this.arduino.flush(); // dont know if this is needed
                 }
                 this.modified = false;
@@ -88,18 +64,10 @@ public class LEDSubsystem extends Subsystem {
         }
     }
 
-    public void setMode(LEDMode newMode) {
-        this.modified = true;
-        this.currentMode = newMode;
-    }
-
-    public LEDMode getMode() {
-        return this.currentMode;
-    }
-
     @Override
     public void initDefaultCommand() {
         this.setDefaultCommand(new LEDCommand());
+
     }
 
 }
