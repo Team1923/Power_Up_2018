@@ -3,9 +3,7 @@ package org.usfirst.frc.team1923.robot.utils.battery;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import org.usfirst.frc.team1923.robot.RobotMap;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class BatteryMonitor {
@@ -13,15 +11,19 @@ public class BatteryMonitor {
     private final double MIN_CURRENT_DEVIATION = 5.00;
     private final double MIN_VOLTAGE_DEVIATION = 1.00;
 
+    private final double MIN_SYSTEM_VOLAGE = 7.00;
+
     private PowerDistributionPanel pdp;
 
     private List<PDPReading> pdpReadings;
     private long lastCalculation;
 
+    private final Queue<OutputDevice> outputDevices;
+
     private double voltage;
     private double resistance;
 
-    private final ConcurrentLinkedQueue<QueuedAction> outputQueue;
+    private boolean enabled;
 
     public BatteryMonitor() {
         this.pdp = new PowerDistributionPanel(RobotMap.PDP_PORT);
@@ -34,10 +36,22 @@ public class BatteryMonitor {
         this.voltage = (this.pdp.getVoltage() + 12.00) / 2;
         this.resistance = 0.025;
 
-        this.outputQueue = new ConcurrentLinkedQueue<>();
+        this.outputDevices = new PriorityQueue<OutputDevice>(25);
+    }
+
+    public void enable() {
+        this.enabled = true;
+    }
+
+    public void disable() {
+        this.enabled = false;
     }
 
     public void tick() {
+        if (!this.enabled) {
+            return;
+        }
+
         this.pdpReadings.add(new PDPReading(
                 this.pdp.getVoltage(),
                 this.pdp.getTotalCurrent()
@@ -45,36 +59,35 @@ public class BatteryMonitor {
 
         this.calculate();
 
-        synchronized (this.outputQueue) {
-            Object[] queuedActions = this.outputQueue.toArray();
+        synchronized (this.outputDevices) {
 
-            Arrays.sort(queuedActions);
-
-            for (Object object : queuedActions) {
-                QueuedAction queuedAction = (QueuedAction) object;
-            }
-
-            // TODO: Do output calculations and limit (if needed)
         }
     }
 
-    /**
-     * Queue a new output action, takes effect on the next tick (max 20ms delay)
-     *
-     * @param outputType Enum output type
-     * @param outputValue Value of output
-     * @param outputCallback Callback class to output
-     * @param priority Priority of output action. Lower has higher priority.
-     */
-    public void queueAction(OutputType outputType, double outputValue, OutputCallback outputCallback, int priority) {
-        synchronized (this.outputQueue) {
-            this.outputQueue.offer(new QueuedAction(
-                    outputType,
-                    outputValue,
-                    outputCallback,
-                    priority
-            ));
+    public synchronized double inform(OutputDevice outputDevice) {
+        if (!this.enabled) {
+            return outputDevice.getOutput();
         }
+
+        if (!this.outputDevices.contains(outputDevice)) {
+            this.outputDevices.add(outputDevice);
+        }
+
+        // TODO: Calculate the max output of the device. Lower outputs of other devices with lower priority if necessary.
+
+        return 0.00;
+    }
+
+    public synchronized void reprioritize() {
+        if (!this.enabled) {
+            return;
+        }
+
+        Queue<OutputDevice> outputDevices = new PriorityQueue<OutputDevice>(this.outputDevices.size());
+        outputDevices.addAll(this.outputDevices);
+
+        this.outputDevices.clear();
+        this.outputDevices.addAll(outputDevices);
     }
 
     private void calculate() {
@@ -131,50 +144,6 @@ public class BatteryMonitor {
 
         public double getCurrent() {
             return current;
-        }
-
-    }
-
-    private class QueuedAction implements Comparable {
-
-        private OutputType outputType;
-        private OutputCallback outputCallback;
-        private double outputValue;
-
-        private int priority;
-
-        public QueuedAction(OutputType outputType, double outputValue, OutputCallback outputCallback, int priority) {
-            this.outputType = outputType;
-            this.outputValue = outputValue;
-            this.outputCallback = outputCallback;
-            this.priority = priority;
-        }
-
-        public OutputType getOutputType() {
-            return outputType;
-        }
-
-        public OutputCallback getOutputCallback() {
-            return outputCallback;
-        }
-
-        public double getOutputValue() {
-            return outputValue;
-        }
-
-        public int getPriority() {
-            return priority;
-        }
-
-        @Override
-        public int compareTo(Object o) {
-            if (!(o instanceof QueuedAction)) {
-                return -1;
-            }
-
-            QueuedAction queuedAction = (QueuedAction) o;
-
-            return Integer.compare(queuedAction.getPriority(), this.getPriority());
         }
 
     }
