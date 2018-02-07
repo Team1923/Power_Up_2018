@@ -11,13 +11,13 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveTrajectoryCommand extends Command {
 	
-	public FitMethod fit = Trajectory.FitMethod.HERMITE_CUBIC; 	// Fit Method:  HERMITE_CUBIC or HERMITE_QUINTIC
-	public int samples = Trajectory.Config.SAMPLES_HIGH;
-	public double timeStep = 0.05;
-	static boolean libLoaded;
-	Trajectory trajectory;
-	Waypoint[] points;
-	public double maxVelocity = 1.7; // in m/s
+    public FitMethod fit = Trajectory.FitMethod.HERMITE_CUBIC; 	// Fit Method:  HERMITE_CUBIC or HERMITE_QUINTIC
+    public int samples = Trajectory.Config.SAMPLES_HIGH;
+    public double timeStep = 0.05;
+    static boolean libLoaded = false;
+    Trajectory trajectory;
+    Waypoint[] points;
+    public double maxVelocity = 1.7; // in m/s
     public double maxAcceleration = 2.0; // in m/s/s
     public double maxJerk = 60.0; // in m/s/s/s
     Trajectory.Config configuration;
@@ -35,21 +35,18 @@ public class DriveTrajectoryCommand extends Command {
     public Waypoint[] RIGHT_SWITCH_AUTON = new Waypoint[] {
         new Waypoint(0, 0, 0),
     	new Waypoint(5, 14, -90),
-      };
-    
-	static {
-		if (libLoaded == false) {
-			try {
-				System.loadLibrary("pathfinderjava");
-				libLoaded = true;
-			} catch (Exception e) {
-				// TODO make this go to Shuffleboard
-				System.out.println("ERROR LOADING PATHFINDER!\nPATHFINDER IS NOT GOING TO WORK!\n" + "Error: ");
-				e.printStackTrace();
-			}
-		}
-		
-	}
+    };
+	
+    static {
+        if (!libLoaded) {
+            try {
+                System.loadLibrary("pathfinderjava");
+		libLoaded = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 	
     public DriveTrajectoryCommand(Waypoint[] points) {
     	
@@ -66,7 +63,7 @@ public class DriveTrajectoryCommand extends Command {
     	            seg.acceleration, seg.jerk, seg.heading);
     	}
                 
-        // The distance between the left and right sides of the wheelbase is 0.6m
+        // The distance between the left and right sides of the wheelbase
     	double wheelbase_width = 0.6096;
 
     	// Create the Modifier Object
@@ -82,9 +79,9 @@ public class DriveTrajectoryCommand extends Command {
     }
     
     @Override
-	protected boolean isFinished() {
+    protected boolean isFinished() {
 		return false;
-	}
+    }
     
     public Trajectory getTrajectory() {
     	return trajectory;
