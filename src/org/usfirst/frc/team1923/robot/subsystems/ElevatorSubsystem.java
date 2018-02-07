@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 import org.usfirst.frc.team1923.robot.RobotMap;
@@ -23,6 +24,8 @@ public class ElevatorSubsystem extends Subsystem {
     private static final int ALLOWABLE_ERROR = 300;
 
     private TalonSRX[] talons;
+
+    private boolean zeroed;
 
     public ElevatorSubsystem() {
         this.talons = new TalonSRX[RobotMap.ELEVATOR_TALON_PORTS.length];
@@ -55,7 +58,6 @@ public class ElevatorSubsystem extends Subsystem {
         this.talons[0].config_kF(0, K_F, RobotMap.TALON_COMMAND_TIMEOUT);
         this.talons[0].configAllowableClosedloopError(0, ALLOWABLE_ERROR, RobotMap.TALON_COMMAND_TIMEOUT);
     }
-
     public void stop() {
         this.talons[0].set(ControlMode.PercentOutput, 0);
     }
@@ -63,7 +65,7 @@ public class ElevatorSubsystem extends Subsystem {
     public void set(ControlMode controlMode, double value) {
         this.talons[0].set(controlMode, value);
     }
-
+    
     public boolean isZeroed() {
         return this.talons[0].getSensorCollection().isRevLimitSwitchClosed();
     }
@@ -75,6 +77,10 @@ public class ElevatorSubsystem extends Subsystem {
     @Override
     protected void initDefaultCommand() {
         this.setDefaultCommand(new ElevatorControlCommand());
+    }
+    
+    public TalonSRX[] getTalons() {
+    	return talons;
     }
 
 }
