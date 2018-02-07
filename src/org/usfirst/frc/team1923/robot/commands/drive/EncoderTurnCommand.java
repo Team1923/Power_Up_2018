@@ -7,8 +7,7 @@ public class EncoderTurnCommand extends DriveDistanceCommand {
 	/**
 	 * Turns a set angle using encoder counts
 	 * 
-	 * @param angle
-	 *            angle to turn right
+	 * @param angle		angle to turn right
 	 */
 	public EncoderTurnCommand(double angle) {
 		super(Robot.drivetrainSubsystem.angleToDistance(angle), -Robot.drivetrainSubsystem.angleToDistance(angle));

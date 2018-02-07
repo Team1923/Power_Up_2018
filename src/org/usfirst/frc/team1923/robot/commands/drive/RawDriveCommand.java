@@ -12,9 +12,9 @@ public class RawDriveCommand extends Command {
 
     @Override
     public void initialize() {
-
     }
     
+    @Override
     public void execute() {
         Robot.drivetrainSubsystem.drive(Robot.oi.driver.getLeftY(), Robot.oi.driver.getRightY());
     }

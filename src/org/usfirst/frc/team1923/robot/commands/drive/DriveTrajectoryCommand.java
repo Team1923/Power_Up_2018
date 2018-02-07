@@ -23,18 +23,18 @@ public class DriveTrajectoryCommand extends Command {
     Trajectory.Config configuration;
     
     public Waypoint[] DRIVE_STRAIGHT_5M = new Waypoint[] {
-            new Waypoint(0, 0, 0),
-            new Waypoint(5, 0, 0),
+    	new Waypoint(0, 0, 0),
+        new Waypoint(5, 0, 0),
     };
     
     public Waypoint[] LEFT_SWITCH_AUTON = new Waypoint[] {
-  		  new Waypoint(0, 0, 0),
-  		  new Waypoint(5, -14, 90),
+    	new Waypoint(0, 0, 0),
+  		new Waypoint(5, -14, 90),
     };
     
     public Waypoint[] RIGHT_SWITCH_AUTON = new Waypoint[] {
-    		  new Waypoint(0, 0, 0),
-    		  new Waypoint(5, 14, -90),
+        new Waypoint(0, 0, 0),
+    	new Waypoint(5, 14, -90),
       };
     
 	static {
@@ -42,8 +42,7 @@ public class DriveTrajectoryCommand extends Command {
 			try {
 				System.loadLibrary("pathfinderjava");
 				libLoaded = true;
-			} 
-			catch (Exception e) {
+			} catch (Exception e) {
 				// TODO make this go to Shuffleboard
 				System.out.println("ERROR LOADING PATHFINDER!\nPATHFINDER IS NOT GOING TO WORK!\n" + "Error: ");
 				e.printStackTrace();
@@ -66,11 +65,9 @@ public class DriveTrajectoryCommand extends Command {
     	        seg.dt, seg.x, seg.y, seg.position, seg.velocity, 
     	            seg.acceleration, seg.jerk, seg.heading);
     	}
-        
-        //TODO set waypoints
-        
-     // The distance between the left and right sides of the wheelbase is 0.6m
-    	double wheelbase_width = 0.6;
+                
+        // The distance between the left and right sides of the wheelbase is 0.6m
+    	double wheelbase_width = 0.6096;
 
     	// Create the Modifier Object
     	TankModifier modifier = new TankModifier(trajectory);
@@ -86,16 +83,11 @@ public class DriveTrajectoryCommand extends Command {
     
     @Override
 	protected boolean isFinished() {
-		// TODO Auto-generated method stub
 		return false;
 	}
     
     public Trajectory getTrajectory() {
     	return trajectory;
     }
-    
-    public void genTrajectory(Waypoint[] waypoints) {
-    	Pathfinder.generate(waypoints, configuration);
-    }
- 
+
 }
