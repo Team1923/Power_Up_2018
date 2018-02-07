@@ -31,5 +31,13 @@ public class RobotMap {
      * Variables
      */
     public static final int TALON_COMMAND_TIMEOUT = 10;
-
+    
+    /**
+     * Voc around 13 volts
+	 * Esr around 0.025 ohms (these numbers may change in the future.
+     */
+    
+    public static final double INIT_VOC = 13;
+    public static final double INIT_ESR = 0.025;
+    public static final double INIT_IDRAW = 0.025;
 }
