@@ -19,20 +19,17 @@ public class ElevatorPositionCommand extends Command {
 	private double position;
 	private double target;
 	private int targetEncoderTick;
-	ControlMode controlMode;
 
 	public ElevatorPositionCommand(double position) {
 		this.requires(Robot.elevatorSubsystem);
 		this.position = position;
 		SmartDashboard.putNumber("position to run", position);
-
 	}
 
 	protected void initialize() {
 		this.position = SmartDashboard.getNumber("position to run", position);
 		this.targetEncoderTick = (int) (position * 4000); // to do
 		Robot.elevatorSubsystem.set(ControlMode.MotionMagic, this.targetEncoderTick);
-
 	}
 
 	protected void execute() {

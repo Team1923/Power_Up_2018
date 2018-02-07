@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1923.robot.commands.intake;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
+
 import org.usfirst.frc.team1923.robot.Robot;
 
 /**
@@ -13,7 +14,7 @@ public class IntakeCloseCommand extends InstantCommand {
     }
 
     @Override
-    public void initialize() {
+    protected void initialize() {
         Robot.intakeSubsystem.close();
     }
 

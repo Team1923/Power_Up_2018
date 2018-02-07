@@ -1,39 +1,42 @@
 package org.usfirst.frc.team1923.robot;
 
-import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team1923.robot.subsystems.DrivetrainSubsystem;
 import org.usfirst.frc.team1923.robot.subsystems.ElevatorSubsystem;
-import org.usfirst.frc.team1923.robot.subsystems.LEDSubsystem;
 import org.usfirst.frc.team1923.robot.subsystems.IntakeSubsystem;
+import org.usfirst.frc.team1923.robot.subsystems.LEDSubsystem;
 
-public class Robot extends IterativeRobot {
+public class Robot extends TimedRobot {
+
+    public static DrivetrainSubsystem drivetrainSubsystem;
+    public static ElevatorSubsystem elevatorSubsystem;
+    public static IntakeSubsystem intakeSubsystem;
+    public static LEDSubsystem ledSubsystem;
 
     public static OI oi;
-
-    public static ElevatorSubsystem elevatorSubsystem;
-    public static DrivetrainSubsystem drivetrainSubsystem;
-    public static LEDSubsystem ledSubsystem;
-    public static IntakeSubsystem intakeSubsystem;
 
     private Command autonomousCommand;
     private SendableChooser<Command> chooser = new SendableChooser<>();
 
     @Override
     public void robotInit() {
-        drivetrainSubsystem = new DrivetrainSubsystem();
-        elevatorSubsystem = new ElevatorSubsystem();
-        intakeSubsystem = new IntakeSubsystem();
-        ledSubsystem = new LEDSubsystem();
+        this.drivetrainSubsystem = new DrivetrainSubsystem();
+        this.elevatorSubsystem = new ElevatorSubsystem();
+        this.intakeSubsystem = new IntakeSubsystem();
+        this.ledSubsystem = new LEDSubsystem();
 
-        oi = new OI();
+        this.oi = new OI();
 
         SmartDashboard.putData("Autonomous Mode", this.chooser);
+    }
+
+    @Override
+    public void disabledInit() {
     }
 
     @Override
@@ -62,16 +65,14 @@ public class Robot extends IterativeRobot {
         }
     }
 
+
     @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-
-        intakeSubsystem.refreshSensors();
     }
 
     @Override
     public void testPeriodic() {
-        LiveWindow.run();
     }
 
 }

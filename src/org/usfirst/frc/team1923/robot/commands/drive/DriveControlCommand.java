@@ -14,23 +14,23 @@ public class DriveControlCommand extends Command {
     }
 
     @Override
-    public void execute() {
+    protected void execute() {
         Robot.drivetrainSubsystem.drive(Robot.oi.driver.getLeftY(), Robot.oi.driver.getRightY());
     }
 
     @Override
-    public void end() {
-        Robot.drivetrainSubsystem.stop();
-    }
-
-    @Override
-    public void interrupted() {
-        Robot.drivetrainSubsystem.stop();
-    }
-
-    @Override
-    public boolean isFinished() {
+    protected boolean isFinished() {
         return false;
+    }
+
+    @Override
+    protected void end() {
+        Robot.drivetrainSubsystem.stop();
+    }
+
+    @Override
+    protected void interrupted() {
+        Robot.drivetrainSubsystem.stop();
     }
 
 }

@@ -1,8 +1,9 @@
 package org.usfirst.frc.team1923.robot.subsystems;
 
-import edu.wpi.first.wpilibj.command.Subsystem;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.commands.drive.DriveControlCommand;
@@ -49,17 +50,19 @@ public class DrivetrainSubsystem extends Subsystem {
     }
 
     public void drive(double leftOutput, double rightOutput) {
-        this.leftTalons[0].set(this.controlMode, leftOutput);
-        this.rightTalons[0].set(this.controlMode, rightOutput);
-
         this.leftOutput = leftOutput;
         this.rightOutput = rightOutput;
+        updateTalons();
     }
 
     public void setControlMode(ControlMode mode) {
         this.controlMode = mode;
+        updateTalons();
+    }
 
-        this.drive(this.leftOutput, this.rightOutput);
+    private void updateTalons() {
+        this.leftTalons[0].set(this.controlMode, this.leftOutput);
+        this.rightTalons[0].set(this.controlMode, this.rightOutput);
     }
 
     public void resetPosition() {
@@ -69,7 +72,6 @@ public class DrivetrainSubsystem extends Subsystem {
 
     public double getLeftPosition() {
         return this.leftTalons[0].getSelectedSensorPosition(0);
-
     }
 
     public double getRightPosition() {
@@ -93,27 +95,27 @@ public class DrivetrainSubsystem extends Subsystem {
     }
 
     public void stop() {
-        drive(0, 0);
+        this.drive(0, 0);
     }
 
     @Override
     protected void initDefaultCommand() {
-        setDefaultCommand(new DriveControlCommand());
+        this.setDefaultCommand(new DriveControlCommand());
     }
 
-    private double distanceToRotations(double distance) {
+    public double distanceToRotations(double distance) {
         return distance / WHEEL_CIRCUMFERENCE;
     }
 
-    private double rotationsToDistance(double rotations) {
+    public double rotationsToDistance(double rotations) {
         return rotations * WHEEL_CIRCUMFERENCE;
     }
 
     private void configureTalon(TalonSRX talon) {
         talon.configNominalOutputForward(0, RobotMap.TALON_COMMAND_TIMEOUT);
         talon.configNominalOutputReverse(0, RobotMap.TALON_COMMAND_TIMEOUT);
-        talon.configPeakOutputForward(1.0, RobotMap.TALON_COMMAND_TIMEOUT);
-        talon.configPeakOutputReverse(-1.0, RobotMap.TALON_COMMAND_TIMEOUT);
+        talon.configPeakOutputForward(1, RobotMap.TALON_COMMAND_TIMEOUT);
+        talon.configPeakOutputReverse(-1, RobotMap.TALON_COMMAND_TIMEOUT);
 
         talon.configMotionAcceleration(500, RobotMap.TALON_COMMAND_TIMEOUT);
         talon.configMotionCruiseVelocity(800, RobotMap.TALON_COMMAND_TIMEOUT);
