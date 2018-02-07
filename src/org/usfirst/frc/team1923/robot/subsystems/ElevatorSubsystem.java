@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1923.robot.subsystems;
+								package org.usfirst.frc.team1923.robot.subsystems;
 
 import com.ctre.phoenix.ParamEnum;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -9,6 +9,7 @@ import org.usfirst.frc.team1923.robot.RobotMap;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import org.usfirst.frc.team1923.robot.commands.elevator.ElevatorControlCommand;
 import org.usfirst.frc.team1923.robot.commands.elevator.ElevatorZeroCommand;
@@ -24,7 +25,7 @@ public class ElevatorSubsystem extends Subsystem {
     
     private TalonSRX[] talons;
     private boolean zeroed;
-
+    
     public ElevatorSubsystem() {
         this.talons = new TalonSRX[RobotMap.ELEVATOR_TALON_PORTS.length];
 
@@ -58,7 +59,6 @@ public class ElevatorSubsystem extends Subsystem {
 
         this.zeroed = this.talons[0].getSensorCollection().isRevLimitSwitchClosed();
     }
-
     public void stop() {
         this.talons[0].set(ControlMode.PercentOutput, 0);
     }
@@ -66,7 +66,7 @@ public class ElevatorSubsystem extends Subsystem {
     public void set(ControlMode controlMode, double value) {
         this.talons[0].set(controlMode, value);
     }
-
+    
     public boolean isZeroed() {
         return this.zeroed;
     }
@@ -79,6 +79,10 @@ public class ElevatorSubsystem extends Subsystem {
     @Override
     protected void initDefaultCommand() {
         this.setDefaultCommand(new ElevatorControlCommand());
+    }
+    
+    public TalonSRX[] getTalons() {
+    	return talons;
     }
 
 }
