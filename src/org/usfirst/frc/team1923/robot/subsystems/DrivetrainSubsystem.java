@@ -130,9 +130,4 @@ public class DrivetrainSubsystem extends Subsystem {
 		return this.imu;
 	}
 
-	public void configMotionMagic() {
-		// TODO
-		
-	}
-
 }

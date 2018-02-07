@@ -4,12 +4,18 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team1923.robot.Robot;
 
 public class DriveDistanceCommand extends Command {
-
+	
+	private double dist;
+    private double target;
 	private double left;
 	private double right;
+	private boolean finished = false;
 
-	public DriveDistanceCommand() {
+	public DriveDistanceCommand(double dist) {
+		requires(Robot.drivetrainsubsystem);
+		this.dist = dist;
 		this(0, 0);
+		finished = true;
 	}
 
 	public DriveDistanceCommand(double left, double right) {
@@ -23,16 +29,20 @@ public class DriveDistanceCommand extends Command {
 	}
 
 	protected void initialize() {
-
+		Robot.drivetrainSubsystem.configMotionMagic();
+        Robot.drivetrainSubsystem.resetPosition();
+        
+        target = DrivetrainSubsystem.distanceToRotations(this.dist);
+        Robot.drivetrainSubsystem.drive(target, target);
 	}
 
 	protected void execute() {
-
+        Robot.drivetrainSubsystem.drive(target, target);
 	}
 
 	@Override
 	protected boolean isFinished() {
-		return false;
+		return finished;
 	}
 
 	protected void end() {
