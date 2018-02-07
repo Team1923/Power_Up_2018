@@ -19,7 +19,7 @@ public class ElevatorControlCommand extends Command {
     }
 
     protected void execute() {
-        Robot.elevatorSubsystem.set(ControlMode.PercentOutput, Robot.oi.operator.getRightY());
+            Robot.elevatorSubsystem.set(ControlMode.PercentOutput, Robot.oi.operator.getRightY());
     }
 
     protected boolean isFinished() {

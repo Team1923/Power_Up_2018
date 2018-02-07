@@ -1,19 +1,20 @@
 package org.usfirst.frc.team1923.robot.commands.drive;
 
-import org.usfirst.frc.team1923.robot.Robot;
-
 import edu.wpi.first.wpilibj.command.Command;
 
-/**
- * Drive the robot based on driver joystick values.
- */
-public class DriveControlCommand extends Command {
+import org.usfirst.frc.team1923.robot.Robot;
 
-    public DriveControlCommand() {
-        this.requires(Robot.drivetrainSubsystem);
+public class RawDriveCommand extends Command {
+
+    public RawDriveCommand() {
+        requires(Robot.drivetrainSubsystem);
     }
 
     @Override
+    public void initialize() {
+
+    }
+    
     public void execute() {
         Robot.drivetrainSubsystem.drive(Robot.oi.driver.getLeftY(), Robot.oi.driver.getRightY());
     }

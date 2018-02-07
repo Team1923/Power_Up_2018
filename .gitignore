@@ -5,6 +5,7 @@ gradle/
 
 .idea/
 .gradle/
+.classpath 
 
 build.gradle
 gradlew
