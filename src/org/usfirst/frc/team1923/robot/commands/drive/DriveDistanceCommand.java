@@ -4,18 +4,22 @@ import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team1923.robot.Robot;
 
 /**
- * Drive the robot forward, in a straight line, for a distance (in inches).
+ * Drive the robot for a distance (in inches) using TalonSRX Motion Magic.
  */
 public class DriveDistanceCommand extends Command {
 
-    private double power;
-    private double distance;
+    private double leftDistance;
+    private double rightDistance;
 
-    public DriveDistanceCommand(double power, double distance) {
+    public DriveDistanceCommand(double distance) {
+        this(distance, distance);
+    }
+
+    public DriveDistanceCommand(double leftDistance, double rightDistance) {
         this.requires(Robot.drivetrainSubsystem);
 
-        this.power = power;
-        this.distance = distance;
+        this.leftDistance = leftDistance;
+        this.rightDistance = rightDistance;
     }
 
     @Override

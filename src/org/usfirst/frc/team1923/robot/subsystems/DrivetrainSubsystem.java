@@ -16,16 +16,9 @@ public class DrivetrainSubsystem extends Subsystem {
     private TalonSRX[] leftTalons;
     private TalonSRX[] rightTalons;
 
-    private ControlMode controlMode;
-
-    private double leftOutput;
-    private double rightOutput;
-
     public DrivetrainSubsystem() {
         this.leftTalons = new TalonSRX[RobotMap.DRIVE_LEFT_TALON_PORTS.length];
         this.rightTalons = new TalonSRX[RobotMap.DRIVE_RIGHT_TALON_PORTS.length];
-
-        this.controlMode = ControlMode.PercentOutput;
 
         for (int i = 0; i < this.leftTalons.length; i++) {
             this.leftTalons[i] = new TalonSRX(RobotMap.DRIVE_LEFT_TALON_PORTS[i]);
@@ -50,19 +43,12 @@ public class DrivetrainSubsystem extends Subsystem {
     }
 
     public void drive(double leftOutput, double rightOutput) {
-        this.leftOutput = leftOutput;
-        this.rightOutput = rightOutput;
-        updateTalons();
+        this.drive(ControlMode.PercentOutput, leftOutput, rightOutput);
     }
 
-    public void setControlMode(ControlMode mode) {
-        this.controlMode = mode;
-        updateTalons();
-    }
-
-    private void updateTalons() {
-        this.leftTalons[0].set(this.controlMode, this.leftOutput);
-        this.rightTalons[0].set(this.controlMode, this.rightOutput);
+    public void drive(ControlMode controlMode, double leftOutput, double rightOutput) {
+        this.leftTalons[0].set(controlMode, leftOutput);
+        this.rightTalons[0].set(controlMode, rightOutput);
     }
 
     public void resetPosition() {
@@ -78,11 +64,11 @@ public class DrivetrainSubsystem extends Subsystem {
         return this.rightTalons[0].getSelectedSensorPosition(0);
     }
 
-    public int getLeftEncPosition() {
+    public int getLeftEncoderPosition() {
         return this.leftTalons[0].getSensorCollection().getPulseWidthPosition();
     }
 
-    public int getRightEncPosition() {
+    public int getRightEncoderPosition() {
         return this.rightTalons[0].getSensorCollection().getPulseWidthPosition();
     }
 
@@ -103,11 +89,11 @@ public class DrivetrainSubsystem extends Subsystem {
         this.setDefaultCommand(new DriveControlCommand());
     }
 
-    public double distanceToRotations(double distance) {
+    public static double distanceToRotations(double distance) {
         return distance / WHEEL_CIRCUMFERENCE;
     }
 
-    public double rotationsToDistance(double rotations) {
+    public static double rotationsToDistance(double rotations) {
         return rotations * WHEEL_CIRCUMFERENCE;
     }
 

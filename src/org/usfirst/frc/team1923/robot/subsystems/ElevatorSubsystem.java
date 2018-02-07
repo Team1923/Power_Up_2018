@@ -58,6 +58,7 @@ public class ElevatorSubsystem extends Subsystem {
         this.talons[0].config_kF(0, K_F, RobotMap.TALON_COMMAND_TIMEOUT);
         this.talons[0].configAllowableClosedloopError(0, ALLOWABLE_ERROR, RobotMap.TALON_COMMAND_TIMEOUT);
     }
+
     public void stop() {
         this.talons[0].set(ControlMode.PercentOutput, 0);
     }
@@ -80,7 +81,7 @@ public class ElevatorSubsystem extends Subsystem {
     }
     
     public TalonSRX[] getTalons() {
-    	return talons;
+        return talons;
     }
 
 }

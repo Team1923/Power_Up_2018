@@ -16,36 +16,36 @@ import org.usfirst.frc.team1923.robot.subsystems.ElevatorSubsystem;
  * Move the elevator to a set position
  */
 public class ElevatorPositionCommand extends Command {
-	private double position;
-	private double target;
-	private int targetEncoderTick;
 
-	public ElevatorPositionCommand(double position) {
-		this.requires(Robot.elevatorSubsystem);
-		this.position = position;
-		SmartDashboard.putNumber("position to run", position);
-	}
+    private double position;
+    private int targetEncoderTick;
 
-	protected void initialize() {
-		this.position = SmartDashboard.getNumber("position to run", position);
-		this.targetEncoderTick = (int) (position * 4000); // to do
-		Robot.elevatorSubsystem.set(ControlMode.MotionMagic, this.targetEncoderTick);
-	}
+    public ElevatorPositionCommand(double position) {
+        this.requires(Robot.elevatorSubsystem);
+        this.position = position;
+        SmartDashboard.putNumber("position to run", position);
+    }
 
-	protected void execute() {
-		// Only for debugging purposes
-	}
+    protected void initialize() {
+        this.position = SmartDashboard.getNumber("position to run", position);
+        this.targetEncoderTick = (int) (position * 4000); // to do
+        Robot.elevatorSubsystem.set(ControlMode.MotionMagic, this.targetEncoderTick);
+    }
 
-	protected boolean isFinished() {
-		return (Math.abs(position - this.targetEncoderTick) < 300 && Math.abs(position - this.targetEncoderTick) < 300);
-	}
+    protected void execute() {
+        // Only for debugging purposes
+    }
 
-	protected void end() {
-		Robot.elevatorSubsystem.stop();
-	}
+    protected boolean isFinished() {
+        return (Math.abs(this.position - this.targetEncoderTick) < 300 && Math.abs(this.position - this.targetEncoderTick) < 300);
+    }
 
-	protected void interrupted() {
-		this.end();
-	}
+    protected void end() {
+        Robot.elevatorSubsystem.stop();
+    }
+
+    protected void interrupted() {
+        this.end();
+    }
 
 }

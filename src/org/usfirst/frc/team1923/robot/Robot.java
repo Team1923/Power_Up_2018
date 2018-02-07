@@ -25,18 +25,19 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
-        this.drivetrainSubsystem = new DrivetrainSubsystem();
-        this.elevatorSubsystem = new ElevatorSubsystem();
-        this.intakeSubsystem = new IntakeSubsystem();
-        this.ledSubsystem = new LEDSubsystem();
+        drivetrainSubsystem = new DrivetrainSubsystem();
+        elevatorSubsystem = new ElevatorSubsystem();
+        intakeSubsystem = new IntakeSubsystem();
+        ledSubsystem = new LEDSubsystem();
 
-        this.oi = new OI();
+        oi = new OI();
 
         SmartDashboard.putData("Autonomous Mode", this.chooser);
     }
 
     @Override
     public void disabledInit() {
+
     }
 
     @Override

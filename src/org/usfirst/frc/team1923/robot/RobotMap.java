@@ -8,18 +8,18 @@ public class RobotMap {
 
     public static final int PCM_MODULE_PORT = 12;
 
-    public static final int[] DRIVE_LEFT_TALON_PORTS = {2, 3, 4};
-    public static final int[] DRIVE_RIGHT_TALON_PORTS = {5, 6, 7};
+    public static final int[] DRIVE_LEFT_TALON_PORTS = {3, 2, 1};
+    public static final int[] DRIVE_RIGHT_TALON_PORTS = {10, 11, 12};
 
-    public static final int[] ELEVATOR_TALON_PORTS = {1, 10};
+    public static final int[] ELEVATOR_TALON_PORTS = {4, 9};
 
-    public static final int INTAKE_LEFT_TALON_PORT = 8;
-    public static final int INTAKE_RIGHT_TALON_PORT = 9;
+    public static final int INTAKE_LEFT_TALON_PORT = 5;
+    public static final int INTAKE_RIGHT_TALON_PORT = 8;
 
-    public static final int INTAKE_LEFT_ULTRASONIC_PING_PORT = 10;
-    public static final int INTAKE_LEFT_ULTRASONIC_ECHO_PORT = 11;
-    public static final int INTAKE_RIGHT_ULTRASONIC_PING_PORT = 10;
-    public static final int INTAKE_RIGHT_ULTRASONIC_ECHO_PORT = 11;
+    public static final int INTAKE_LEFT_ULTRASONIC_PING_PORT = 1;
+    public static final int INTAKE_LEFT_ULTRASONIC_ECHO_PORT = 2;
+    public static final int INTAKE_RIGHT_ULTRASONIC_PING_PORT = 3;
+    public static final int INTAKE_RIGHT_ULTRASONIC_ECHO_PORT = 4;
 
     public static final int INTAKE_SOLENOID_FORWARD_PORT = 1;
     public static final int INTAKE_SOLENOID_REVERSE_PORT = 2;
