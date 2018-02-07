@@ -90,6 +90,4 @@ public class DriveTrajectoryCommand extends Command {
     	Pathfinder.generate(waypoints, config);
     }
   
-  
-  
 }

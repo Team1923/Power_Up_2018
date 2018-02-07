@@ -1,8 +1,8 @@
 package org.usfirst.frc.team1923.robot.commands.drive;
 
-import edu.wpi.first.wpilibj.command.Command;
-
 import org.usfirst.frc.team1923.robot.Robot;
+
+import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * Drive the robot based on driver joystick values.
