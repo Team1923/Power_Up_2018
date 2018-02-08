@@ -15,7 +15,6 @@ public class DriveDistanceCommand extends Command {
 		requires(Robot.drivetrainsubsystem);
 		this.dist = dist;
 		this(0, 0);
-		finished = true;
 	}
 
 	public DriveDistanceCommand(double left, double right) {
@@ -38,6 +37,7 @@ public class DriveDistanceCommand extends Command {
 
 	protected void execute() {
         Robot.drivetrainSubsystem.drive(target, target);
+		finished = true;
 	}
 
 	@Override
