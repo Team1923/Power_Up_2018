@@ -3,6 +3,7 @@ package org.usfirst.frc.team1923.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 import org.usfirst.frc.team1923.robot.RobotMap;
@@ -16,6 +17,8 @@ public class DrivetrainSubsystem extends Subsystem {
     private TalonSRX[] leftTalons;
     private TalonSRX[] rightTalons;
 
+    private PigeonIMU imu;
+
     public DrivetrainSubsystem() {
         this.leftTalons = new TalonSRX[RobotMap.DRIVE_LEFT_TALON_PORTS.length];
         this.rightTalons = new TalonSRX[RobotMap.DRIVE_RIGHT_TALON_PORTS.length];
@@ -27,6 +30,7 @@ public class DrivetrainSubsystem extends Subsystem {
                 this.leftTalons[i].set(ControlMode.Follower, RobotMap.DRIVE_LEFT_TALON_PORTS[0]);
             }
 
+            this.leftTalons[i].setInverted(true);
             this.configureTalon(this.leftTalons[i]);
         }
 
@@ -37,9 +41,10 @@ public class DrivetrainSubsystem extends Subsystem {
                 this.rightTalons[i].set(ControlMode.Follower, RobotMap.DRIVE_RIGHT_TALON_PORTS[0]);
             }
 
-            this.rightTalons[i].setInverted(true);
             this.configureTalon(this.rightTalons[i]);
         }
+
+        this.imu = new PigeonIMU(RobotMap.PIGEON_IMU_PORT);
     }
 
     public void drive(double leftOutput, double rightOutput) {
@@ -84,11 +89,19 @@ public class DrivetrainSubsystem extends Subsystem {
         this.drive(0, 0);
     }
 
+    public double getHeading() {
+        return this.imu.getFusedHeading();
+    }
+
+    public void resetHeading() {
+        this.imu.setFusedHeading(0, 10);
+    }
+
     @Override
     protected void initDefaultCommand() {
         this.setDefaultCommand(new DriveControlCommand());
     }
-
+ 
     public static double distanceToRotations(double distance) {
         return distance / WHEEL_CIRCUMFERENCE;
     }
@@ -103,8 +116,12 @@ public class DrivetrainSubsystem extends Subsystem {
         talon.configPeakOutputForward(1, RobotMap.TALON_COMMAND_TIMEOUT);
         talon.configPeakOutputReverse(-1, RobotMap.TALON_COMMAND_TIMEOUT);
 
-        talon.configMotionAcceleration(500, RobotMap.TALON_COMMAND_TIMEOUT);
-        talon.configMotionCruiseVelocity(800, RobotMap.TALON_COMMAND_TIMEOUT);
+        talon.configMotionAcceleration(800, RobotMap.TALON_COMMAND_TIMEOUT);
+        talon.configMotionCruiseVelocity(1600, RobotMap.TALON_COMMAND_TIMEOUT);
+
+        talon.config_kP(0, 0.455, RobotMap.TALON_COMMAND_TIMEOUT);
+        talon.config_kI(0, 0.001, RobotMap.TALON_COMMAND_TIMEOUT);
+        talon.config_kD(0, 0.000,RobotMap.TALON_COMMAND_TIMEOUT);
     }
 
 }

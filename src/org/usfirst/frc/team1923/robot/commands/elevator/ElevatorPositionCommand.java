@@ -18,18 +18,13 @@ import org.usfirst.frc.team1923.robot.subsystems.ElevatorSubsystem;
 public class ElevatorPositionCommand extends Command {
 
     private double position;
-    private int targetEncoderTick;
 
     public ElevatorPositionCommand(double position) {
         this.requires(Robot.elevatorSubsystem);
-        this.position = position;
-        SmartDashboard.putNumber("position to run", position);
     }
 
     protected void initialize() {
-        this.position = SmartDashboard.getNumber("position to run", position);
-        this.targetEncoderTick = (int) (position * 4000); // to do
-        Robot.elevatorSubsystem.set(ControlMode.MotionMagic, this.targetEncoderTick);
+        Robot.elevatorSubsystem.set(ControlMode.MotionMagic, this.position);
     }
 
     protected void execute() {
@@ -37,7 +32,7 @@ public class ElevatorPositionCommand extends Command {
     }
 
     protected boolean isFinished() {
-        return (Math.abs(this.position - this.targetEncoderTick) < 300 && Math.abs(this.position - this.targetEncoderTick) < 300);
+        return false;
     }
 
     protected void end() {

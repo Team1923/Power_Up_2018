@@ -1,23 +1,22 @@
 package org.usfirst.frc.team1923.robot.commands.elevator;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-
 import edu.wpi.first.wpilibj.command.Command;
-
 import org.usfirst.frc.team1923.robot.Robot;
 
-/**
- * Change elevator position based on operator joystick values.
- */
-public class ElevatorControlCommand extends Command {
+public class ElevatorMoveCommand extends Command {
 
-    public ElevatorControlCommand() {
+    private double out;
+
+    public ElevatorMoveCommand(double out) {
         this.requires(Robot.elevatorSubsystem);
+
+        this.out = out;
     }
 
     @Override
     protected void execute() {
-        // Robot.elevatorSubsystem.set(ControlMode.PercentOutput, Robot.oi.operator.getRightY());
+        Robot.elevatorSubsystem.set(ControlMode.PercentOutput, this.out);
     }
 
     @Override

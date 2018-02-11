@@ -11,6 +11,8 @@ public class RobotMap {
     public static final int[] DRIVE_LEFT_TALON_PORTS = {3, 2, 1};
     public static final int[] DRIVE_RIGHT_TALON_PORTS = {10, 11, 12};
 
+    public static final int PIGEON_IMU_PORT = 10;
+
     public static final int[] ELEVATOR_TALON_PORTS = {4, 9};
 
     public static final int INTAKE_LEFT_TALON_PORT = 5;
@@ -26,5 +28,10 @@ public class RobotMap {
 
     // Variables
     public static final int TALON_COMMAND_TIMEOUT = 10;
+
+    public static final String TRAJECTORY_STORE_DIR = "/tmp/trajectories";
+
+    public static final double ROBOT_WHEELBASE_WIDTH = 27.50;
+    public static final double ROBOT_WHEEL_DIAMETER = 6.00;
 
 }
