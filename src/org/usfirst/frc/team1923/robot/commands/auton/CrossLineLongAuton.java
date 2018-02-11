@@ -6,7 +6,7 @@ import org.usfirst.frc.team1923.robot.commands.drive.DriveDistanceCommand;
 public class CrossLineLongAuton extends CommandGroup implements AutonCommand {
 
     public CrossLineLongAuton() {
-        this.addSequential(new DriveDistanceCommand(150));
+        this.addSequential(new DriveDistanceCommand(280));
     }
 
     @Override
