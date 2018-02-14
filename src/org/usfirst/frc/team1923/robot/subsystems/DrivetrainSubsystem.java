@@ -6,18 +6,21 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team1923.robot.Measurement;
 import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.commands.drive.DriveControlCommand;
+import org.usfirst.frc.team1923.robot.utils.EncoderCalculator;
 
 public class DrivetrainSubsystem extends Subsystem {
-
-    private static final double WHEEL_DIAMETER = 6;
-    private static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
 
     private TalonSRX[] leftTalons;
     private TalonSRX[] rightTalons;
 
     private PigeonIMU imu;
+
+    private EncoderCalculator leftEncoder;
+    private EncoderCalculator rightEncoder;
 
     public DrivetrainSubsystem() {
         this.leftTalons = new TalonSRX[RobotMap.DRIVE_LEFT_TALON_PORTS.length];
@@ -45,6 +48,20 @@ public class DrivetrainSubsystem extends Subsystem {
         }
 
         this.imu = new PigeonIMU(RobotMap.PIGEON_IMU_PORT);
+
+        this.leftEncoder = new EncoderCalculator();
+        this.rightEncoder = new EncoderCalculator();
+    }
+
+    public void tick() {
+        this.leftEncoder.calculate(this.getLeftEncoderPosition());
+        this.rightEncoder.calculate(this.getRightEncoderPosition());
+
+        SmartDashboard.putNumber("Left DT Velocity", this.leftEncoder.getVelocity());
+        SmartDashboard.putNumber("Left DT Acceleration", this.leftEncoder.getAcceleration());
+
+        SmartDashboard.putNumber("Right DT Velocity", this.rightEncoder.getVelocity());
+        SmartDashboard.putNumber("Right DT Acceleration", this.rightEncoder.getAcceleration());
     }
 
     public void drive(double leftOutput, double rightOutput) {
@@ -59,6 +76,12 @@ public class DrivetrainSubsystem extends Subsystem {
     public void resetPosition() {
         this.leftTalons[0].setSelectedSensorPosition(0, 0, RobotMap.TALON_COMMAND_TIMEOUT);
         this.rightTalons[0].setSelectedSensorPosition(0, 0, RobotMap.TALON_COMMAND_TIMEOUT);
+
+        this.leftTalons[0].getSensorCollection().setPulseWidthPosition(0, RobotMap.TALON_COMMAND_TIMEOUT);
+        this.leftTalons[0].getSensorCollection().setQuadraturePosition(0, RobotMap.TALON_COMMAND_TIMEOUT);
+
+        this.rightTalons[0].getSensorCollection().setPulseWidthPosition(0, RobotMap.TALON_COMMAND_TIMEOUT);
+        this.rightTalons[0].getSensorCollection().setQuadraturePosition(0, RobotMap.TALON_COMMAND_TIMEOUT);
     }
 
     public double getLeftPosition() {
@@ -70,11 +93,11 @@ public class DrivetrainSubsystem extends Subsystem {
     }
 
     public int getLeftEncoderPosition() {
-        return this.leftTalons[0].getSensorCollection().getPulseWidthPosition();
+        return this.leftTalons[0].getSensorCollection().getQuadraturePosition();
     }
 
     public int getRightEncoderPosition() {
-        return this.rightTalons[0].getSensorCollection().getPulseWidthPosition();
+        return this.rightTalons[0].getSensorCollection().getQuadraturePosition();
     }
 
     public double getLeftError() {
@@ -103,11 +126,11 @@ public class DrivetrainSubsystem extends Subsystem {
     }
  
     public static double distanceToRotations(double distance) {
-        return distance / WHEEL_CIRCUMFERENCE;
+        return distance / (Measurement.ROBOT_WHEEL_DIAMETER.inInches() * Math.PI);
     }
 
     public static double rotationsToDistance(double rotations) {
-        return rotations * WHEEL_CIRCUMFERENCE;
+        return rotations * (Measurement.ROBOT_WHEEL_DIAMETER.inInches() * Math.PI);
     }
 
     private void configureTalon(TalonSRX talon) {

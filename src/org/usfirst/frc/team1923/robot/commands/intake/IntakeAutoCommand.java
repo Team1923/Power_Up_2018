@@ -25,11 +25,12 @@ public class IntakeAutoCommand extends TimedCommand {
 
     @Override
     protected void execute() {
+
     }
 
     @Override
     protected boolean isFinished() {
-        return Robot.oi.operator.getLeftTrigger() > 0.3 || Robot.oi.operator.getRightTrigger() > 0.3 || Robot.intakeSubsystem.isSecure() || super.isFinished();
+        return Robot.intakeSubsystem.isSecure() || super.isFinished();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1923.robot.commands.drive;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team1923.robot.Robot;
 
@@ -12,6 +11,11 @@ public class DriveControlCommand extends Command {
 
     public DriveControlCommand() {
         this.requires(Robot.drivetrainSubsystem);
+    }
+    
+    @Override
+    protected void initialize() {
+
     }
 
     @Override

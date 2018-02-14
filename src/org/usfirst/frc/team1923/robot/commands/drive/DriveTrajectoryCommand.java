@@ -6,8 +6,8 @@ import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.followers.EncoderFollower;
 import jaci.pathfinder.modifiers.TankModifier;
+import org.usfirst.frc.team1923.robot.Measurement;
 import org.usfirst.frc.team1923.robot.Robot;
-import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.utils.pathfinder.TrajectoryStore;
 
 public class DriveTrajectoryCommand extends Command {
@@ -25,6 +25,8 @@ public class DriveTrajectoryCommand extends Command {
     	this.requires(Robot.drivetrainSubsystem);
     	
     	this.trajectory = trajectory;
+    	
+    	System.out.println("Max V: " + TrajectoryStore.trajectoryConfig.max_velocity);
     }
 
     @Override
@@ -38,15 +40,15 @@ public class DriveTrajectoryCommand extends Command {
     		e.printStackTrace();
     	}
     	
-        TankModifier modifier = new TankModifier(this.trajectory).modify(RobotMap.ROBOT_WHEELBASE_WIDTH);
+        TankModifier modifier = new TankModifier(this.trajectory).modify(Measurement.ROBOT_WHEELBASE_WIDTH.inMeters());
 
         this.leftFollower = new EncoderFollower(modifier.getLeftTrajectory());
-        this.leftFollower.configureEncoder(Robot.drivetrainSubsystem.getLeftEncoderPosition(), 4096, RobotMap.ROBOT_WHEEL_DIAMETER);  
-        this.leftFollower.configurePIDVA(0.1, 0.001, 0, 0, 0);
+        this.leftFollower.configureEncoder(Robot.drivetrainSubsystem.getLeftEncoderPosition(), 4096, Measurement.ROBOT_WHEEL_DIAMETER.inMeters());
+        this.leftFollower.configurePIDVA(0.00, 0, 0, Measurement.DRIVETRAIN_VELOCIY_CONSTANT, 0);
 
         this.rightFollower = new EncoderFollower(modifier.getRightTrajectory());
-        this.rightFollower.configureEncoder(Robot.drivetrainSubsystem.getRightEncoderPosition(), 4096, RobotMap.ROBOT_WHEEL_DIAMETER);
-        this.rightFollower.configurePIDVA(0.1, 0.001, 0, 0, 0);
+        this.rightFollower.configureEncoder(Robot.drivetrainSubsystem.getRightEncoderPosition(), 4096, Measurement.ROBOT_WHEEL_DIAMETER.inMeters());
+        this.rightFollower.configurePIDVA(0.00, 0, 0, Measurement.DRIVETRAIN_VELOCIY_CONSTANT, 0);
     }
 
     @Override
@@ -57,11 +59,11 @@ public class DriveTrajectoryCommand extends Command {
         double headingError = Pathfinder.boundHalfDegrees(Pathfinder.r2d(this.leftFollower.getHeading()) - Robot.drivetrainSubsystem.getHeading());
         double turnOutput = 0.8 * (-1.0 / 80.0) * headingError;
         
-        System.out.println("LO" + leftOutput + ", RO: " + rightOutput + ", TO: " + turnOutput);
+        System.out.println("LO" + leftOutput + ", RO: " + rightOutput + ", TO: " + turnOutput + ", Button State: " + Robot.oi.driver.circle.get());
         
-        turnOutput = 0;
+        // turnOutput = 0;
 
-        // Robot.drivetrainSubsystem.drive(ControlMode.PercentOutput, leftOutput + turnOutput, rightOutput - turnOutput);
+        Robot.drivetrainSubsystem.drive(ControlMode.PercentOutput, leftOutput + turnOutput, rightOutput - turnOutput);
     }
 
     @Override

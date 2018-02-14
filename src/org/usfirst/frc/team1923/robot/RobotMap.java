@@ -31,7 +31,4 @@ public class RobotMap {
 
     public static final String TRAJECTORY_STORE_DIR = "/tmp/trajectories";
 
-    public static final double ROBOT_WHEELBASE_WIDTH = 27.50;
-    public static final double ROBOT_WHEEL_DIAMETER = 6.00;
-
 }

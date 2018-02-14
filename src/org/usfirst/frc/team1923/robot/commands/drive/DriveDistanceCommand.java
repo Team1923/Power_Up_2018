@@ -26,29 +26,17 @@ public class DriveDistanceCommand extends Command {
 
     @Override
     protected void initialize() {
-    	System.out.println("init");
-    	
-    	try {
-    		Robot.drivetrainSubsystem.resetPosition();
-    		
-    		Thread.sleep(250);
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
+        Robot.drivetrainSubsystem.resetPosition();
     }
 
     @Override
     protected void execute() {
     	Robot.drivetrainSubsystem.drive(ControlMode.MotionMagic, this.leftTarget, this.rightTarget);
-    	
-        System.out.println("LCE: " + Robot.drivetrainSubsystem.getLeftError() + "\tRCE:" + Robot.drivetrainSubsystem.getRightError() + "\tLCE-RCE: " + (Robot.drivetrainSubsystem.getLeftError() - Robot.drivetrainSubsystem.getRightError())
-                + "\tLTE: " + (this.leftTarget - Robot.drivetrainSubsystem.getLeftPosition()) + "\tRTE: " + (this.rightTarget - Robot.drivetrainSubsystem.getRightPosition())
-        );
     }
 
     @Override
     protected boolean isFinished() {
-    	if (Robot.oi.driver.circle.get()) {
+    	if (Robot.oi.driver.cross.get()) {
     		return false;
     	}
     	

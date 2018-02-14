@@ -3,6 +3,7 @@ package org.usfirst.frc.team1923.robot.utils.pathfinder;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
+import org.usfirst.frc.team1923.robot.Measurement;
 import org.usfirst.frc.team1923.robot.RobotMap;
 
 import java.io.File;
@@ -14,10 +15,10 @@ public class TrajectoryStore {
 
     public static Trajectory.Config trajectoryConfig = new Trajectory.Config(
             Trajectory.FitMethod.HERMITE_QUINTIC,
-            Trajectory.Config.SAMPLES_HIGH,
+            Trajectory.Config.SAMPLES_LOW,
             0.05,
-            2.00,
-            2.00,
+            Measurement.ROBOT_MAX_VELOCITY.inMeters(),
+            Measurement.ROBOT_MAX_ACCELERATION.inMeters(),
             60.00
     );
 
@@ -49,7 +50,7 @@ public class TrajectoryStore {
         if (!trajectoryFile.exists()) {
             trajectory = Pathfinder.generate(waypoints.getWaypoints(), trajectoryConfig);
 
-            // Pathfinder.writeToFile(trajectoryFile, trajectory);
+            Pathfinder.writeToFile(trajectoryFile, trajectory);
         } else {
             trajectory = Pathfinder.readFromFile(trajectoryFile);
         }
@@ -90,43 +91,11 @@ public class TrajectoryStore {
         }
     }
 
-    final double length = 32.5;
-    final double width = 27.5;
-    final double bumpers = 6.25;
-
     public static enum Waypoints {
 
         STRAIGHT_2M(new Waypoint[] {
                 new Waypoint(0, 0, 0),
-                new Waypoint(0, 3, 0)
-        }),
-
-//        LEFT_LSWITCH(new Waypoint[]{
-//            new Waypoint(0, 0, 0),
-//            new Waypoint(3.404826, 0, 90),
-//        }),
-//
-//        LEFT_LSCALE(new Waypoint[] {
-//            new Waypoint(0, 0, 0),
-//            new Waypoint(7.4041, 0, 90)
-//        }),
-
-        CENTER_LSWITCH(new Waypoint[] {
-            new Waypoint(0, 0, 0),
-        }),
-
-        CENTER_RSWITCH(new Waypoint[] {
-            new Waypoint(0, 0, 0),
-        }),
-
-        RIGHT_RSWITCH(new Waypoint[] {
-            new Waypoint(0, 0, 0),
-
-        }),
-
-        RIGHT_RSCALE(new Waypoint[] {
-            new Waypoint(0, 0, 0),
-
+                new Waypoint(2, 0, 0)
         });
 
         private final Waypoint[] waypoints;
