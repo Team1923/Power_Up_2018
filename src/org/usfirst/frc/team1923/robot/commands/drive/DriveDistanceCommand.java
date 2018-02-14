@@ -40,7 +40,7 @@ public class DriveDistanceCommand extends Command {
             return false;
         }
         
-        return Math.abs(this.leftTarget - Robot.drivetrainSubsystem.getLeftPosition()) < 300 ||
+        return Math.abs(this.leftTarget - Robot.drivetrainSubsystem.getLeftEncoderPosition()) < 300 ||
                 Math.abs(this.rightTarget - Robot.drivetrainSubsystem.getRightEncoderPosition()) < 300;
     }
 

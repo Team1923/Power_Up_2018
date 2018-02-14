@@ -74,22 +74,8 @@ public class DrivetrainSubsystem extends Subsystem {
     }
 
     public void resetPosition() {
-        this.leftTalons[0].setSelectedSensorPosition(0, 0, RobotMap.TALON_COMMAND_TIMEOUT);
-        this.rightTalons[0].setSelectedSensorPosition(0, 0, RobotMap.TALON_COMMAND_TIMEOUT);
-
         this.leftTalons[0].getSensorCollection().setPulseWidthPosition(0, RobotMap.TALON_COMMAND_TIMEOUT);
-        this.leftTalons[0].getSensorCollection().setQuadraturePosition(0, RobotMap.TALON_COMMAND_TIMEOUT);
-
-        this.rightTalons[0].getSensorCollection().setPulseWidthPosition(0, RobotMap.TALON_COMMAND_TIMEOUT);
         this.rightTalons[0].getSensorCollection().setQuadraturePosition(0, RobotMap.TALON_COMMAND_TIMEOUT);
-    }
-
-    public double getLeftPosition() {
-        return this.leftTalons[0].getSelectedSensorPosition(0);
-    }
-
-    public double getRightPosition() {
-        return this.rightTalons[0].getSelectedSensorPosition(0);
     }
 
     public int getLeftEncoderPosition() {
@@ -127,10 +113,6 @@ public class DrivetrainSubsystem extends Subsystem {
  
     public static double distanceToRotations(double distance) {
         return distance / (Measurement.ROBOT_WHEEL_DIAMETER.inInches() * Math.PI);
-    }
-
-    public static double rotationsToDistance(double rotations) {
-        return rotations * (Measurement.ROBOT_WHEEL_DIAMETER.inInches() * Math.PI);
     }
 
     private void configureTalon(TalonSRX talon) {
