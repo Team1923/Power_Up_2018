@@ -1,8 +1,5 @@
 package org.usfirst.frc.team1923.robot;
 
-import org.usfirst.frc.team1923.robot.commands.intake.IntakeCloseCommand;
-import org.usfirst.frc.team1923.robot.commands.intake.IntakeOpenCommand;
-import org.usfirst.frc.team1923.robot.commands.led.LEDOnCommand;
 import org.usfirst.frc.team1923.robot.utils.controller.PS4Controller;
 import org.usfirst.frc.team1923.robot.utils.controller.XboxController;
 
@@ -19,11 +16,6 @@ public class OI {
         this.operator = new XboxController(RobotMap.OPERATOR_CONTROLLER_PORT);
         this.operator.leftTrigger.setTriggerSensitivity(0.5);
         this.operator.rightTrigger.setTriggerSensitivity(0.5);
-
-        this.operator.leftButton.whenPressed(new IntakeOpenCommand());
-        this.operator.rightButton.whenPressed(new IntakeCloseCommand());
-
-        this.driver.square.whileHeld(new LEDOnCommand());
     }
 
 }

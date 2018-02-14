@@ -1,26 +1,22 @@
-package org.usfirst.frc.team1923.robot.commands.drive;
+package org.usfirst.frc.team1923.robot.commands.auton;
 
 import edu.wpi.first.wpilibj.command.Command;
-
 import org.usfirst.frc.team1923.robot.Robot;
 
-/**
- * Drive the robot based on driver joystick values.
- */
-public class DriveControlCommand extends Command {
+public class DoNothingAuton extends Command implements AutonCommand {
 
-    public DriveControlCommand() {
+    public DoNothingAuton() {
         this.requires(Robot.drivetrainSubsystem);
     }
-    
+
     @Override
     protected void initialize() {
-
+        Robot.drivetrainSubsystem.stop();
     }
 
     @Override
     protected void execute() {
-        Robot.drivetrainSubsystem.drive(Robot.oi.driver.getLeftY(), Robot.oi.driver.getRightY());
+
     }
 
     @Override
@@ -36,6 +32,11 @@ public class DriveControlCommand extends Command {
     @Override
     protected void interrupted() {
         Robot.drivetrainSubsystem.stop();
+    }
+
+    @Override
+    public boolean isPossible(AllianceColorSide allianceSwitch, AllianceColorSide scale, AllianceColorSide opposingSwitch) {
+        return true;
     }
 
 }

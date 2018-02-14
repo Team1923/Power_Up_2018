@@ -1,40 +1,37 @@
 package org.usfirst.frc.team1923.robot.commands.elevator;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-
 import edu.wpi.first.wpilibj.command.Command;
-
 import org.usfirst.frc.team1923.robot.Robot;
 
-/**
- * Move the elevator to a set position
- */
-public class ElevatorPositionCommand extends Command {
+public class ElevatorMoveCommand extends Command {
 
-    private double position;
+    private double out;
 
-    public ElevatorPositionCommand(double position) {
+    public ElevatorMoveCommand(double out) {
         this.requires(Robot.elevatorSubsystem);
+
+        this.out = out;
     }
 
-    protected void initialize() {
-        Robot.elevatorSubsystem.set(ControlMode.MotionMagic, this.position);
-    }
-
+    @Override
     protected void execute() {
-
+        Robot.elevatorSubsystem.set(ControlMode.PercentOutput, this.out);
     }
 
+    @Override
     protected boolean isFinished() {
         return false;
     }
 
+    @Override
     protected void end() {
         Robot.elevatorSubsystem.stop();
     }
 
+    @Override
     protected void interrupted() {
-        this.end();
+        Robot.elevatorSubsystem.stop();
     }
 
 }

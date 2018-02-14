@@ -10,6 +10,7 @@ import org.usfirst.frc.team1923.robot.subsystems.DrivetrainSubsystem;
 import org.usfirst.frc.team1923.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team1923.robot.subsystems.IntakeSubsystem;
 import org.usfirst.frc.team1923.robot.subsystems.LEDSubsystem;
+import org.usfirst.frc.team1923.robot.utils.pathfinder.TrajectoryStore;
 
 public class Robot extends TimedRobot {
 
@@ -25,6 +26,12 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
+        System.out.println("Loading trajectories...");
+
+        TrajectoryStore.loadTrajectories();
+
+        System.out.println("Loaded all trajectories.");
+
         drivetrainSubsystem = new DrivetrainSubsystem();
         elevatorSubsystem = new ElevatorSubsystem();
         intakeSubsystem = new IntakeSubsystem();
@@ -35,6 +42,12 @@ public class Robot extends TimedRobot {
         SmartDashboard.putData("Autonomous Mode", this.chooser);
     }
 
+    private void periodic() {
+        Scheduler.getInstance().run();
+
+        drivetrainSubsystem.tick();
+    }
+
     @Override
     public void disabledInit() {
 
@@ -42,7 +55,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-        Scheduler.getInstance().run();
+        this.periodic();
     }
 
     @Override
@@ -56,7 +69,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-        Scheduler.getInstance().run();
+        this.periodic();
     }
 
     @Override
@@ -69,11 +82,12 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        Scheduler.getInstance().run();
+        this.periodic();
     }
 
     @Override
     public void testPeriodic() {
+
     }
 
 }
