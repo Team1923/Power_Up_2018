@@ -22,24 +22,24 @@ public class DriveTrajectoryCommand extends Command {
     }
     
     public DriveTrajectoryCommand(Trajectory trajectory) {
-    	this.requires(Robot.drivetrainSubsystem);
-    	
-    	this.trajectory = trajectory;
-    	
-    	System.out.println("Max V: " + TrajectoryStore.trajectoryConfig.max_velocity);
+        this.requires(Robot.drivetrainSubsystem);
+        
+        this.trajectory = trajectory;
+        
+        System.out.println("Max V: " + TrajectoryStore.trajectoryConfig.max_velocity);
     }
 
     @Override
     protected void initialize() {
-    	Robot.drivetrainSubsystem.resetHeading();
-    	Robot.drivetrainSubsystem.resetPosition();
-    	
-    	try {
-    		Thread.sleep(250);
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    	}
-    	
+        Robot.drivetrainSubsystem.resetHeading();
+        Robot.drivetrainSubsystem.resetPosition();
+        
+        try {
+            Thread.sleep(250);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
         TankModifier modifier = new TankModifier(this.trajectory).modify(Measurement.ROBOT_WHEELBASE_WIDTH.inMeters());
 
         this.leftFollower = new EncoderFollower(modifier.getLeftTrajectory());

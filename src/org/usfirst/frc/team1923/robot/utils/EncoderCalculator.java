@@ -18,7 +18,7 @@ public class EncoderCalculator {
     public void calculate(int encoderValue) {
         double dt = (this.getTime() - this.timestamp) / 1000.0;
 
-        if (dt < 500) {
+        if (dt < 0.5) {
             return;
         }
 

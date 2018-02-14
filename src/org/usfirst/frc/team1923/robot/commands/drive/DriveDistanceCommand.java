@@ -31,17 +31,17 @@ public class DriveDistanceCommand extends Command {
 
     @Override
     protected void execute() {
-    	Robot.drivetrainSubsystem.drive(ControlMode.MotionMagic, this.leftTarget, this.rightTarget);
+        Robot.drivetrainSubsystem.drive(ControlMode.MotionMagic, this.leftTarget, this.rightTarget);
     }
 
     @Override
     protected boolean isFinished() {
-    	if (Robot.oi.driver.cross.get()) {
-    		return false;
-    	}
-    	
+        if (Robot.oi.driver.cross.get()) {
+            return false;
+        }
+        
         return Math.abs(this.leftTarget - Robot.drivetrainSubsystem.getLeftPosition()) < 300 ||
-        		Math.abs(this.rightTarget - Robot.drivetrainSubsystem.getRightEncoderPosition()) < 300;
+                Math.abs(this.rightTarget - Robot.drivetrainSubsystem.getRightEncoderPosition()) < 300;
     }
 
     @Override

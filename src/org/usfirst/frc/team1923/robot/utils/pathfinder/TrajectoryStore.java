@@ -62,10 +62,10 @@ public class TrajectoryStore {
 
     public static void loadTrajectories() {
         for (Waypoints waypoints : Waypoints.values()) {
-        	if (waypoints.getWaypoints().length < 2) {
-        		continue;
-        	}
-        	
+            if (waypoints.getWaypoints().length < 2) {
+                continue;
+            }
+            
             loadTrajectory(waypoints);
         }
     }
