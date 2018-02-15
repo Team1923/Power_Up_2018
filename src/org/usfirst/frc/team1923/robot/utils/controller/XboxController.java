@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class XboxController extends Controller {
 
-    private static final double TRIGGER_DEADZONE = 0.05;
+    private static final double TRIGGER_DEADZONE = 0.2;
 
     private static final int A_BUTTON_ID = 1;
     private static final int B_BUTTON_ID = 2;

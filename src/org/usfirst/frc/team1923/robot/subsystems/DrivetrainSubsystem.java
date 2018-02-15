@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1923.robot.Measurement;
+import org.usfirst.frc.team1923.robot.Robot;
 import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.commands.drive.DriveControlCommand;
 import org.usfirst.frc.team1923.robot.utils.EncoderCalculator;
@@ -33,6 +34,7 @@ public class DrivetrainSubsystem extends Subsystem {
                 this.leftTalons[i].set(ControlMode.Follower, RobotMap.DRIVE_LEFT_TALON_PORTS[0]);
             }
 
+            this.leftTalons[i].setSensorPhase(true);
             this.leftTalons[i].setInverted(true);
             this.configureTalon(this.leftTalons[i]);
         }
@@ -51,17 +53,6 @@ public class DrivetrainSubsystem extends Subsystem {
 
         this.leftEncoder = new EncoderCalculator();
         this.rightEncoder = new EncoderCalculator();
-    }
-
-    public void tick() {
-        this.leftEncoder.calculate(this.getLeftEncoderPosition());
-        this.rightEncoder.calculate(this.getRightEncoderPosition());
-
-        SmartDashboard.putNumber("Left DT Velocity", this.leftEncoder.getVelocity());
-        SmartDashboard.putNumber("Left DT Acceleration", this.leftEncoder.getAcceleration());
-
-        SmartDashboard.putNumber("Right DT Velocity", this.rightEncoder.getVelocity());
-        SmartDashboard.putNumber("Right DT Acceleration", this.rightEncoder.getAcceleration());
     }
 
     public void drive(double leftOutput, double rightOutput) {
@@ -86,14 +77,6 @@ public class DrivetrainSubsystem extends Subsystem {
         return this.rightTalons[0].getSensorCollection().getQuadraturePosition();
     }
 
-    public double getLeftError() {
-        return this.leftTalons[0].getClosedLoopError(0);
-    }
-
-    public double getRightError() {
-        return this.rightTalons[0].getClosedLoopError(0);
-    }
-
     public void stop() {
         this.drive(0, 0);
     }
@@ -104,6 +87,21 @@ public class DrivetrainSubsystem extends Subsystem {
 
     public void resetHeading() {
         this.imu.setFusedHeading(0, 10);
+    }
+
+    @Override
+    public void periodic() {
+        this.leftEncoder.calculate(this.getLeftEncoderPosition());
+        this.rightEncoder.calculate(this.getRightEncoderPosition());
+
+        SmartDashboard.putNumber("Left DT Velocity", this.leftEncoder.getVelocity());
+        SmartDashboard.putNumber("Left DT Accel.", this.leftEncoder.getAcceleration());
+
+        SmartDashboard.putNumber("Right DT Velocity", this.rightEncoder.getVelocity());
+        SmartDashboard.putNumber("Right DT Accel.", this.rightEncoder.getAcceleration());
+
+        SmartDashboard.putNumber("Left Encoder", Robot.drivetrainSubsystem.getLeftEncoderPosition());
+        SmartDashboard.putNumber("Right Encoder", Robot.drivetrainSubsystem.getRightEncoderPosition());
     }
 
     @Override
@@ -127,6 +125,9 @@ public class DrivetrainSubsystem extends Subsystem {
         talon.config_kP(0, 0.455, RobotMap.TALON_COMMAND_TIMEOUT);
         talon.config_kI(0, 0.001, RobotMap.TALON_COMMAND_TIMEOUT);
         talon.config_kD(0, 0.000,RobotMap.TALON_COMMAND_TIMEOUT);
+
+        talon.enableVoltageCompensation(true);
+        talon.configVoltageCompSaturation(11.5, RobotMap.TALON_COMMAND_TIMEOUT);
     }
 
 }

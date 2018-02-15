@@ -15,8 +15,8 @@ public class IntakeControlCommand extends Command {
 
     @Override
     protected void execute() {
-        Robot.intakeSubsystem.intakeLeft(Robot.oi.operator.leftTrigger.getX());
-        Robot.intakeSubsystem.intakeRight(Robot.oi.operator.rightTrigger.getX());
+        Robot.intakeSubsystem.intakeLeft(Robot.oi.operator.getLeftY());
+        Robot.intakeSubsystem.intakeRight(Robot.oi.operator.getRightY());
     }
 
     @Override
