@@ -5,7 +5,10 @@ import org.usfirst.frc.team1923.robot.autonomous.Autonomous;
 import org.usfirst.frc.team1923.robot.commands.drive.DriveDistanceCommand;
 
 @Autonomous(
-        startingPosition = { Autonomous.Side.LEFT, Autonomous.Side.RIGHT }
+        name = "Cross the Line Long",
+        description = "Drive forward 280 inches",
+        startingPosition = { Autonomous.Side.LEFT, Autonomous.Side.RIGHT },
+        defaultPriority = 75
 )
 public class CrossLineLongAuton extends CommandGroup {
 
