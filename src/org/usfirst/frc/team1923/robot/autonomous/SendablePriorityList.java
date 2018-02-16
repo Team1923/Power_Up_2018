@@ -6,25 +6,32 @@ import edu.wpi.first.wpilibj.SendableBase;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
+
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.List;
+//import java.util.Arrays;
+import java.util.Collections;
 
 public class SendablePriorityList extends SendableBase implements Sendable {
 
-    private List<String> items = new ArrayList();
+    private Map<String, Command> items = new LinkedHashMap();
     private NetworkTableEntry values;
 
     public void add(Command... commands) {
         for (Command command : commands) {
-            this.items.add(command.getClass().getAnnotation(Autonomous.class).name());
+            this.items.put(command.getClass().getAnnotation(Autonomous.class).name(), command);
         }
     }
     
-    public List<String> getOrder() {
+    public List<Command> getOrder() {
         if (this.values != null) {
-            return Arrays.asList(values.getStringArray(new String[0]));
+            List<Command> commands = new ArrayList<>();
+            for (String commandName : values.getStringArray(new String[0])) {
+                commands.add(this.items.get(commandName));
+            }
+            return commands;
         } else {
             return Collections.emptyList();
         }
@@ -34,7 +41,7 @@ public class SendablePriorityList extends SendableBase implements Sendable {
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("Priority List");
         builder.addStringArrayProperty("values", () -> {
-            return items.toArray(new String[0]);
+            return this.items.keySet().toArray(new String[0]);
         }, null);
         this.values = builder.getEntry("values");
     }
