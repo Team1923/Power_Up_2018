@@ -5,7 +5,8 @@ import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.SendableBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class SendablePriorityList extends SendableBase implements Sendable {
@@ -19,9 +20,9 @@ public class SendablePriorityList extends SendableBase implements Sendable {
 
     public List<String> getOrder() {
         if (this.values != null) {
-            return values.getStringArray(new String[0]);
+            return Arrays.asList(values.getStringArray(new String[0]));
         } else {
-            return new String[0];
+            return Collections.emptyList();
         }
     }
     
