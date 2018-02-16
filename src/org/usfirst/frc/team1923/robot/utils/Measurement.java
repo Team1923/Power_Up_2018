@@ -24,19 +24,51 @@ public enum Measurement {
     }
 
     public double inFeet() {
-        return this.inches / 12.0;
+        return inchesToFeet(this.inches);
     }
 
-    public double inMeters() {
-        return this.inches * 0.0254;
+    public double inMillimeters() {
+        return inchesToMillimeters(this.inches);
     }
 
     public double inCentimeters() {
-        return this.inMeters() * 100.0;
+        return inchesToCentimeters(this.inches);
+    }
+
+    public double inMeters() {
+        return inchesToMeters(this.inches);
+    }
+
+    public static double inchesToFeet(double inches) {
+        return inches / 12;
+    }
+
+    public static double inchesToMillimeters(double inches) {
+        return inches * 25.4;
+    }
+
+    public static double inchesToCentimeters(double inches) {
+        return inches * 2.54;
     }
 
     public static double inchesToMeters(double inches) {
         return inches * 0.0254;
+    }
+
+    public static double feetToInches(double feet) {
+        return feet * 12;
+    }
+
+    public static double millimetersToInches(double millimeters) {
+        return millimeters / 25.4;
+    }
+
+    public static double centimetersToInches(double centimeters) {
+        return centimeters / 2.54;
+    }
+
+    public static double metersToInches(double meters) {
+        return meters / 0.0254;
     }
 
 }

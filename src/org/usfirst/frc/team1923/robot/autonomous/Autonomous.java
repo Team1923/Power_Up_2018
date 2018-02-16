@@ -1,6 +1,11 @@
 package org.usfirst.frc.team1923.robot.autonomous;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 @Inherited
 @Documented
@@ -16,13 +21,11 @@ public @interface Autonomous {
 
     FieldConfiguration[] fieldConfigurations() default { FieldConfiguration.LLL, FieldConfiguration.RRR, FieldConfiguration.LRL, FieldConfiguration.RLR };
 
-    int defaultPriority() default 100;
-
     public enum Side {
         LEFT,
         CENTER,
         RIGHT,
-        NONE // Default side, will result in DoNothingAuton
+        NONE
     }
 
     public enum FieldConfiguration {
