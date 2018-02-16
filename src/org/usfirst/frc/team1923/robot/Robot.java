@@ -1,11 +1,12 @@
 package org.usfirst.frc.team1923.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team1923.robot.autonomous.Autonomous;
 import org.usfirst.frc.team1923.robot.autonomous.SendablePriorityList;
 import org.usfirst.frc.team1923.robot.commands.auton.CenterLScaleAuton;
 import org.usfirst.frc.team1923.robot.commands.auton.CenterLSwitchAuton;
@@ -61,10 +62,29 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        this.autonomousCommand = null;
+
+        Autonomous.FieldConfiguration fieldConfiguration = Autonomous.FieldConfiguration.valueOf(DriverStation.getInstance().getGameSpecificMessage());
+
         for (Command command : this.priorityList.getOrder()) {
-            if (true) { // TODO check if the command can be run under the current field configuration
-                this.autonomousCommand = command;
-                command.start();
+            if (!command.getClass().isAnnotationPresent(Autonomous.class)) {
+                System.out.println(command.getClass().getName() + " does not have the @Autonomous annotation");
+
+                continue;
+            }
+
+            Autonomous.FieldConfiguration[] fieldConfigurations = command.getClass().getAnnotation(Autonomous.class).fieldConfigurations();
+
+            for (Autonomous.FieldConfiguration possibleConfiguration : fieldConfigurations) {
+                if (possibleConfiguration == fieldConfiguration) {
+                    this.autonomousCommand = command;
+                    this.autonomousCommand.start();
+
+                    break;
+                }
+            }
+
+            if (this.autonomousCommand != null) {
                 break;
             }
         }
