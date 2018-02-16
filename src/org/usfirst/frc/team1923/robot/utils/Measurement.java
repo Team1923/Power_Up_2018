@@ -47,7 +47,7 @@ public enum Measurement {
         return inches * 25.4;
     }
 
-    public static double inchesTocentimeters(double inches) {
+    public static double inchesToCentimeters(double inches) {
         return inches * 2.54;
     }
 
