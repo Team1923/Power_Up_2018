@@ -63,7 +63,7 @@ public class ElevatorSubsystem extends Subsystem {
     }
 
     public void stop() {
-        this.talons[0].set(ControlMode.PercentOutput, 0);
+        this.set(ControlMode.PercentOutput, 0);
     }
 
     public void set(ControlMode controlMode, double value) {

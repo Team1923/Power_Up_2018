@@ -68,8 +68,7 @@ public class IntakeSubsystem extends Subsystem {
     }
 
     public void stop() {
-        this.leftTalon.set(ControlMode.PercentOutput, 0);
-        this.rightTalon.set(ControlMode.PercentOutput, 0);
+        this.intake(0);
     }
 
     @Override

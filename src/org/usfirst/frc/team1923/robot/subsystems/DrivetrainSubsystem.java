@@ -77,7 +77,7 @@ public class DrivetrainSubsystem extends Subsystem {
     }
 
     public void stop() {
-        this.drive(0, 0);
+        this.drive(ControlMode.PercentOutput, 0, 0);
     }
 
     public double getHeading() {
