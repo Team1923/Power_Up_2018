@@ -6,8 +6,7 @@ import org.usfirst.frc.team1923.robot.autonomous.Autonomous;
 @Autonomous(
         name =  "Do Nothing",
         description = "Do absolutely nothing",
-        startingPosition = { Autonomous.Side.LEFT, Autonomous.Side.CENTER, Autonomous.Side.RIGHT, Autonomous.Side.NONE },
-        defaultPriority = 1000
+        startingPosition = { Autonomous.Side.LEFT, Autonomous.Side.CENTER, Autonomous.Side.RIGHT, Autonomous.Side.NONE }
 )
 public class DoNothingAuton extends Command {
 

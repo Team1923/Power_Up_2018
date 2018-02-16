@@ -7,8 +7,7 @@ import org.usfirst.frc.team1923.robot.autonomous.Autonomous;
         name = "Left Left-Switch",
         description = "Starting from the left, place a cube in the left switch",
         startingPosition = Autonomous.Side.LEFT,
-        fieldConfigurations = { Autonomous.FieldConfiguration.LLL, Autonomous.FieldConfiguration.LRL },
-        defaultPriority = 50
+        fieldConfigurations = { Autonomous.FieldConfiguration.LLL, Autonomous.FieldConfiguration.LRL }
 )
 public class LeftLSwitchAuton extends CommandGroup {
 

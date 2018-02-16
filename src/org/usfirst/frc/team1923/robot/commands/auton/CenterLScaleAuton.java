@@ -7,8 +7,7 @@ import org.usfirst.frc.team1923.robot.autonomous.Autonomous;
         name = "Center Left-Scale",
         description = "Starting from the center, place a cube in the left scale",
         startingPosition = Autonomous.Side.CENTER,
-        fieldConfigurations = { Autonomous.FieldConfiguration.LLL, Autonomous.FieldConfiguration.RLR },
-        defaultPriority = 50
+        fieldConfigurations = { Autonomous.FieldConfiguration.LLL, Autonomous.FieldConfiguration.RLR }
 )
 public class CenterLScaleAuton extends CommandGroup {
 
