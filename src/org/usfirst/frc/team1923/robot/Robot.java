@@ -42,12 +42,12 @@ public class Robot extends TimedRobot {
         TrajectoryStore.loadTrajectories();
         System.out.println("Loaded all trajectories.");
 
-        this.drivetrainSubsystem = new DrivetrainSubsystem();
-        this.elevatorSubsystem = new ElevatorSubsystem();
-        this.intakeSubsystem = new IntakeSubsystem();
-        this.ledSubsystem = new LEDSubsystem();
+        drivetrainSubsystem = new DrivetrainSubsystem();
+        elevatorSubsystem = new ElevatorSubsystem();
+        intakeSubsystem = new IntakeSubsystem();
+        ledSubsystem = new LEDSubsystem();
 
-        this.oi = new OI();
+        oi = new OI();
 
         this.priorityList = new SendablePriorityList();
         this.priorityList.add(new CenterLScaleAuton(), new CenterLSwitchAuton(), new CenterRScaleAuton(), new CenterRSwitchAuton(), new CrossLineLongAuton(), new CrossLineShortAuton(), new DoNothingAuton(), new LeftLScaleAuton(), new LeftLSwitchAuton(), new RightRScaleAuton(), new RightRSwitchAuton());
