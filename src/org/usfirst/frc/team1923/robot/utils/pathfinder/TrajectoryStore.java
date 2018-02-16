@@ -3,7 +3,7 @@ package org.usfirst.frc.team1923.robot.utils.pathfinder;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
-import org.usfirst.frc.team1923.robot.Measurement;
+import org.usfirst.frc.team1923.robot.utils.Measurement;
 import org.usfirst.frc.team1923.robot.RobotMap;
 
 import java.io.File;

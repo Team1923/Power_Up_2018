@@ -1,9 +1,11 @@
 package org.usfirst.frc.team1923.robot.commands.auton;
 
 import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team1923.robot.autonomous.Autonomous;
 import org.usfirst.frc.team1923.robot.Robot;
 
-public class DoNothingAuton extends Command implements AutonCommand {
+@Autonomous
+public class DoNothingAuton extends Command {
 
     public DoNothingAuton() {
         this.requires(Robot.drivetrainSubsystem);
@@ -32,11 +34,6 @@ public class DoNothingAuton extends Command implements AutonCommand {
     @Override
     protected void interrupted() {
         Robot.drivetrainSubsystem.stop();
-    }
-
-    @Override
-    public boolean isPossible(AllianceColorSide allianceSwitch, AllianceColorSide scale, AllianceColorSide opposingSwitch) {
-        return true;
     }
 
 }

@@ -22,7 +22,6 @@ public class Robot extends TimedRobot {
     public static OI oi;
 
     private Command autonomousCommand;
-    private SendableChooser<Command> chooser = new SendableChooser<>();
 
     @Override
     public void robotInit() {
@@ -38,14 +37,6 @@ public class Robot extends TimedRobot {
         ledSubsystem = new LEDSubsystem();
 
         oi = new OI();
-
-        SmartDashboard.putData("Autonomous Mode", this.chooser);
-    }
-
-    private void periodic() {
-        Scheduler.getInstance().run();
-
-        drivetrainSubsystem.tick();
     }
 
     @Override
@@ -55,13 +46,11 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledPeriodic() {
-        this.periodic();
+        Scheduler.getInstance().run();
     }
 
     @Override
     public void autonomousInit() {
-        this.autonomousCommand = this.chooser.getSelected();
-
         if (this.autonomousCommand != null) {
             this.autonomousCommand.start();
         }
@@ -69,7 +58,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-        this.periodic();
+        Scheduler.getInstance().run();
     }
 
     @Override
@@ -79,10 +68,9 @@ public class Robot extends TimedRobot {
         }
     }
 
-
     @Override
     public void teleopPeriodic() {
-        this.periodic();
+        Scheduler.getInstance().run();
     }
 
     @Override

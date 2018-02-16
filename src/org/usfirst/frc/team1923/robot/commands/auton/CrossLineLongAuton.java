@@ -1,17 +1,16 @@
 package org.usfirst.frc.team1923.robot.commands.auton;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import org.usfirst.frc.team1923.robot.autonomous.Autonomous;
 import org.usfirst.frc.team1923.robot.commands.drive.DriveDistanceCommand;
 
-public class CrossLineLongAuton extends CommandGroup implements AutonCommand {
+@Autonomous(
+        startingPosition = { Autonomous.Side.LEFT, Autonomous.Side.RIGHT }
+)
+public class CrossLineLongAuton extends CommandGroup {
 
     public CrossLineLongAuton() {
         this.addSequential(new DriveDistanceCommand(280));
-    }
-
-    @Override
-    public boolean isPossible(AutonCommand.AllianceColorSide allianceSwitch, AutonCommand.AllianceColorSide scale, AutonCommand.AllianceColorSide opposingSwitch) {
-        return true;
     }
 
 }

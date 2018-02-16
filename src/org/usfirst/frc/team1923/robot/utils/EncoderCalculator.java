@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1923.robot.utils;
 
 import edu.wpi.first.wpilibj.Timer;
-import org.usfirst.frc.team1923.robot.Measurement;
 
 public class EncoderCalculator {
 

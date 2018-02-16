@@ -2,11 +2,10 @@ package org.usfirst.frc.team1923.robot.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.modifiers.TankModifier;
-import org.usfirst.frc.team1923.robot.Measurement;
+import org.usfirst.frc.team1923.robot.utils.Measurement;
 import org.usfirst.frc.team1923.robot.Robot;
 import org.usfirst.frc.team1923.robot.utils.pathfinder.EncoderFollower;
 import org.usfirst.frc.team1923.robot.utils.pathfinder.TrajectoryStore;
