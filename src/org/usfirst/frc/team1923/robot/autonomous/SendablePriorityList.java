@@ -11,13 +11,16 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.List;
-//import java.util.Arrays;
 import java.util.Collections;
 
 public class SendablePriorityList extends SendableBase implements Sendable {
 
-    private Map<String, Command> items = new LinkedHashMap();
+    private Map<String, Command> items;
     private NetworkTableEntry values;
+
+    public SendablePriorityList() {
+        this.items = new LinkedHashMap<>();
+    }
 
     public void add(Command... commands) {
         for (Command command : commands) {
