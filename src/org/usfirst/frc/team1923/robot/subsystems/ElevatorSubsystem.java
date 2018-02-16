@@ -31,12 +31,16 @@ public class ElevatorSubsystem extends Subsystem {
 
         for (int i = 0; i < this.talons.length; i++) {
             this.talons[i] = new TalonSRX(RobotMap.ELEVATOR_TALON_PORTS[i]);
+
             this.talons[i].configNominalOutputForward(0, RobotMap.TALON_COMMAND_TIMEOUT);
             this.talons[i].configNominalOutputReverse(0, RobotMap.TALON_COMMAND_TIMEOUT);
             this.talons[i].configPeakOutputForward(1, RobotMap.TALON_COMMAND_TIMEOUT);
             this.talons[i].configPeakOutputReverse(-1, RobotMap.TALON_COMMAND_TIMEOUT);
             this.talons[i].configMotionAcceleration(350, RobotMap.TALON_COMMAND_TIMEOUT);
             this.talons[i].configMotionCruiseVelocity(500, RobotMap.TALON_COMMAND_TIMEOUT);
+
+            this.talons[i].enableVoltageCompensation(true);
+            this.talons[i].configVoltageCompSaturation(11.5, RobotMap.TALON_COMMAND_TIMEOUT);
 
             if (i > 0) {
                 this.talons[i].set(ControlMode.Follower, RobotMap.ELEVATOR_TALON_PORTS[0]);

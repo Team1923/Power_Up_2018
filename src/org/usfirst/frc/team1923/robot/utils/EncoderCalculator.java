@@ -1,10 +1,10 @@
 package org.usfirst.frc.team1923.robot.utils;
 
-import org.usfirst.frc.team1923.robot.Measurement;
+import edu.wpi.first.wpilibj.Timer;
 
 public class EncoderCalculator {
 
-    private long timestamp;
+    private double timestamp;
 
     private int encoderValue;
 
@@ -16,9 +16,9 @@ public class EncoderCalculator {
     }
 
     public void calculate(int encoderValue) {
-        double dt = (this.getTime() - this.timestamp) / 1000.0;
+        double dt = this.getTime() - this.timestamp;
 
-        if (dt < 0.5) {
+        if (dt < 0.75) {
             return;
         }
 
@@ -42,8 +42,8 @@ public class EncoderCalculator {
         return this.acceleration;
     }
 
-    public long getTime() {
-        return System.currentTimeMillis();
+    public double getTime() {
+        return Timer.getFPGATimestamp();
     }
 
 }

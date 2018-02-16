@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1923.robot;
+package org.usfirst.frc.team1923.robot.utils;
 
 public enum Measurement {
 
@@ -8,10 +8,10 @@ public enum Measurement {
     ROBOT_LENGTH(32.50),
     ROBOT_WIDTH(27.50),
 
-    ROBOT_MAX_VELOCITY(12),
-    ROBOT_MAX_ACCELERATION(6);
+    ROBOT_MAX_VELOCITY(18),
+    ROBOT_MAX_ACCELERATION(12);
 
-    public static final double DRIVETRAIN_VELOCIY_CONSTANT = 250.0 / 1143.0;
+    public static final double DRIVETRAIN_VELOCIY_CONSTANT = 0.375;
 
     private double inches;
 

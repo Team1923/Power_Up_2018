@@ -24,12 +24,14 @@ public class IntakeSubsystem extends Subsystem {
     private TalonSRX rightTalon;
 
     public IntakeSubsystem() {
-        // this.solenoid = new DoubleSolenoid(RobotMap.PCM_MODULE_PORT, RobotMap.INTAKE_SOLENOID_FORWARD_PORT, RobotMap.INTAKE_SOLENOID_REVERSE_PORT);
+        this.solenoid = new DoubleSolenoid(RobotMap.PCM_MODULE_PORT, RobotMap.INTAKE_SOLENOID_FORWARD_PORT, RobotMap.INTAKE_SOLENOID_REVERSE_PORT);
 
         this.leftTalon = new TalonSRX(RobotMap.INTAKE_LEFT_TALON_PORT);
         this.rightTalon = new TalonSRX(RobotMap.INTAKE_RIGHT_TALON_PORT);
         this.configureTalon(this.leftTalon);
         this.configureTalon(this.rightTalon);
+
+        this.leftTalon.setInverted(true);
 
         this.startTime = 0;
 
