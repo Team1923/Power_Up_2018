@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1923.robot.utils.Measurement;
-import org.usfirst.frc.team1923.robot.Robot;
 import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.commands.drive.DriveControlCommand;
 import org.usfirst.frc.team1923.robot.utils.EncoderCalculator;
@@ -100,8 +99,8 @@ public class DrivetrainSubsystem extends Subsystem {
         SmartDashboard.putNumber("Right DT Velocity", this.rightEncoder.getVelocity());
         SmartDashboard.putNumber("Right DT Accel.", this.rightEncoder.getAcceleration());
 
-        SmartDashboard.putNumber("Left Encoder", Robot.drivetrainSubsystem.getLeftEncoderPosition());
-        SmartDashboard.putNumber("Right Encoder", Robot.drivetrainSubsystem.getRightEncoderPosition());
+        SmartDashboard.putNumber("Left Encoder", this.getLeftEncoderPosition());
+        SmartDashboard.putNumber("Right Encoder", this.getRightEncoderPosition());
     }
 
     @Override
