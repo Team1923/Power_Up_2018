@@ -7,7 +7,8 @@ import org.usfirst.frc.team1923.robot.autonomous.Autonomous;
         name = "Center Right-Switch",
         description = "Starting from the center, place a cube in the right switch",
         startingPosition = Autonomous.Side.CENTER,
-        fieldConfigurations = { Autonomous.FieldConfiguration.RRR, Autonomous.FieldConfiguration.RLR }
+        fieldConfigurations = { Autonomous.FieldConfiguration.RRR, Autonomous.FieldConfiguration.RLR },
+        defaultPriority = 50
 )
 public class CenterRSwitchAuton extends CommandGroup {
 

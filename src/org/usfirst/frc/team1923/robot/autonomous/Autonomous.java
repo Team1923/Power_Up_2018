@@ -21,6 +21,8 @@ public @interface Autonomous {
 
     FieldConfiguration[] fieldConfigurations() default { FieldConfiguration.LLL, FieldConfiguration.RRR, FieldConfiguration.LRL, FieldConfiguration.RLR };
 
+    int defaultPriority() default 0;
+
     public enum Side {
         LEFT,
         CENTER,

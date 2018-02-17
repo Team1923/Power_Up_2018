@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team1923.robot.autonomous.AutonManager;
 import org.usfirst.frc.team1923.robot.autonomous.Autonomous;
 import org.usfirst.frc.team1923.robot.autonomous.SendablePriorityList;
 import org.usfirst.frc.team1923.robot.commands.auton.CenterLScaleAuton;
@@ -34,8 +35,7 @@ public class Robot extends TimedRobot {
 
     public static OI oi;
 
-    private Command autonomousCommand;
-    private SendablePriorityList priorityList;
+    public static AutonManager autonManager;
 
     @Override
     public void robotInit() {
@@ -49,10 +49,6 @@ public class Robot extends TimedRobot {
         ledSubsystem = new LEDSubsystem();
 
         oi = new OI();
-
-        this.priorityList = new SendablePriorityList();
-        this.priorityList.add(new CenterLScaleAuton(), new CenterLSwitchAuton(), new CenterRScaleAuton(), new CenterRSwitchAuton(), new CrossLineLongAuton(), new CrossLineShortAuton(), new DoNothingAuton(), new LeftLScaleAuton(), new LeftLSwitchAuton(), new RightRScaleAuton(), new RightRSwitchAuton());
-        SmartDashboard.putData("Autonomous Mode Priority List", priorityList);
     }
 
     @Override
@@ -62,39 +58,12 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        this.autonomousCommand = null;
 
-        Autonomous.FieldConfiguration fieldConfiguration = Autonomous.FieldConfiguration.valueOf(DriverStation.getInstance().getGameSpecificMessage());
-
-        for (Command command : this.priorityList.getOrder()) {
-            if (!command.getClass().isAnnotationPresent(Autonomous.class)) {
-                System.out.println(command.getClass().getName() + " does not have the @Autonomous annotation");
-
-                continue;
-            }
-
-            Autonomous.FieldConfiguration[] fieldConfigurations = command.getClass().getAnnotation(Autonomous.class).fieldConfigurations();
-
-            for (Autonomous.FieldConfiguration possibleConfiguration : fieldConfigurations) {
-                if (possibleConfiguration == fieldConfiguration) {
-                    this.autonomousCommand = command;
-                    this.autonomousCommand.start();
-
-                    break;
-                }
-            }
-
-            if (this.autonomousCommand != null) {
-                break;
-            }
-        }
     }
 
     @Override
     public void teleopInit() {
-        if (this.autonomousCommand != null) {
-            this.autonomousCommand.cancel();
-        }
+        // cancel auton command
     }
 
 }

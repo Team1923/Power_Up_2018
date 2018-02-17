@@ -1,55 +1,35 @@
 package org.usfirst.frc.team1923.robot.autonomous;
 
-import org.usfirst.frc.team1923.robot.commands.auton.*;
+import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team1923.robot.Robot;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public enum Preset {
 
     @AutonomousPreset(
             name = "Default"
     )
-    NONE_DEFAULT(
-            DoNothingAuton.class
-    ),
+    DEFAULT();
 
-    @AutonomousPreset(
-            name = "Default",
-            startingPosition = Autonomous.Side.LEFT
-    )
-    LEFT_DEFAULT(
-            LeftLScaleAuton.class,
-            LeftLSwitchAuton.class,
-            CrossLineLongAuton.class,
-            DoNothingAuton.class
-    ),
+    private List<Class<?>> classes;
 
-    @AutonomousPreset(
-            name = "Default",
-            startingPosition = Autonomous.Side.CENTER
-    )
-    CENTER_DEFAULT(
-            CenterLSwitchAuton.class,
-            CenterRSwitchAuton.class,
-            CenterLScaleAuton.class,
-            CenterRScaleAuton.class,
-            CrossLineShortAuton.class,
-            DoNothingAuton.class
-    ),
+    private Preset(Class<?>... classes) {
+        this.classes = new ArrayList<>();
 
-    @AutonomousPreset(
-            name = "Default",
-            startingPosition = Autonomous.Side.RIGHT
-    )
-    RIGHT_DEFAULT(
-            RightRScaleAuton.class,
-            RightRSwitchAuton.class,
-            CrossLineLongAuton.class,
-            DoNothingAuton.class
-    );
+        Collections.addAll(this.classes, classes);
 
-    private Class[] classes;
+        if (this.classes.isEmpty()) {
+            for (Command command : Robot.autonManager.getAllAutons()) {
+                this.classes.add(command.getClass());
+            }
+        }
+    }
 
-    private Preset(Class... classes) {
-        this.classes = classes;
+    public List<Class<?>> getClasses() {
+        return this.classes;
     }
 
 }
