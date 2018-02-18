@@ -1,25 +1,11 @@
 package org.usfirst.frc.team1923.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team1923.robot.autonomous.AutonManager;
-import org.usfirst.frc.team1923.robot.autonomous.Autonomous;
-import org.usfirst.frc.team1923.robot.autonomous.SendablePriorityList;
-import org.usfirst.frc.team1923.robot.commands.auton.CenterLScaleAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.CenterLSwitchAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.CenterRScaleAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.CenterRSwitchAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.CrossLineLongAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.CrossLineShortAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.DoNothingAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.LeftLScaleAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.LeftLSwitchAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.RightRScaleAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.RightRSwitchAuton;
+import org.usfirst.frc.team1923.robot.commands.auton.*;
 import org.usfirst.frc.team1923.robot.subsystems.DrivetrainSubsystem;
 import org.usfirst.frc.team1923.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team1923.robot.subsystems.IntakeSubsystem;
@@ -36,6 +22,7 @@ public class Robot extends TimedRobot {
     public static OI oi;
 
     public static AutonManager autonManager;
+    private Command autonCommand;
 
     @Override
     public void robotInit() {
@@ -49,21 +36,50 @@ public class Robot extends TimedRobot {
         ledSubsystem = new LEDSubsystem();
 
         oi = new OI();
+
+        autonManager = new AutonManager();
+        autonManager.add(new CenterLScaleAuton())
+                .add(new CenterLSwitchAuton())
+                .add(new CenterRScaleAuton())
+                .add(new CenterRSwitchAuton())
+                .add(new CrossLineLongAuton())
+                .add(new CrossLineShortAuton())
+                .add(new DoNothingAuton())
+                .add(new LeftLScaleAuton())
+                .add(new LeftLSwitchAuton())
+                .add(new RightRScaleAuton())
+                .add(new RightRSwitchAuton());
+    }
+
+    @Override
+    public void autonomousInit() {
+        this.autonCommand = autonManager.getSelectedAuton();
+
+        if (this.autonCommand != null) {
+            this.autonCommand.start();
+        }
+    }
+
+    @Override
+    public void autonomousPeriodic() {
+        // In case the FMS does not send data at autonomousInit()
+        if (this.autonCommand == null) {
+            this.autonomousInit();
+        }
+    }
+
+    @Override
+    public void teleopInit() {
+        if (this.autonCommand != null) {
+            this.autonCommand.cancel();
+        }
     }
 
     @Override
     public void robotPeriodic() {
         Scheduler.getInstance().run();
-    }
 
-    @Override
-    public void autonomousInit() {
-
-    }
-
-    @Override
-    public void teleopInit() {
-        // cancel auton command
+        autonManager.periodic();
     }
 
 }

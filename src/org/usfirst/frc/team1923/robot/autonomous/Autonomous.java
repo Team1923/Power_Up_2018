@@ -24,10 +24,10 @@ public @interface Autonomous {
     int defaultPriority() default 0;
 
     public enum Side {
+        NONE,
         LEFT,
         CENTER,
-        RIGHT,
-        NONE
+        RIGHT
     }
 
     public enum FieldConfiguration {

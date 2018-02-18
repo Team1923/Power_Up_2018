@@ -2,7 +2,6 @@ package org.usfirst.frc.team1923.robot.autonomous;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team1923.robot.commands.auton.DoNothingAuton;
 
@@ -42,6 +41,7 @@ public class AutonManager {
 
         if (robotPosition != this.lastRobotPosition) {
             this.updatePresets();
+            this.updateAutons();
 
             this.lastRobotPosition = robotPosition;
         }
@@ -54,24 +54,20 @@ public class AutonManager {
     }
 
     public void updatePresets() {
-        this.autonPreset = new SendableChooser<>(); // TODO: Best way to clear SendableChooser ???
+        this.autonPreset = new SendableChooser<>();
         Autonomous.Side robotPosition = this.robotPosition.getSelected();
 
         for (Preset preset : Preset.values()) {
             try {
                 Field field = preset.getClass().getField(preset.name());
 
-                if (!field.isAnnotationPresent(AutonomousPreset.class)) {
+                if (!field.isAnnotationPresent(Preset.AutonomousPreset.class)) {
                     continue;
                 }
 
-                for (Autonomous.Side startingPosition : field.getAnnotation(AutonomousPreset.class).startingPosition()) {
+                for (Autonomous.Side startingPosition : field.getAnnotation(Preset.AutonomousPreset.class).startingPosition()) {
                     if (startingPosition == robotPosition) {
-                        if (preset == Preset.DEFAULT) {
-                            this.autonPreset.addDefault(field.getAnnotation(AutonomousPreset.class).name(), preset);
-                        } else {
-                            this.autonPreset.addObject(field.getAnnotation(AutonomousPreset.class).name(), preset);
-                        }
+                        this.autonPreset.add(field.getAnnotation(Preset.AutonomousPreset.class).name(), preset);
                     }
                 }
             } catch (Exception e) {
@@ -83,7 +79,7 @@ public class AutonManager {
     }
 
     public void updateAutons() {
-        this.autonList = new SendablePriorityList(); // TODO: Best way to clear SendablePriorityList ???
+        this.autonList = new SendablePriorityList();
         Preset preset = this.autonPreset.getSelected();
 
         for (Class<?> clazz : preset.getClasses()) {
@@ -106,7 +102,15 @@ public class AutonManager {
     }
 
     public Command getSelectedAuton() {
-        Autonomous.FieldConfiguration currentFieldConfiguration = Autonomous.FieldConfiguration.valueOf(DriverStation.getInstance().getGameSpecificMessage());
+        Autonomous.FieldConfiguration currentFieldConfiguration;
+
+        try {
+            currentFieldConfiguration = Autonomous.FieldConfiguration.valueOf(DriverStation.getInstance().getGameSpecificMessage());
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+
+            return null;
+        }
 
         for (Command command : this.autonList.getOrder()) {
             for (Autonomous.Side side : command.getClass().getAnnotation(Autonomous.class).startingPosition()) {
