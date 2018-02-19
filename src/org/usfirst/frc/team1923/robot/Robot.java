@@ -76,6 +76,15 @@ public class Robot extends TimedRobot {
     }
 
     @Override
+    public void disabledInit() {
+        if (this.autonCommand != null) {
+            this.autonCommand.cancel();
+        }
+
+        this.autonCommand = null;
+    }
+
+    @Override
     public void robotPeriodic() {
         Scheduler.getInstance().run();
 

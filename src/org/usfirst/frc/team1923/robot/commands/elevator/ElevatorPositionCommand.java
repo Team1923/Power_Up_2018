@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.command.Command;
 
 import org.usfirst.frc.team1923.robot.Robot;
+import org.usfirst.frc.team1923.robot.RobotMap;
 
 /**
  * Move the elevator to a set position
@@ -13,8 +14,13 @@ public class ElevatorPositionCommand extends Command {
 
     private double position;
 
+    public ElevatorPositionCommand(ElevatorPosition position) {
+        this(position.getPosition());
+    }
+
     public ElevatorPositionCommand(double position) {
         this.requires(Robot.elevatorSubsystem);
+
     }
 
     protected void initialize() {
@@ -35,6 +41,28 @@ public class ElevatorPositionCommand extends Command {
 
     protected void interrupted() {
         this.end();
+    }
+
+    public enum ElevatorPosition {
+
+        BOTTOM(0),
+
+        SWITCH(20),
+
+        SCALE(50),
+
+        TOP(RobotMap.Elevator.PRIMARY_STAGE_TRAVEL + RobotMap.Elevator.SECONDARY_STAGE_TRAVEL);
+
+        private double position;
+
+        private ElevatorPosition(double position) {
+            this.position = position;
+        }
+
+        public double getPosition() {
+            return this.position;
+        }
+
     }
 
 }

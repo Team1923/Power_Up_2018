@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1923.robot.utils;
 
 import edu.wpi.first.wpilibj.Timer;
+import org.usfirst.frc.team1923.robot.RobotMap;
 
 public class EncoderCalculator {
 
@@ -22,8 +23,8 @@ public class EncoderCalculator {
             return;
         }
 
-        double dr = (encoderValue - this.encoderValue) / 4096.0;
-        double dp = dr * Measurement.ROBOT_WHEEL_DIAMETER.inFeet() * Math.PI;
+        double dr = (encoderValue - this.encoderValue) / RobotMap.Robot.ENCODER_TICKS_PER_ROTATION;
+        double dp = dr * Converter.inchesToFeet(RobotMap.Drivetrain.WHEEL_DIAMETER) * Math.PI;
 
         double velocity = dp / dt;
         double acceleration = (velocity - this.velocity) / dt;

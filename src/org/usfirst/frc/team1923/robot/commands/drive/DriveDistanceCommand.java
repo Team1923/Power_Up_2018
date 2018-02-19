@@ -1,8 +1,10 @@
 package org.usfirst.frc.team1923.robot.commands.drive;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team1923.robot.Robot;
+import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.subsystems.DrivetrainSubsystem;
 
 /**
@@ -20,13 +22,15 @@ public class DriveDistanceCommand extends Command {
     public DriveDistanceCommand(double leftTarget, double rightTarget) {
         this.requires(Robot.drivetrainSubsystem);
 
-        this.leftTarget = DrivetrainSubsystem.distanceToRotations(leftTarget) * 4096;
-        this.rightTarget = DrivetrainSubsystem.distanceToRotations(rightTarget) * 4096;
+        this.leftTarget = DrivetrainSubsystem.distanceToRotations(leftTarget) * RobotMap.Robot.ENCODER_TICKS_PER_ROTATION;
+        this.rightTarget = DrivetrainSubsystem.distanceToRotations(rightTarget) * RobotMap.Robot.ENCODER_TICKS_PER_ROTATION;
     }
 
     @Override
     protected void initialize() {
         Robot.drivetrainSubsystem.resetPosition();
+
+        Timer.delay(0.10);
     }
 
     @Override
@@ -36,12 +40,8 @@ public class DriveDistanceCommand extends Command {
 
     @Override
     protected boolean isFinished() {
-        if (Robot.oi.driver.cross.get()) {
-            return false;
-        }
-        
-        return Math.abs(this.leftTarget - Robot.drivetrainSubsystem.getLeftEncoderPosition()) < 300 ||
-                Math.abs(this.rightTarget - Robot.drivetrainSubsystem.getRightEncoderPosition()) < 300;
+        return Math.abs(this.leftTarget - Robot.drivetrainSubsystem.getLeftEncoderPosition()) < RobotMap.Drivetrain.ALLOWABLE_ERROR ||
+                Math.abs(this.rightTarget - Robot.drivetrainSubsystem.getRightEncoderPosition()) < RobotMap.Drivetrain.ALLOWABLE_ERROR;
     }
 
     @Override

@@ -3,8 +3,8 @@ package org.usfirst.frc.team1923.robot.utils.pathfinder;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
-import org.usfirst.frc.team1923.robot.utils.Measurement;
 import org.usfirst.frc.team1923.robot.RobotMap;
+import org.usfirst.frc.team1923.robot.utils.Converter;
 
 import java.io.File;
 import java.security.MessageDigest;
@@ -16,10 +16,10 @@ public class TrajectoryStore {
     public static Trajectory.Config trajectoryConfig = new Trajectory.Config(
             Trajectory.FitMethod.HERMITE_QUINTIC,
             Trajectory.Config.SAMPLES_LOW,
-            0.05,
-            Measurement.ROBOT_MAX_VELOCITY.inMeters(),
-            Measurement.ROBOT_MAX_ACCELERATION.inMeters(),
-            60.00
+            0.02,
+            Converter.inchesToMeters(RobotMap.Drivetrain.TRAJECTORY_MAX_VELOCITY),
+            Converter.inchesToMeters(RobotMap.Drivetrain.TRAJECTORY_MAX_ACCELERATION),
+            Converter.inchesToMeters(RobotMap.Drivetrain.TRAJECTORY_MAX_JERK)
     );
 
     public static Map<String, Trajectory> trajectories = new ConcurrentHashMap<>();
@@ -29,7 +29,7 @@ public class TrajectoryStore {
             return trajectories.get(waypoints.name());
         }
 
-        File trajectoryDir = new File(RobotMap.TRAJECTORY_STORE_DIR);
+        File trajectoryDir = new File(RobotMap.Drivetrain.TRAJECTORY_STORE_DIR);
 
         if (!trajectoryDir.exists()) {
             trajectoryDir.mkdir();
@@ -39,7 +39,7 @@ public class TrajectoryStore {
             throw new RuntimeException("Trajectory directory is not a directory.");
         }
 
-        File trajectoryFile = new File(RobotMap.TRAJECTORY_STORE_DIR + "/" + getTrajectoryFile(waypoints));
+        File trajectoryFile = new File(RobotMap.Drivetrain.TRAJECTORY_STORE_DIR + "/" + getTrajectoryFile(waypoints));
 
         if (!trajectoryFile.isFile() && trajectoryFile.exists()) {
             throw new RuntimeException("Trajectory file is not a file.");
@@ -91,11 +91,39 @@ public class TrajectoryStore {
         }
     }
 
-    public static enum Waypoints {
+    public enum Waypoints {
 
-        STRAIGHT_2M(new Waypoint[] {
+        LEFT_LSCALE(new Waypoint[] {
+                new Waypoint(0, Converter.inchesToMeters(104.5), 0),
+                new Waypoint(Converter.inchesToMeters(168), Converter.inchesToMeters(120), 0),
+                new Waypoint(Converter.inchesToMeters(268), Converter.inchesToMeters(100), Pathfinder.d2r(135)),
+        }),
+
+        CENTER_LSWITCH(new Waypoint[] {
                 new Waypoint(0, 0, 0),
-                new Waypoint(2, 0, 0)
+                new Waypoint(Converter.inchesToMeters(95), Converter.inchesToMeters(50), Pathfinder.d2r(0)),
+        }),
+
+        CENTER_RSWITCH(new Waypoint[] {
+                new Waypoint(0, 0, 0),
+                new Waypoint(Converter.inchesToMeters(95), -1 * Converter.inchesToMeters(50), Pathfinder.d2r(0)),
+        }),
+
+        CENTER_LSCALE(new Waypoint[] {
+                new Waypoint(0, 0, 0),
+                new Waypoint(Converter.inchesToMeters(148), Converter.inchesToMeters(130), 0),
+                new Waypoint(Converter.inchesToMeters(268), Converter.inchesToMeters(100), Pathfinder.d2r(-45)),
+        }),
+
+        CENTER_RSCALE(new Waypoint[] {
+                new Waypoint(0, 0, 0),
+                new Waypoint(Converter.inchesToMeters(148), -1 * Converter.inchesToMeters(130), 0),
+                new Waypoint(Converter.inchesToMeters(268), -1 * Converter.inchesToMeters(100), Pathfinder.d2r(45)),
+        }),
+
+        RIGHT_RSWITCH(new Waypoint[] {
+                new Waypoint(0, -1 * Converter.inchesToMeters(104.5), 0),
+                new Waypoint(Converter.inchesToMeters(100), -1 * Converter.inchesToMeters(100), Pathfinder.d2r(-135)),
         });
 
         private final Waypoint[] waypoints;

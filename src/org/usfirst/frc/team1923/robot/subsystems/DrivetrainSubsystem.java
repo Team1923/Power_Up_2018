@@ -7,9 +7,9 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team1923.robot.utils.Measurement;
 import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.commands.drive.DriveControlCommand;
+import org.usfirst.frc.team1923.robot.utils.Converter;
 import org.usfirst.frc.team1923.robot.utils.EncoderCalculator;
 
 public class DrivetrainSubsystem extends Subsystem {
@@ -23,32 +23,31 @@ public class DrivetrainSubsystem extends Subsystem {
     private EncoderCalculator rightEncoder;
 
     public DrivetrainSubsystem() {
-        this.leftTalons = new TalonSRX[RobotMap.DRIVE_LEFT_TALON_PORTS.length];
-        this.rightTalons = new TalonSRX[RobotMap.DRIVE_RIGHT_TALON_PORTS.length];
+        this.leftTalons = new TalonSRX[RobotMap.Drivetrain.LEFT_TALON_PORTS.length];
+        this.rightTalons = new TalonSRX[RobotMap.Drivetrain.RIGHT_TALON_PORTS.length];
 
         for (int i = 0; i < this.leftTalons.length; i++) {
-            this.leftTalons[i] = new TalonSRX(RobotMap.DRIVE_LEFT_TALON_PORTS[i]);
+            this.leftTalons[i] = new TalonSRX(RobotMap.Drivetrain.LEFT_TALON_PORTS[i]);
 
             if (i > 0) {
-                this.leftTalons[i].set(ControlMode.Follower, RobotMap.DRIVE_LEFT_TALON_PORTS[0]);
+                this.leftTalons[i].set(ControlMode.Follower, RobotMap.Drivetrain.LEFT_TALON_PORTS[0]);
             }
 
-            this.leftTalons[i].setSensorPhase(true);
             this.leftTalons[i].setInverted(true);
             this.configureTalon(this.leftTalons[i]);
         }
 
         for (int i = 0; i < this.rightTalons.length; i++) {
-            this.rightTalons[i] = new TalonSRX(RobotMap.DRIVE_RIGHT_TALON_PORTS[i]);
+            this.rightTalons[i] = new TalonSRX(RobotMap.Drivetrain.RIGHT_TALON_PORTS[i]);
 
             if (i > 0) {
-                this.rightTalons[i].set(ControlMode.Follower, RobotMap.DRIVE_RIGHT_TALON_PORTS[0]);
+                this.rightTalons[i].set(ControlMode.Follower, RobotMap.Drivetrain.RIGHT_TALON_PORTS[0]);
             }
 
             this.configureTalon(this.rightTalons[i]);
         }
 
-        this.imu = new PigeonIMU(RobotMap.PIGEON_IMU_PORT);
+        this.imu = new PigeonIMU(RobotMap.Drivetrain.PIGEON_IMU_PORT);
 
         this.leftEncoder = new EncoderCalculator();
         this.rightEncoder = new EncoderCalculator();
@@ -64,12 +63,15 @@ public class DrivetrainSubsystem extends Subsystem {
     }
 
     public void resetPosition() {
-        this.leftTalons[0].getSensorCollection().setPulseWidthPosition(0, RobotMap.TALON_COMMAND_TIMEOUT);
-        this.rightTalons[0].getSensorCollection().setQuadraturePosition(0, RobotMap.TALON_COMMAND_TIMEOUT);
+        this.leftTalons[0].getSensorCollection().setQuadraturePosition(0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        this.rightTalons[0].getSensorCollection().setQuadraturePosition(0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+
+        this.leftTalons[0].setSelectedSensorPosition(0, 0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        this.rightTalons[0].setSelectedSensorPosition(0, 0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
     }
 
     public int getLeftEncoderPosition() {
-        return this.leftTalons[0].getSensorCollection().getQuadraturePosition();
+        return -this.leftTalons[0].getSensorCollection().getQuadraturePosition();
     }
 
     public int getRightEncoderPosition() {
@@ -85,7 +87,7 @@ public class DrivetrainSubsystem extends Subsystem {
     }
 
     public void resetHeading() {
-        this.imu.setFusedHeading(0, 10);
+        this.imu.setFusedHeading(0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
     }
 
     @Override
@@ -109,24 +111,25 @@ public class DrivetrainSubsystem extends Subsystem {
     }
  
     public static double distanceToRotations(double distance) {
-        return distance / (Measurement.ROBOT_WHEEL_DIAMETER.inInches() * Math.PI);
+        return distance / (RobotMap.Drivetrain.WHEEL_DIAMETER * Math.PI);
     }
 
     private void configureTalon(TalonSRX talon) {
-        talon.configNominalOutputForward(0, RobotMap.TALON_COMMAND_TIMEOUT);
-        talon.configNominalOutputReverse(0, RobotMap.TALON_COMMAND_TIMEOUT);
-        talon.configPeakOutputForward(1, RobotMap.TALON_COMMAND_TIMEOUT);
-        talon.configPeakOutputReverse(-1, RobotMap.TALON_COMMAND_TIMEOUT);
+        talon.configNominalOutputForward(0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        talon.configNominalOutputReverse(0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        talon.configPeakOutputForward(1, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        talon.configPeakOutputReverse(-1, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
 
-        talon.configMotionAcceleration(800, RobotMap.TALON_COMMAND_TIMEOUT);
-        talon.configMotionCruiseVelocity(1600, RobotMap.TALON_COMMAND_TIMEOUT);
+        talon.configMotionAcceleration(Converter.inchesToTicks(RobotMap.Drivetrain.TRAJECTORY_MAX_ACCELERATION, RobotMap.Drivetrain.WHEEL_DIAMETER) / 10, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        talon.configMotionCruiseVelocity(Converter.inchesToTicks(RobotMap.Drivetrain.TRAJECTORY_MAX_VELOCITY, RobotMap.Drivetrain.WHEEL_DIAMETER) / 10, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
 
-        talon.config_kP(0, 0.455, RobotMap.TALON_COMMAND_TIMEOUT);
-        talon.config_kI(0, 0.001, RobotMap.TALON_COMMAND_TIMEOUT);
-        talon.config_kD(0, 0.000,RobotMap.TALON_COMMAND_TIMEOUT);
+        talon.config_kP(0, RobotMap.Drivetrain.P, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        talon.config_kI(0, RobotMap.Drivetrain.I, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        talon.config_kD(0, RobotMap.Drivetrain.D, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        talon.config_kF(0, RobotMap.Drivetrain.F, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
 
         talon.enableVoltageCompensation(true);
-        talon.configVoltageCompSaturation(11.5, RobotMap.TALON_COMMAND_TIMEOUT);
+        talon.configVoltageCompSaturation(RobotMap.Robot.TALON_NOMINAL_OUTPUT_VOLTAGE, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
     }
 
 }

@@ -107,8 +107,6 @@ public class AutonManager {
         try {
             currentFieldConfiguration = Autonomous.FieldConfiguration.valueOf(DriverStation.getInstance().getGameSpecificMessage());
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-
             return null;
         }
 

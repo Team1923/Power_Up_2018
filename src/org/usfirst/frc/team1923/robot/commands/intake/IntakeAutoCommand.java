@@ -30,7 +30,7 @@ public class IntakeAutoCommand extends TimedCommand {
 
     @Override
     protected boolean isFinished() {
-        return Robot.intakeSubsystem.isSecure() || super.isFinished();
+        return super.isFinished();
     }
 
     @Override
