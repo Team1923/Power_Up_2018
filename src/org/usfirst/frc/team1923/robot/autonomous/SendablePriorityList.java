@@ -5,7 +5,6 @@ import edu.wpi.first.wpilibj.SendableBase;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
-
 import java.util.*;
 
 public class SendablePriorityList extends SendableBase implements Sendable {

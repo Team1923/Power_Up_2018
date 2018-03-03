@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.commands.intake.IntakeControlCommand;
@@ -14,7 +15,6 @@ public class IntakeSubsystem extends Subsystem {
 
     private Ultrasonic leftUltrasonic;
     private Ultrasonic rightUltrasonic;
-    private long startTime;
 
     private DoubleSolenoid intakeArmSolenoid;
     private DoubleSolenoid intakePositionSolenoid;
@@ -31,12 +31,8 @@ public class IntakeSubsystem extends Subsystem {
         this.configureTalon(this.leftTalon);
         this.configureTalon(this.rightTalon);
 
-        this.leftTalon.setInverted(true);
-
-        this.startTime = 0;
-
-        this.leftUltrasonic = new Ultrasonic(RobotMap.Intake.LEFT_ULTRASONIC_PING_PORT, RobotMap.Intake.LEFT_ULTRASONIC_ECHO_PORT);
-        this.rightUltrasonic = new Ultrasonic(RobotMap.Intake.RIGHT_ULTRASONIC_PING_PORT, RobotMap.Intake.RIGHT_ULTRASONIC_ECHO_PORT);
+        this.leftUltrasonic = new Ultrasonic(RobotMap.Intake.LEFT_ULTRASONIC_PING_PORT, RobotMap.Intake.LEFT_ULTRASONIC_ECHO_PORT, Ultrasonic.Unit.kInches);
+        this.rightUltrasonic = new Ultrasonic(RobotMap.Intake.RIGHT_ULTRASONIC_PING_PORT, RobotMap.Intake.RIGHT_ULTRASONIC_ECHO_PORT, Ultrasonic.Unit.kInches);
         this.configureUltrasonic(this.leftUltrasonic);
         this.configureUltrasonic(this.rightUltrasonic);
     }
@@ -81,13 +77,8 @@ public class IntakeSubsystem extends Subsystem {
 
     @Override
     public void periodic() {
-        if (this.leftUltrasonic.getRangeInches() < 2 && this.rightUltrasonic.getRangeInches() < 2) {
-            if (this.startTime == 0) {
-                this.startTime = System.currentTimeMillis();
-            }
-        } else {
-            this.startTime = 0;
-        }
+        SmartDashboard.putBoolean("Intake Position", this.intakePositionSolenoid.get() == DoubleSolenoid.Value.kForward);
+        SmartDashboard.putBoolean("Intake Arms", this.intakeArmSolenoid.get() == DoubleSolenoid.Value.kForward);
     }
 
     private void configureUltrasonic(Ultrasonic ultrasonic) {

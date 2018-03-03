@@ -3,11 +3,13 @@ package org.usfirst.frc.team1923.robot.autonomous;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import org.usfirst.frc.team1923.robot.commands.auton.DoNothingAuton;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.usfirst.frc.team1923.robot.Robot;
+import org.usfirst.frc.team1923.robot.commands.auton.DoNothingAuton;
 
 public class AutonManager {
 
@@ -29,10 +31,14 @@ public class AutonManager {
 
         this.robotPosition.addDefault("None", Autonomous.Side.NONE);
         this.robotPosition.addObject("Left", Autonomous.Side.LEFT);
+        this.robotPosition.addObject("Left Straight", Autonomous.Side.LEFT_STRAIGHT);
         this.robotPosition.addObject("Center", Autonomous.Side.CENTER);
         this.robotPosition.addObject("Right", Autonomous.Side.RIGHT);
+        this.robotPosition.addObject("Right Straight", Autonomous.Side.RIGHT_STRAIGHT);
 
         SmartDashboard.putData("Robot Position", this.robotPosition);
+
+        //Robot.logger.addDataSource("AutonManager_Position", () -> this.robotPosition.getSelected().name());
     }
 
     public void periodic() {

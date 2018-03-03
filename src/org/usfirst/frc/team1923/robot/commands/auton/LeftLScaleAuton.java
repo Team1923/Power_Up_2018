@@ -1,11 +1,10 @@
 package org.usfirst.frc.team1923.robot.commands.auton;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+
 import org.usfirst.frc.team1923.robot.autonomous.Autonomous;
-import org.usfirst.frc.team1923.robot.commands.drive.DriveDistanceCommand;
-import org.usfirst.frc.team1923.robot.commands.drive.TurnEncoderCommand;
-import org.usfirst.frc.team1923.robot.commands.elevator.ElevatorPositionCommand;
-import org.usfirst.frc.team1923.robot.commands.intake.IntakeOutputCommand;
+import org.usfirst.frc.team1923.robot.commands.drive.DriveTrajectoryCommand;
+import org.usfirst.frc.team1923.robot.utils.pathfinder.TrajectoryStore;
 
 @Autonomous(
         name = "Left Left-Scale",
@@ -17,10 +16,7 @@ import org.usfirst.frc.team1923.robot.commands.intake.IntakeOutputCommand;
 public class LeftLScaleAuton extends CommandGroup {
 
     public LeftLScaleAuton() {
-        this.addParallel(new DriveDistanceCommand(140));
-        this.addParallel(new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.BOTTOM));
-        this.addSequential(new TurnEncoderCommand(-90));
-        this.addSequential(new IntakeOutputCommand(0.5));
+        this.addSequential(new DriveTrajectoryCommand(TrajectoryStore.Waypoints.LEFT_LSWITCHLAYUP));
     }
 
 }

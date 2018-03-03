@@ -1,12 +1,13 @@
 package org.usfirst.frc.team1923.robot.autonomous;
 
 import edu.wpi.first.wpilibj.command.Command;
-import org.usfirst.frc.team1923.robot.Robot;
 
 import java.lang.annotation.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.usfirst.frc.team1923.robot.Robot;
 
 public enum Preset {
 

@@ -1,37 +1,32 @@
 package org.usfirst.frc.team1923.robot.utils;
 
 import edu.wpi.first.wpilibj.Timer;
+
 import org.usfirst.frc.team1923.robot.RobotMap;
 
 public class EncoderCalculator {
 
     private double timestamp;
 
-    private int encoderValue;
-
     private double velocity;
     private double acceleration;
 
-    public EncoderCalculator() {
+    private final double wheelDiameter;
+
+    public EncoderCalculator(double wheelDiameter) {
         this.timestamp = this.getTime();
+
+        this.wheelDiameter = wheelDiameter;
     }
 
-    public void calculate(int encoderValue) {
+    public void calculate(double tickVelocity) {
         double dt = this.getTime() - this.timestamp;
 
-        if (dt < 0.75) {
-            return;
-        }
+        double velocity = 10.0 * tickVelocity * this.wheelDiameter * Math.PI / RobotMap.Robot.ENCODER_TICKS_PER_ROTATION;
 
-        double dr = (encoderValue - this.encoderValue) / RobotMap.Robot.ENCODER_TICKS_PER_ROTATION;
-        double dp = dr * Converter.inchesToFeet(RobotMap.Drivetrain.WHEEL_DIAMETER) * Math.PI;
-
-        double velocity = dp / dt;
-        double acceleration = (velocity - this.velocity) / dt;
-
+        this.acceleration = (this.velocity - velocity) / dt;
         this.velocity = velocity;
-        this.acceleration = acceleration;
-        this.encoderValue = encoderValue;
+
         this.timestamp = this.getTime();
     }
 

@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1923.robot.commands.intake;
 
 import edu.wpi.first.wpilibj.command.TimedCommand;
+
 import org.usfirst.frc.team1923.robot.Robot;
 
 public class IntakeOutputCommand extends TimedCommand {
@@ -17,11 +18,15 @@ public class IntakeOutputCommand extends TimedCommand {
     @Override
     protected void initialize() {
         Robot.intakeSubsystem.intake(-this.power);
+
+        System.out.println("IntakeOutputCommand Init @ " + System.currentTimeMillis());
     }
 
     @Override
     protected void end() {
         Robot.intakeSubsystem.stop();
+
+        System.out.println("IntakeOutputCommand End @ " + System.currentTimeMillis());
     }
 
     @Override
