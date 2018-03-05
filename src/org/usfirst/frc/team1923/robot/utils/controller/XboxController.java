@@ -100,11 +100,11 @@ public class XboxController extends Controller {
     }
 
     public double getLeftTrigger() {
-        return (this.leftTrigger.getX() + 1) / 2;
+        return this.leftTrigger.getX();
     }
 
     public double getRightTrigger() {
-        return (this.rightTrigger.getX() + 1) / 2;
+        return this.rightTrigger.getX();
     }
 
 }

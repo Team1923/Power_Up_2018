@@ -1,28 +1,19 @@
 package org.usfirst.frc.team1923.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team1923.robot.autonomous.Autonomous;
-import org.usfirst.frc.team1923.robot.autonomous.SendablePriorityList;
-import org.usfirst.frc.team1923.robot.commands.auton.CenterLScaleAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.CenterLSwitchAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.CenterRScaleAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.CenterRSwitchAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.CrossLineLongAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.CrossLineShortAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.DoNothingAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.LeftLScaleAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.LeftLSwitchAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.RightRScaleAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.RightRSwitchAuton;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.usfirst.frc.team1923.robot.autonomous.AutonManager;
+import org.usfirst.frc.team1923.robot.commands.auton.*;
 import org.usfirst.frc.team1923.robot.subsystems.DrivetrainSubsystem;
 import org.usfirst.frc.team1923.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team1923.robot.subsystems.IntakeSubsystem;
 import org.usfirst.frc.team1923.robot.subsystems.LEDSubsystem;
+import org.usfirst.frc.team1923.robot.utils.logger.Logger;
 import org.usfirst.frc.team1923.robot.utils.pathfinder.TrajectoryStore;
 
 public class Robot extends TimedRobot {
@@ -33,15 +24,20 @@ public class Robot extends TimedRobot {
     public static LEDSubsystem ledSubsystem;
 
     public static OI oi;
+ //   public static Logger logger;
 
-    private Command autonomousCommand;
-    private SendablePriorityList priorityList;
+    public static AutonManager autonManager;
+    private Command autonCommand;
+
+    private PowerDistributionPanel pdp;
 
     @Override
     public void robotInit() {
         System.out.println("Loading trajectories...");
         TrajectoryStore.loadTrajectories();
         System.out.println("Loaded all trajectories.");
+
+        this.pdp = new PowerDistributionPanel(RobotMap.Robot.PDP_PORT);
 
         drivetrainSubsystem = new DrivetrainSubsystem();
         elevatorSubsystem = new ElevatorSubsystem();
@@ -50,51 +46,80 @@ public class Robot extends TimedRobot {
 
         oi = new OI();
 
-        this.priorityList = new SendablePriorityList();
-        this.priorityList.add(new CenterLScaleAuton(), new CenterLSwitchAuton(), new CenterRScaleAuton(), new CenterRSwitchAuton(), new CrossLineLongAuton(), new CrossLineShortAuton(), new DoNothingAuton(), new LeftLScaleAuton(), new LeftLSwitchAuton(), new RightRScaleAuton(), new RightRSwitchAuton());
-        SmartDashboard.putData("Autonomous Mode Priority List", priorityList);
-    }
+//        logger = new Logger();
+//
+//        logger.addDataSource("DriverStation_Alliance", () -> DriverStation.getInstance().getAlliance().name());
+//        logger.addDataSource("DriverStation_GameSpecificMessage", () -> DriverStation.getInstance().getGameSpecificMessage());
+//        logger.addDataSource("DriverStation_MatchTime", () -> String.format("%.4g%n", DriverStation.getInstance().getMatchTime()));
+//
+//        logger.addDataSource("PDP_Voltage", () -> String.format("%.4g%n", this.pdp.getVoltage()));
+//        logger.addDataSource("PDP_Current", () -> String.format("%.4g%n", this.pdp.getTotalCurrent()));
+//        logger.addDataSource("PDP_Temp", () -> String.format("%.4g%n", this.pdp.getTemperature()));
+//
+//        for (int i = 0; i < 16; i++) {
+//            logger.addDataSource("PDP_Current" + i, () -> String.format("%.4g%n", this.pdp.getCurrent(0)));
+//        }
 
-    @Override
-    public void robotPeriodic() {
-        Scheduler.getInstance().run();
+        autonManager = new AutonManager();
+        autonManager.add(new CenterLSwitchAuton())
+                .add(new CenterRSwitchAuton())
+                .add(new SCrossLineShortAuton())
+                .add(new DoNothingAuton())
+                .add(new SLeftLSwitchAuton())
+                .add(new SRightRSwitchAuton());
     }
 
     @Override
     public void autonomousInit() {
-        this.autonomousCommand = null;
+        this.autonCommand = autonManager.getSelectedAuton();
 
-        Autonomous.FieldConfiguration fieldConfiguration = Autonomous.FieldConfiguration.valueOf(DriverStation.getInstance().getGameSpecificMessage());
+        if (this.autonCommand != null) {
+            this.autonCommand.start();
+        }
 
-        for (Command command : this.priorityList.getOrder()) {
-            if (!command.getClass().isAnnotationPresent(Autonomous.class)) {
-                System.out.println(command.getClass().getName() + " does not have the @Autonomous annotation");
+//        if (!logger.isActive()) {
+//            logger.initialize();
+//        }
+    }
 
-                continue;
-            }
-
-            Autonomous.FieldConfiguration[] fieldConfigurations = command.getClass().getAnnotation(Autonomous.class).fieldConfigurations();
-
-            for (Autonomous.FieldConfiguration possibleConfiguration : fieldConfigurations) {
-                if (possibleConfiguration == fieldConfiguration) {
-                    this.autonomousCommand = command;
-                    this.autonomousCommand.start();
-
-                    break;
-                }
-            }
-
-            if (this.autonomousCommand != null) {
-                break;
-            }
+    @Override
+    public void autonomousPeriodic() {
+        // In case the FMS does not send data at autonomousInit()
+        if (this.autonCommand == null) {
+            this.autonomousInit();
         }
     }
 
     @Override
     public void teleopInit() {
-        if (this.autonomousCommand != null) {
-            this.autonomousCommand.cancel();
+        if (this.autonCommand != null) {
+            this.autonCommand.cancel();
         }
+
+//        if (!logger.isActive()) {
+//            logger.initialize();
+//        }
+    }
+
+    @Override
+    public void disabledInit() {
+        if (this.autonCommand != null) {
+            this.autonCommand.cancel();
+        }
+
+        this.autonCommand = null;
+
+   //     logger.save();
+    }
+
+    @Override
+    public void robotPeriodic() {
+        Scheduler.getInstance().run();
+
+        autonManager.periodic();
+
+        SmartDashboard.putNumber("Match Time Remaining", DriverStation.getInstance().getMatchTime());
+      //  logger.periodic();
     }
 
 }

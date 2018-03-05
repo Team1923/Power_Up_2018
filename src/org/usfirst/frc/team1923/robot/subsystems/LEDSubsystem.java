@@ -3,8 +3,6 @@ package org.usfirst.frc.team1923.robot.subsystems;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-import org.usfirst.frc.team1923.robot.commands.led.LEDOffCommand;
-
 import java.util.Arrays;
 
 // TODO: Cache, Blink, Arduino
@@ -94,7 +92,7 @@ public class LEDSubsystem extends Subsystem {
 
     @Override
     protected void initDefaultCommand() {
-        this.setDefaultCommand(new LEDOffCommand());
+
     }
 
 }

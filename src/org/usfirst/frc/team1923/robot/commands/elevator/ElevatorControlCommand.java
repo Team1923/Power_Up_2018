@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1923.robot.commands.elevator;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 import org.usfirst.frc.team1923.robot.Robot;
@@ -15,7 +17,11 @@ public class ElevatorControlCommand extends Command {
 
     @Override
     protected void execute() {
-        // Robot.elevatorSubsystem.set(ControlMode.PercentOutput, Robot.oi.operator.getRightY());
+        double outputPower = Robot.oi.operator.getLeftTrigger() > 0 ? -Robot.oi.operator.getLeftTrigger() : Robot.oi.operator.getRightTrigger();
+
+        outputPower = outputPower * 0.50;
+
+        Robot.elevatorSubsystem.set(ControlMode.PercentOutput, outputPower);
     }
 
     @Override

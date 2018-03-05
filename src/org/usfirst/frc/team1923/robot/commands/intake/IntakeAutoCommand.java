@@ -1,8 +1,8 @@
 package org.usfirst.frc.team1923.robot.commands.intake;
 
-import org.usfirst.frc.team1923.robot.Robot;
-
 import edu.wpi.first.wpilibj.command.TimedCommand;
+
+import org.usfirst.frc.team1923.robot.Robot;
 
 /**
  * Run intake until cube is secured, command times out, or overridden by operator control whichever comes first.
@@ -30,7 +30,7 @@ public class IntakeAutoCommand extends TimedCommand {
 
     @Override
     protected boolean isFinished() {
-        return Robot.intakeSubsystem.isSecure() || super.isFinished();
+        return super.isFinished();
     }
 
     @Override

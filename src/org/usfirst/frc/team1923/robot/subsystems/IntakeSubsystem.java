@@ -6,47 +6,51 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.commands.intake.IntakeControlCommand;
 
 public class IntakeSubsystem extends Subsystem {
 
-    private static final int SECURE_THRESHOLD = 750;
-
     private Ultrasonic leftUltrasonic;
     private Ultrasonic rightUltrasonic;
-    private long startTime;
 
-    private DoubleSolenoid solenoid;
+    private DoubleSolenoid intakeArmSolenoid;
+    private DoubleSolenoid intakePositionSolenoid;
 
     private TalonSRX leftTalon;
     private TalonSRX rightTalon;
 
     public IntakeSubsystem() {
-        this.solenoid = new DoubleSolenoid(RobotMap.PCM_MODULE_PORT, RobotMap.INTAKE_SOLENOID_FORWARD_PORT, RobotMap.INTAKE_SOLENOID_REVERSE_PORT);
+        this.intakeArmSolenoid = new DoubleSolenoid(RobotMap.Robot.PCM_PORT, RobotMap.Intake.SOLENOID_OPEN_PORT, RobotMap.Intake.SOLENOID_CLOSE_PORT);
+        this.intakePositionSolenoid = new DoubleSolenoid(RobotMap.Robot.PCM_PORT, RobotMap.Intake.SOLENOID_RAISE_PORT, RobotMap.Intake.SOLENOID_LOWER_PORT);
 
-        this.leftTalon = new TalonSRX(RobotMap.INTAKE_LEFT_TALON_PORT);
-        this.rightTalon = new TalonSRX(RobotMap.INTAKE_RIGHT_TALON_PORT);
+        this.leftTalon = new TalonSRX(RobotMap.Intake.LEFT_TALON_PORT);
+        this.rightTalon = new TalonSRX(RobotMap.Intake.RIGHT_TALON_PORT);
         this.configureTalon(this.leftTalon);
         this.configureTalon(this.rightTalon);
 
-        this.leftTalon.setInverted(true);
-
-        this.startTime = 0;
-
-        this.leftUltrasonic = new Ultrasonic(RobotMap.INTAKE_LEFT_ULTRASONIC_PING_PORT, RobotMap.INTAKE_LEFT_ULTRASONIC_ECHO_PORT);
-        this.rightUltrasonic = new Ultrasonic(RobotMap.INTAKE_RIGHT_ULTRASONIC_PING_PORT, RobotMap.INTAKE_RIGHT_ULTRASONIC_ECHO_PORT);
+        this.leftUltrasonic = new Ultrasonic(RobotMap.Intake.LEFT_ULTRASONIC_PING_PORT, RobotMap.Intake.LEFT_ULTRASONIC_ECHO_PORT, Ultrasonic.Unit.kInches);
+        this.rightUltrasonic = new Ultrasonic(RobotMap.Intake.RIGHT_ULTRASONIC_PING_PORT, RobotMap.Intake.RIGHT_ULTRASONIC_ECHO_PORT, Ultrasonic.Unit.kInches);
         this.configureUltrasonic(this.leftUltrasonic);
         this.configureUltrasonic(this.rightUltrasonic);
     }
 
     public void open() {
-        this.solenoid.set(DoubleSolenoid.Value.kForward);
+        this.intakeArmSolenoid.set(DoubleSolenoid.Value.kForward);
     }
 
     public void close() {
-        this.solenoid.set(DoubleSolenoid.Value.kReverse);
+        this.intakeArmSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+
+    public void raise() {
+        this.intakePositionSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
+
+    public void lower() {
+        this.intakePositionSolenoid.set(DoubleSolenoid.Value.kReverse);
     }
 
     public void intake(double speed) {
@@ -73,17 +77,8 @@ public class IntakeSubsystem extends Subsystem {
 
     @Override
     public void periodic() {
-        if (this.leftUltrasonic.getRangeInches() < 2 && this.rightUltrasonic.getRangeInches() < 2) {
-            if (this.startTime == 0) {
-                this.startTime = System.currentTimeMillis();
-            }
-        } else {
-            this.startTime = 0;
-        }
-    }
-
-    public boolean isSecure() {
-        return this.startTime + SECURE_THRESHOLD < System.currentTimeMillis();
+        SmartDashboard.putBoolean("Intake Position", this.intakePositionSolenoid.get() == DoubleSolenoid.Value.kForward);
+        SmartDashboard.putBoolean("Intake Arms", this.intakeArmSolenoid.get() == DoubleSolenoid.Value.kForward);
     }
 
     private void configureUltrasonic(Ultrasonic ultrasonic) {
@@ -93,10 +88,10 @@ public class IntakeSubsystem extends Subsystem {
     }
 
     private void configureTalon(TalonSRX talon) {
-        talon.configNominalOutputForward(0, RobotMap.TALON_COMMAND_TIMEOUT);
-        talon.configNominalOutputReverse(0, RobotMap.TALON_COMMAND_TIMEOUT);
-        talon.configPeakOutputForward(1, RobotMap.TALON_COMMAND_TIMEOUT);
-        talon.configPeakOutputReverse(-1, RobotMap.TALON_COMMAND_TIMEOUT);
+        talon.configNominalOutputForward(0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        talon.configNominalOutputReverse(0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        talon.configPeakOutputForward(1, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        talon.configPeakOutputReverse(-1, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
     }
 
 }

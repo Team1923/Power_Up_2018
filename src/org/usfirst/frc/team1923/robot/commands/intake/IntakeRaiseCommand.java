@@ -4,18 +4,15 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 
 import org.usfirst.frc.team1923.robot.Robot;
 
-/**
- * Open the intake.
- */
-public class IntakeOpenCommand extends InstantCommand {
+public class IntakeRaiseCommand extends InstantCommand {
 
-    public IntakeOpenCommand() {
+    public IntakeRaiseCommand() {
         this.requires(Robot.intakeSubsystem);
     }
 
     @Override
     protected void initialize() {
-        Robot.intakeSubsystem.open();
+        Robot.intakeSubsystem.raise();
     }
 
 }
