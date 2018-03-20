@@ -10,10 +10,11 @@ public class ElevatorMoveCommand extends Command {
 
     private double out;
 
-    public ElevatorMoveCommand(double out) {
+    public ElevatorMoveCommand(double out, double timeout) {
         this.requires(Robot.elevatorSubsystem);
 
         this.out = out;
+        this.setTimeout(timeout);
     }
 
     @Override
@@ -23,7 +24,7 @@ public class ElevatorMoveCommand extends Command {
 
     @Override
     protected boolean isFinished() {
-        return false;
+        return this.isTimedOut();
     }
 
     @Override
@@ -33,7 +34,7 @@ public class ElevatorMoveCommand extends Command {
 
     @Override
     protected void interrupted() {
-        Robot.elevatorSubsystem.stop();
+        this.end();
     }
 
 }
