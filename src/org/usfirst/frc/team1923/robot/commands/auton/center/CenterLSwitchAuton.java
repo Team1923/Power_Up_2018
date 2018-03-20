@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import org.usfirst.frc.team1923.robot.autonomous.Autonomous;
 import org.usfirst.frc.team1923.robot.commands.drive.DriveTrajectoryCommand;
 import org.usfirst.frc.team1923.robot.commands.elevator.ElevatorPositionCommand;
-import org.usfirst.frc.team1923.robot.commands.intake.IntakeOutputCommand;
+import org.usfirst.frc.team1923.robot.commands.intake.IntakeTimeCommand;
 import org.usfirst.frc.team1923.robot.utils.pathfinder.TrajectoryStore;
 
 @Autonomous(
@@ -23,7 +23,7 @@ public class CenterLSwitchAuton extends CommandGroup {
         commandGroup.addParallel(new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.SWITCH));
 
         this.addSequential(commandGroup);
-        this.addSequential(new IntakeOutputCommand(-1.0));
+        this.addSequential(new IntakeTimeCommand(-1.0));
     }
 
 }
