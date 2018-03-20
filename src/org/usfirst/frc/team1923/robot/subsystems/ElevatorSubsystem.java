@@ -7,11 +7,11 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team1923.robot.Robot;
 import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.commands.elevator.ElevatorControlCommand;
 import org.usfirst.frc.team1923.robot.utils.Converter;
 import org.usfirst.frc.team1923.robot.utils.EncoderCalculator;
+import org.usfirst.frc.team1923.robot.utils.PIDF;
 
 public class ElevatorSubsystem extends Subsystem {
 
@@ -45,29 +45,23 @@ public class ElevatorSubsystem extends Subsystem {
         this.talons[0].configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyOpen, RobotMap.Elevator.TALON_PORTS[1], RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
 
         this.talons[0].configSetParameter(ParamEnum.eClearPositionOnLimitR, 1, 0, 0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.talons[0].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        this.talons[0].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
         this.talons[0].setSensorPhase(false);
 
 
-        this.talons[0].config_kP(0, RobotMap.Elevator.MM_P, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.talons[0].config_kI(0, RobotMap.Elevator.MM_I, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.talons[0].config_kD(0, RobotMap.Elevator.MM_D, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.talons[0].config_kF(0, RobotMap.Elevator.MM_F, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.talons[0].configAllowableClosedloopError(0, RobotMap.Elevator.MM_ALLOWABLE_ERROR, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        this.talons[0].config_kP(PIDF.TALON_MOTIONMAGIC_SLOT, RobotMap.Elevator.MM_PIDF.getP(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        this.talons[0].config_kI(PIDF.TALON_MOTIONMAGIC_SLOT, RobotMap.Elevator.MM_PIDF.getI(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        this.talons[0].config_kD(PIDF.TALON_MOTIONMAGIC_SLOT, RobotMap.Elevator.MM_PIDF.getD(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        this.talons[0].config_kF(PIDF.TALON_MOTIONMAGIC_SLOT, RobotMap.Elevator.MM_PIDF.getF(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        this.talons[0].configAllowableClosedloopError(PIDF.TALON_MOTIONMAGIC_SLOT, RobotMap.Elevator.MM_ALLOWABLE_ERROR, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
 
         this.encoderCalculator = new EncoderCalculator(RobotMap.Elevator.PULLEY_DIAMETER);
-
-//        Robot.logger.addDataSource("Elevator_Encoder", () -> this.getEncoderPosition() + "");
-//        Robot.logger.addDataSource("Elevator_Velocity", () -> String.format("%.4g%n", this.encoderCalculator.getVelocity()));
-//        Robot.logger.addDataSource("Elevator_Accel", () -> String.format("%.4g%n", this.encoderCalculator.getAcceleration()));
-//        Robot.logger.addDataSource("Elevator_TalonMode", () -> this.talons[0].getControlMode().name());
     }
 
     @Override
     public void periodic() {
-        this.encoderCalculator.calculate(this.talons[0].getSelectedSensorVelocity(0));
+        this.encoderCalculator.calculate(this.talons[0].getSelectedSensorVelocity(PIDF.PRIMARY_LOOP));
 
-        SmartDashboard.putNumber("Elevator Velocity", this.encoderCalculator.getVelocity());
         SmartDashboard.putNumber("Elevator Encoder", this.getEncoderPosition());
         SmartDashboard.putNumber("Elevator Position", this.getElevatorPosition());
 
@@ -79,16 +73,12 @@ public class ElevatorSubsystem extends Subsystem {
         return this.talons[1].getSensorCollection().isFwdLimitSwitchClosed();
     }
 
-    public double getElevatorVelocity() {
-        return this.encoderCalculator.getVelocity() * 12.0;
-    }
-
     public double getElevatorPosition() {
         return Converter.ticksToInches(this.getEncoderPosition(), RobotMap.Elevator.PULLEY_DIAMETER);
     }
 
     public int getEncoderPosition() {
-        return this.talons[0].getSelectedSensorPosition(0);
+        return this.talons[0].getSelectedSensorPosition(PIDF.PRIMARY_LOOP);
     }
 
     public void stop() {

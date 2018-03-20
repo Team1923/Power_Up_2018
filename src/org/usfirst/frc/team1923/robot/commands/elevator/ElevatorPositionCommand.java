@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.command.Command;
 
 import org.usfirst.frc.team1923.robot.Robot;
 import org.usfirst.frc.team1923.robot.RobotMap;
-import org.usfirst.frc.team1923.robot.utils.logger.TransientDataSource;
 
 /**
  * Move the elevator to a set position
@@ -20,21 +19,6 @@ public class ElevatorPositionCommand extends Command {
         this(position.getPosition());
 
         this.elevatorPosition = position;
-
-//        Robot.logger.addTransientDataSource("ElevatorPositionCommand_TargetEncoderTick", new TransientDataSource(
-//                () -> this.position + "",
-//                this::isRunning
-//        ));
-//
-//        Robot.logger.addTransientDataSource("ElevatorPositionCommand_Error", new TransientDataSource(
-//                () -> (this.position - Robot.elevatorSubsystem.getEncoderPosition()) + "",
-//                this::isRunning
-//        ));
-//
-//        Robot.logger.addTransientDataSource("ElevatorPositionCommand_Preset", new TransientDataSource(
-//                position::name,
-//                this::isRunning
-//        ));
     }
 
     public ElevatorPositionCommand(double position) {
@@ -42,17 +26,15 @@ public class ElevatorPositionCommand extends Command {
 
         this.position = (position / RobotMap.Elevator.PULLEY_DIAMETER / Math.PI) * RobotMap.Robot.ENCODER_TICKS_PER_ROTATION;
         this.setTimeout(6);
+        this.setInterruptible(false);
     }
 
     @Override
-    protected void initialize() {
-        System.out.println("ElevatorPositionCommand Init @ " + System.currentTimeMillis());
-    }
-
     protected void execute() {
         Robot.elevatorSubsystem.set(ControlMode.MotionMagic, this.position);
     }
 
+    @Override
     protected boolean isFinished() {
         if (this.elevatorPosition == ElevatorPosition.TOP && Robot.elevatorSubsystem.getForwardLimitSwitch()) {
             return true;
@@ -61,12 +43,12 @@ public class ElevatorPositionCommand extends Command {
         return Math.abs(this.position - Robot.elevatorSubsystem.getEncoderPosition()) < RobotMap.Elevator.MM_ALLOWABLE_ERROR;
     }
 
+    @Override
     protected void end() {
         Robot.elevatorSubsystem.stop();
-
-        System.out.println("ElevatorPositionCommand End @ " + System.currentTimeMillis());
     }
 
+    @Override
     protected void interrupted() {
         this.end();
     }

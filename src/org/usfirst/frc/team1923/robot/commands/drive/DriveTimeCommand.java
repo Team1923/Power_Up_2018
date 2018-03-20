@@ -30,7 +30,7 @@ public class DriveTimeCommand extends TimedCommand {
 
     @Override
     protected void interrupted() {
-        Robot.drivetrainSubsystem.stop();
+        this.end();
     }
 
 }

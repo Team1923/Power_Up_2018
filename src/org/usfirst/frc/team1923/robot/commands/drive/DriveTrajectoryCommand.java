@@ -3,18 +3,19 @@ package org.usfirst.frc.team1923.robot.commands.drive;
 import com.ctre.phoenix.motion.MotionProfileStatus;
 import com.ctre.phoenix.motion.SetValueMotionProfile;
 import com.ctre.phoenix.motion.TrajectoryPoint;
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Command;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.modifiers.TankModifier;
 
 import org.usfirst.frc.team1923.robot.Robot;
 import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.utils.Converter;
-import org.usfirst.frc.team1923.robot.utils.logger.TransientDataSource;
+import org.usfirst.frc.team1923.robot.utils.PIDF;
 import org.usfirst.frc.team1923.robot.utils.pathfinder.TrajectoryStore;
 
 public class DriveTrajectoryCommand extends Command {
@@ -27,11 +28,8 @@ public class DriveTrajectoryCommand extends Command {
     private Trajectory leftTrajectory;
     private Trajectory rightTrajectory;
 
-    private int leftTarget;
-    private int rightTarget;
-
-    public DriveTrajectoryCommand(TrajectoryStore.Waypoints waypoints) {
-        this(TrajectoryStore.loadTrajectory(waypoints));
+    public DriveTrajectoryCommand(TrajectoryStore.Path path) {
+        this(TrajectoryStore.loadTrajectory(path));
     }
 
     public DriveTrajectoryCommand(Trajectory trajectory) {
@@ -45,94 +43,57 @@ public class DriveTrajectoryCommand extends Command {
         this.leftMPStatus.topBufferCnt = Integer.MAX_VALUE;
         this.rightMPStatus.btmBufferCnt = Integer.MAX_VALUE;
 
-//        Robot.logger.addTransientDataSource("DriveTrajectoryCommand_LeftError", new TransientDataSource(
-//                () -> (
-//                        Converter.inchesToTicks(
-//                                Converter.feetToInches(this.leftTrajectory.segments[this.leftTrajectory.segments.length - this.leftMPStatus.topBufferCnt - this.leftMPStatus.btmBufferCnt - 1].position),
-//                                RobotMap.Drivetrain.WHEEL_DIAMETER
-//                        ) - Robot.drivetrainSubsystem.getLeftEncoderPosition()
-//                ) + "",
-//                this::isRunning
-//        ));
-//
-//        Robot.logger.addTransientDataSource("DriveTrajectoryCommand_RightError", new TransientDataSource(
-//                () -> (
-//                        Converter.inchesToTicks(
-//                                Converter.feetToInches(this.rightTrajectory.segments[this.rightTrajectory.segments.length - this.rightMPStatus.topBufferCnt - this.rightMPStatus.btmBufferCnt - 1].position),
-//                                RobotMap.Drivetrain.WHEEL_DIAMETER
-//                        ) - Robot.drivetrainSubsystem.getLeftEncoderPosition()
-//                ) + "",
-//                this::isRunning
-//        ));
+        this.setInterruptible(false);
     }
 
     @Override
     protected void initialize() {
-        this.resetTalons();
-
+        Robot.drivetrainSubsystem.stop();
+        Robot.drivetrainSubsystem.resetHeading();
         Robot.drivetrainSubsystem.resetPosition();
+        Robot.drivetrainSubsystem.getLeftMasterTalon().clearMotionProfileTrajectories();
+        Robot.drivetrainSubsystem.getLeftMasterTalon().clearMotionProfileHasUnderrun(0);
+        Robot.drivetrainSubsystem.getRightMasterTalon().clearMotionProfileTrajectories();
+        Robot.drivetrainSubsystem.getRightMasterTalon().clearMotionProfileHasUnderrun(0);
+        Robot.drivetrainSubsystem.setMotionProfile(SetValueMotionProfile.Disable);
 
         TankModifier modifier = new TankModifier(this.trajectory).modify(Converter.inchesToFeet(RobotMap.Drivetrain.WHEELBASE_WIDTH));
-
-        this.leftMPStatus = new MotionProfileStatus();
-        this.rightMPStatus = new MotionProfileStatus();
-
-        this.leftMPStatus.topBufferCnt = Integer.MAX_VALUE;
-        this.rightMPStatus.btmBufferCnt = Integer.MAX_VALUE;
-
         this.leftTrajectory = modifier.getLeftTrajectory();
         this.rightTrajectory = modifier.getRightTrajectory();
 
-        this.leftTarget = Converter.inchesToTicks(Converter.feetToInches(this.leftTrajectory.segments[this.leftTrajectory.segments.length - 1].position), RobotMap.Drivetrain.WHEEL_DIAMETER);
-        this.rightTarget = Converter.inchesToTicks(Converter.feetToInches(this.rightTrajectory.segments[this.rightTrajectory.segments.length - 1].position), RobotMap.Drivetrain.WHEEL_DIAMETER);
-
-        Robot.drivetrainSubsystem.setMotionProfile(SetValueMotionProfile.Disable);
+        this.leftMPStatus = new MotionProfileStatus();
+        this.rightMPStatus = new MotionProfileStatus();
+        this.leftMPStatus.topBufferCnt = Integer.MAX_VALUE;
+        this.rightMPStatus.btmBufferCnt = Integer.MAX_VALUE;
 
         this.pushTrajectoryPoints();
 
         Robot.drivetrainSubsystem.setMotionProfile(SetValueMotionProfile.Enable);
-
-        System.out.println("DriveTrajectoryCommand Init @ " + System.currentTimeMillis());
     }
 
     @Override
     protected void execute() {
         Robot.drivetrainSubsystem.getLeftMasterTalon().getMotionProfileStatus(this.leftMPStatus);
         Robot.drivetrainSubsystem.getRightMasterTalon().getMotionProfileStatus(this.rightMPStatus);
-
-        System.out.println("Left Segment: " + this.getLeftSegmentId() + ", Right Segment: " + this.getRightSegmentId());
     }
 
     @Override
     protected boolean isFinished() {
-        if (Robot.oi.driver.cross.get()) {
-            return false;
-        }
-
         return this.leftMPStatus.isLast && this.rightMPStatus.isLast;
+    }
+
+    public boolean isAlmostFinished(int segmentsRemaining) {
+        return this.leftMPStatus.btmBufferCnt + this.leftMPStatus.topBufferCnt < segmentsRemaining && this.rightMPStatus.btmBufferCnt + this.rightMPStatus.topBufferCnt < segmentsRemaining;
     }
 
     @Override
     protected void end() {
-        Robot.drivetrainSubsystem.setMotionProfile(SetValueMotionProfile.Disable);
         Robot.drivetrainSubsystem.stop();
-
-        System.out.println("DriveTrajectoryCommand End @ " + System.currentTimeMillis());
     }
 
     @Override
     protected void interrupted() {
         this.end();
-    }
-
-    private void resetTalons() {
-        System.out.println("RESET");
-        Robot.drivetrainSubsystem.drive(ControlMode.PercentOutput, 0, 0);
-
-        Robot.drivetrainSubsystem.getLeftMasterTalon().clearMotionProfileTrajectories();
-        Robot.drivetrainSubsystem.getLeftMasterTalon().clearMotionProfileHasUnderrun(0);
-        Robot.drivetrainSubsystem.getRightMasterTalon().clearMotionProfileTrajectories();
-        Robot.drivetrainSubsystem.getRightMasterTalon().clearMotionProfileHasUnderrun(0);
     }
 
     private void pushTrajectoryPoints() {
@@ -158,23 +119,17 @@ public class DriveTrajectoryCommand extends Command {
     private void pushTrajectoryPoint(Trajectory.Segment segment, TalonSRX talon, boolean isFirst, boolean isLast) {
         TrajectoryPoint point = new TrajectoryPoint();
 
-        point.headingDeg = 0;
-        point.isLastPoint = isLast;
         point.position = Converter.inchesToTicks(Converter.feetToInches(segment.position), RobotMap.Drivetrain.WHEEL_DIAMETER);
-        point.profileSlotSelect0 = 1;
+        point.auxiliaryPos = Pathfinder.boundHalfDegrees(Pathfinder.r2d(segment.heading)) * 10.0;
+        point.headingDeg = Pathfinder.r2d(segment.heading);
+        point.profileSlotSelect0 = PIDF.TALON_MOTIONPROFILE_SLOT;
+        point.profileSlotSelect1 = PIDF.TALON_GYRO_SLOT;
         point.timeDur = TrajectoryPoint.TrajectoryDuration.Trajectory_Duration_0ms;
-        point.velocity = Converter.inchesToTicks(Converter.feetToInches(segment.velocity), RobotMap.Drivetrain.WHEEL_DIAMETER);
+        point.velocity = Converter.inchesToTicks(Converter.feetToInches(segment.velocity), RobotMap.Drivetrain.WHEEL_DIAMETER) / 10.0;
         point.zeroPos = isFirst;
+        point.isLastPoint = isLast;
 
         talon.pushMotionProfileTrajectory(point);
-    }
-
-    public int getLeftSegmentId() {
-        return this.leftTrajectory.segments.length - this.leftMPStatus.btmBufferCnt - this.leftMPStatus.topBufferCnt - 1;
-    }
-
-    public int getRightSegmentId() {
-        return this.rightTrajectory.segments.length - this.rightMPStatus.btmBufferCnt - this.rightMPStatus.topBufferCnt - 1;
     }
 
 }

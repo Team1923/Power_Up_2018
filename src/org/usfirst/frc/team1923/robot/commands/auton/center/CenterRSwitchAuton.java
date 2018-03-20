@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1923.robot.commands.auton;
+package org.usfirst.frc.team1923.robot.commands.auton.center;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -7,11 +7,11 @@ import org.usfirst.frc.team1923.robot.commands.QueueCommand;
 import org.usfirst.frc.team1923.robot.commands.drive.DriveTrajectoryCommand;
 import org.usfirst.frc.team1923.robot.commands.elevator.ElevatorPositionCommand;
 import org.usfirst.frc.team1923.robot.commands.intake.IntakeTimeCommand;
+import org.usfirst.frc.team1923.robot.utils.CGUtils;
 import org.usfirst.frc.team1923.robot.utils.pathfinder.TrajectoryStore;
 
 @Autonomous(
-        name = "Center Right-Switch",
-        description = "Starting from the center, place a cube in the right switch",
+        name = "C > RSwitch",
         startingPosition = Autonomous.Side.CENTER,
         fieldConfigurations = { Autonomous.FieldConfiguration.RRR, Autonomous.FieldConfiguration.RLR },
         defaultPriority = 75
@@ -19,30 +19,15 @@ import org.usfirst.frc.team1923.robot.utils.pathfinder.TrajectoryStore;
 public class CenterRSwitchAuton extends CommandGroup {
 
     public CenterRSwitchAuton() {
-//        CommandGroup commandGroup = new CommandGroup();
-//        commandGroup.addParallel(new DriveTrajectoryCommand(TrajectoryStore.Waypoints.CENTER_RSWITCHLAYUP));
-//        commandGroup.addParallel(new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.SWITCH));
-//
-//        this.addSequential(commandGroup);
-//        this.addSequential(new IntakeTimeCommand(-1.0));
+        DriveTrajectoryCommand drive = new DriveTrajectoryCommand(TrajectoryStore.Path.CENTER_RSWITCHLAYUP);
 
-//        CommandGroup commandGroup = new CommandGroup();
-//        DriveTrajectoryCommand drive = new DriveTrajectoryCommand(TrajectoryStore.Waypoints.CENTER_RSWITCHLAYUP);
-//        commandGroup.addParallel(drive);
-//        commandGroup.addParallel(new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.SWITCH));
-//
-//        commandGroup.addParallel(new QueueCommand(
-//                new IntakeTimeCommand(-1.0),
-//                () -> drive.getLeftSegmentId() > 145 && drive.getRightSegmentId() > 145
-//        ));
-
-        final DriveTrajectoryCommand driveTrajectory = new DriveTrajectoryCommand(TrajectoryStore.Waypoints.CENTER_RSWITCHLAYUP);
-
-        this.addParallel(driveTrajectory);
-        this.addParallel(new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.SWITCH));
-        this.addParallel(new QueueCommand(
-                new IntakeTimeCommand(-1.0),
-                () -> driveTrajectory.isAlmostFinished(25)
+        this.addSequential(CGUtils.parallel(
+                drive,
+                new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.SWITCH),
+                new QueueCommand(
+                        new IntakeTimeCommand(0.5),
+                        () -> drive.isAlmostFinished(50)
+                )
         ));
     }
 

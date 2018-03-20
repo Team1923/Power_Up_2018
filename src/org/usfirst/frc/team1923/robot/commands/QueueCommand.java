@@ -7,7 +7,7 @@ public class QueueCommand extends Command {
     private Command command;
     private QueueCommandConditional conditional;
 
-    private boolean finished;
+    private boolean initialized;
 
     public QueueCommand(Command command, QueueCommandConditional conditional) {
         this.command = command;
@@ -16,19 +16,30 @@ public class QueueCommand extends Command {
 
     @Override
     protected void initialize() {
-        this.finished = false;
+        this.initialized = false;
     }
 
     @Override
     protected void execute() {
-        if (this.conditional.isTrue()) {
+        if (this.conditional.isTrue() && !this.initialized) {
             this.command.start();
+            this.initialized = true;
         }
     }
 
     @Override
     protected boolean isFinished() {
-        return this.finished;
+        return this.initialized && !this.command.isRunning();
+    }
+
+    @Override
+    protected void end() {
+        this.command.cancel();
+    }
+
+    @Override
+    protected void interrupted() {
+        this.end();
     }
 
     public interface QueueCommandConditional {

@@ -19,7 +19,19 @@ public class ElevatorControlCommand extends Command {
     protected void execute() {
         double outputPower = Robot.oi.operator.getLeftTrigger() > 0 ? -Robot.oi.operator.getLeftTrigger() : Robot.oi.operator.getRightTrigger();
 
-        outputPower = outputPower * 0.50;
+        outputPower = outputPower * 0.75;
+
+        if (Robot.elevatorSubsystem.getElevatorPosition() < 16 && outputPower < 0) {
+            double maxOutputPower = -(0.002 * Math.pow(Robot.elevatorSubsystem.getElevatorPosition(), 2) + 0.175);
+
+            outputPower = Math.max(outputPower, maxOutputPower);
+        }
+
+        if (Robot.elevatorSubsystem.getElevatorPosition() > 60 && outputPower > 0) {
+            double maxOutputPower = 0.002 * Math.pow(74 - Robot.elevatorSubsystem.getElevatorPosition(), 2) + 0.175;
+
+            outputPower = Math.min(maxOutputPower, outputPower);
+        }
 
         Robot.elevatorSubsystem.set(ControlMode.PercentOutput, outputPower);
     }
@@ -36,7 +48,7 @@ public class ElevatorControlCommand extends Command {
 
     @Override
     protected void interrupted() {
-        Robot.elevatorSubsystem.stop();
+        this.end();
     }
 
 }
