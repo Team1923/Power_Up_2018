@@ -15,8 +15,6 @@ public @interface Autonomous {
 
     String name();
 
-    String description() default "Autonomous Command";
-
     Side[] startingPosition();
 
     FieldConfiguration[] fieldConfigurations() default { FieldConfiguration.LLL, FieldConfiguration.RRR, FieldConfiguration.LRL, FieldConfiguration.RLR };
@@ -26,10 +24,8 @@ public @interface Autonomous {
     public enum Side {
         NONE,
         LEFT,
-        LEFT_STRAIGHT,
         CENTER,
-        RIGHT,
-        RIGHT_STRAIGHT
+        RIGHT
     }
 
     public enum FieldConfiguration {

@@ -6,11 +6,15 @@ import edu.wpi.first.wpilibj.command.Command;
 
 import org.usfirst.frc.team1923.robot.Robot;
 
-public class ElevatorMoveCommand extends Command {
+public class ElevatorTimeCommand extends Command {
 
     private double out;
 
-    public ElevatorMoveCommand(double out, double timeout) {
+    public ElevatorTimeCommand(double out) {
+        this(out, 1.0);
+    }
+
+    public ElevatorTimeCommand(double out, double timeout) {
         this.requires(Robot.elevatorSubsystem);
 
         this.out = out;

@@ -1,14 +1,13 @@
 package org.usfirst.frc.team1923.robot.commands.auton.left;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-
 import edu.wpi.first.wpilibj.command.WaitCommand;
+
 import org.usfirst.frc.team1923.robot.autonomous.Autonomous;
 import org.usfirst.frc.team1923.robot.commands.QueueCommand;
 import org.usfirst.frc.team1923.robot.commands.drive.DriveDistanceCommand;
 import org.usfirst.frc.team1923.robot.commands.drive.DriveTrajectoryCommand;
 import org.usfirst.frc.team1923.robot.commands.drive.TurnEncoderCommand;
-import org.usfirst.frc.team1923.robot.commands.drive.TurnGyroCommand;
 import org.usfirst.frc.team1923.robot.commands.elevator.ElevatorTimeCommand;
 import org.usfirst.frc.team1923.robot.commands.elevator.ElevatorPositionCommand;
 import org.usfirst.frc.team1923.robot.commands.intake.IntakeLowerCommand;
@@ -18,15 +17,14 @@ import org.usfirst.frc.team1923.robot.utils.CGUtils;
 import org.usfirst.frc.team1923.robot.utils.pathfinder.TrajectoryStore;
 
 @Autonomous(
-        name = "Left Left-Scale",
-        description = "Starting from the left, place a cube in the left scale",
+        name = "L > LScale > LSwitch",
         startingPosition = Autonomous.Side.LEFT,
-       // fieldConfigurations = { Autonomous.FieldConfiguration.LLL, Autonomous.FieldConfiguration.RLR },
+        fieldConfigurations = { Autonomous.FieldConfiguration.LLL },
         defaultPriority = 50
 )
-public class LeftLScaleAuton extends CommandGroup {
+public class LeftLScaleLSwitchAuton extends CommandGroup {
 
-    public LeftLScaleAuton() {
+    public LeftLScaleLSwitchAuton() {
         DriveTrajectoryCommand drive = new DriveTrajectoryCommand(TrajectoryStore.Path.LEFT_LSCALE);
 
         this.addSequential(CGUtils.parallel(

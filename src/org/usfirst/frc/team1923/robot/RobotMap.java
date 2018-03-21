@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1923.robot;
 
+import org.usfirst.frc.team1923.robot.utils.PIDF;
+
 /**
  * Class of constants. Unless otherwise specified, all measurements are in inches, angles in degrees, and times in seconds.
  */
@@ -19,6 +21,7 @@ public abstract class RobotMap {
         public static final int CTRE_COMMAND_TIMEOUT_MS = 15; // milliseconds
 
         public static final int ENCODER_TICKS_PER_ROTATION = 4096; // encoder ticks
+        public static final int PIDGEON_UNITS_PER_ROTATION = 8192; // pidgeon imu native units
 
         public static final double TALON_NOMINAL_OUTPUT_VOLTAGE = 11.5; // volts
 
@@ -47,7 +50,12 @@ public abstract class RobotMap {
         public static final int[] LEFT_TALON_PORTS = {3, 2, 1};
         public static final int[] RIGHT_TALON_PORTS = {10, 11, 12};
 
-        public static final int PIGEON_IMU_PORT = 10;
+        public static final int PIGEON_IMU_PORT = 12;
+
+        /**
+         * Configuration for TalonSRX Gyro (Pigeon IMU)
+         */
+        public static final PIDF GYRO_PIDF = new PIDF(5, 0.0, 0.0, 0.0);
 
         /**
          * Configuration for TalonSRX Motion Magic Following
@@ -55,32 +63,26 @@ public abstract class RobotMap {
         public static final double MM_MAX_VELOCITY = 72; // inches per second
         public static final double MM_MAX_ACCELERATION = 32; // inches per second^2
 
-        public static final double MM_P = 0.455;
-        public static final double MM_I = 0.000;
-        public static final double MM_D = 0.000;
-        public static final double MM_F = 0.000;
-        public static final int MM_ALLOWABLE_ERROR = 500; // encoder ticks
+        public static final PIDF MM_PIDF = new PIDF(0.455, 0.0, 0.0, 0.0);
+
+        public static final int MM_ALLOWABLE_ERROR = 400; // encoder ticks
 
         /**
          * Configuration for Pathfinder Trajectory following
          */
-        public static final double TRAJ_MAX_VELOCITY = 72; // inches per second
-        public static final double TRAJ_MAX_ACCELERATION = 72; // inches per second^2
+        public static final double TRAJ_MAX_VELOCITY = 84; // inches per second
+        public static final double TRAJ_MAX_ACCELERATION = 84; // inches per second^2
         public static final double TRAJ_MAX_JERK = 144; // inches per second^3
 
-        public static final double TRAJ_P = 0.485;
-        public static final double TRAJ_I = 0.000;
-        public static final double TRAJ_D = 0.000;
-        public static final double TRAJ_F = 0.040;
+        public static final PIDF TRAJ_PIDF = new PIDF(0.485, 0.0, 0.0, 0.35); // TODO: Old F = 0.04 when using ticks / sec for velocity
+        // TODO: Old: 0.485, 0.0, 0.0, 0.25
 
-        public static final String TRAJECTORY_STORE_DIR = "/tmp/trajectories";
+        public static final String TRAJECTORY_STORE_DIR = "/home/lvuser/trajectories";
 
         /**
          * Physical Dimensions
          */
-        public static final double LENGTH = 32.50; // inches
-        public static final double WIDTH = 27.50; // inches
-        public static final double WHEELBASE_WIDTH = 24.33; // inches
+        public static final double WHEELBASE_WIDTH = 25.5; // inches, empirically calculated
         public static final double WHEEL_DIAMETER = 6; // inches
 
         /**
@@ -101,13 +103,6 @@ public abstract class RobotMap {
         public static final int LEFT_TALON_PORT = 5;
         public static final int RIGHT_TALON_PORT = 8;
 
-        public static final int LEFT_ULTRASONIC_PING_PORT = 0;
-        public static final int LEFT_ULTRASONIC_ECHO_PORT = 1;
-        public static final int RIGHT_ULTRASONIC_PING_PORT = 2;
-        public static final int RIGHT_ULTRASONIC_ECHO_PORT = 3;
-
-        public static final int SOLENOID_OPEN_PORT = 3;
-        public static final int SOLENOID_CLOSE_PORT = 4;
         public static final int SOLENOID_RAISE_PORT = 5;
         public static final int SOLENOID_LOWER_PORT = 2;
 
@@ -123,14 +118,11 @@ public abstract class RobotMap {
         /**
          * Configuration for TalonSRX Motion Magic Following
          */
-        public static final double MM_MAX_VELOCITY = 50; // inches per second
-        public static final double MM_MAX_ACCELERATION = 50; // inches per second^2
+        public static final double MM_MAX_VELOCITY = 200; // inches per second
+        public static final double MM_MAX_ACCELERATION = 180; // inches per second^2
 
-        public static final double MM_P = 0.455;
-        public static final double MM_I = 0.000;
-        public static final double MM_D = 0.000;
-        public static final double MM_F = 0.120;
-        public static final int MM_ALLOWABLE_ERROR = 300; // encoder ticks
+        public static final PIDF MM_PIDF = new PIDF(0.455, 0.0, 0.0, 0.12);
+        public static final int MM_ALLOWABLE_ERROR = 800; // encoder ticks
 
         /**
          * Physical Dimensions

@@ -9,15 +9,14 @@ import org.usfirst.frc.team1923.robot.commands.elevator.ElevatorPositionCommand;
 import org.usfirst.frc.team1923.robot.commands.intake.IntakeTimeCommand;
 
 @Autonomous(
-        name = "Left Left-Switch",
-        description = "Starting from the left, place a cube in the left switch",
+        name = "L > LSwitch",
         startingPosition = Autonomous.Side.LEFT,
         fieldConfigurations = { Autonomous.FieldConfiguration.LLL, Autonomous.FieldConfiguration.LRL },
         defaultPriority = 75
 )
-public class LeftLSwitchAutonBackup extends CommandGroup {
+public class LeftLSwitchAuton extends CommandGroup {
 
-    public LeftLSwitchAutonBackup() {
+    public LeftLSwitchAuton() {
         this.addParallel(new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.SWITCH));
         this.addSequential(new DriveDistanceCommand(140));
         this.addSequential(new TurnEncoderCommand(-95));

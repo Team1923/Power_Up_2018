@@ -8,13 +8,27 @@ import java.util.Collections;
 import java.util.List;
 
 import org.usfirst.frc.team1923.robot.Robot;
+import org.usfirst.frc.team1923.robot.commands.auton.CrossLineAuton;
+import org.usfirst.frc.team1923.robot.commands.auton.left.LeftLScaleAuton;
+import org.usfirst.frc.team1923.robot.commands.auton.left.LeftRScaleAuton;
+import org.usfirst.frc.team1923.robot.commands.auton.right.RightRScaleAuton;
 
 public enum Preset {
 
     @AutonomousPreset(
             name = "Default"
     )
-    DEFAULT();
+    DEFAULT(),
+
+    @AutonomousPreset(
+            name = "Playoff Scale"
+    )
+    PLAYOFF_SCALE(
+            LeftLScaleAuton.class,
+            LeftRScaleAuton.class,
+            RightRScaleAuton.class,
+            CrossLineAuton.class
+    );
 
     private List<Class<?>> classes;
 

@@ -12,11 +12,6 @@ public class DriveControlCommand extends Command {
     public DriveControlCommand() {
         this.requires(Robot.drivetrainSubsystem);
     }
-    
-    @Override
-    protected void initialize() {
-
-    }
 
     @Override
     protected void execute() {
@@ -35,7 +30,7 @@ public class DriveControlCommand extends Command {
 
     @Override
     protected void interrupted() {
-        Robot.drivetrainSubsystem.stop();
+        this.end();
     }
 
 }
