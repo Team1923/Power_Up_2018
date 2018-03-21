@@ -7,15 +7,14 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
-import jaci.pathfinder.modifiers.TankModifier;
 
 import org.usfirst.frc.team1923.robot.Robot;
 import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.utils.Converter;
 import org.usfirst.frc.team1923.robot.utils.PIDF;
+import org.usfirst.frc.team1923.robot.utils.pathfinder.TankModifier;
 import org.usfirst.frc.team1923.robot.utils.pathfinder.TrajectoryStore;
 
 public class DriveTrajectoryCommand extends Command {

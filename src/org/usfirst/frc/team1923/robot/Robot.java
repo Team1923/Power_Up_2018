@@ -51,6 +51,7 @@ public class Robot extends TimedRobot {
                 .add(new LeftRScaleAuton())
                 .add(new CenterLSwitchAuton())
                 .add(new CenterRSwitchAuton())
+                .add(new RightRSwitchAuton())
                 .add(new RightRScaleAuton())
                 .add(new CrossLineAuton())
                 .add(new DoNothingAuton());

@@ -30,6 +30,9 @@ public class TankModifier {
         this.leftTrajectory = trajectories[0];
         this.rightTrajectory = trajectories[1];
 
+        this.correctHeadings(this.leftTrajectory);
+        this.correctHeadings(this.rightTrajectory);
+
         return this;
     }
 

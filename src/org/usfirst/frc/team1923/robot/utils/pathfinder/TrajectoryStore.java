@@ -70,6 +70,12 @@ public class TrajectoryStore {
         }
     }
 
+    public static Waypoint distanceAtAngle(double x, double y, double distance, double angle) {
+        angle = Math.toRadians(angle);
+
+        return new Waypoint(x + distance * Math.cos(angle), y + distance * Math.sin(angle), angle - Math.PI);
+    }
+
     public enum Path {
 
         CENTER_RSWITCHLAYUP(new Waypoint[]{
