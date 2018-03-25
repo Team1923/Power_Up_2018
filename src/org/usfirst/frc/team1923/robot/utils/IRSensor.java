@@ -30,7 +30,7 @@ public class IRSensor {
     }
 
     private double cm2in(double cm) {
-        return cm*0.393701;
+        return cm * 0.393701;
     }
 }
 
