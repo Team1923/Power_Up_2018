@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1923.robot.autonomous;
+package org.usfirst.frc.team1923.robot.utils;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 
@@ -21,9 +21,11 @@ public class IRSensor {
         if (voltage <= 2.4) {
             distance = (voltage / 2.4); // Solving y=2.4x for x
         } else if (voltage <= 2.46) {
-            distance = ((2.46 / 1.4) * voltage); // Solving 1.4y = 2.46x for x
+            distance = ((1.4 / 2.46) * voltage); // Solving 1.4y = 2.46x for x
         } else {
             distance = (1 / voltage); // Solving y = 1/x for x
         }
+
+        return (distance * 0.393701);
     }
 }
