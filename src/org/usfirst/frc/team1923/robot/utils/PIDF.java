@@ -8,6 +8,7 @@ public class PIDF {
     public static final int TALON_MOTIONPROFILE_SLOT = 0;
     public static final int TALON_GYRO_SLOT = 1;
     public static final int TALON_MOTIONMAGIC_SLOT = 2;
+    public static final int TALON_GYROTURN_SLOT = 3;
 
     private final double p;
     private final double i;

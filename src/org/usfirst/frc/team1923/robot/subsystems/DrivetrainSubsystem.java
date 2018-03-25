@@ -137,10 +137,6 @@ public class DrivetrainSubsystem extends Subsystem {
         talon.configPeakOutputForward(1, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
         talon.configPeakOutputReverse(-1, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
 
-        talon.configMotionAcceleration(Converter.inchesToTicks(RobotMap.Drivetrain.MM_MAX_ACCELERATION, RobotMap.Drivetrain.WHEEL_DIAMETER) / 10, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        talon.configMotionCruiseVelocity(Converter.inchesToTicks(RobotMap.Drivetrain.MM_MAX_VELOCITY, RobotMap.Drivetrain.WHEEL_DIAMETER) / 10, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        talon.configMotionProfileTrajectoryPeriod(20, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-
         talon.config_kP(PIDF.TALON_MOTIONMAGIC_SLOT, RobotMap.Drivetrain.MM_PIDF.getP(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
         talon.config_kI(PIDF.TALON_MOTIONMAGIC_SLOT, RobotMap.Drivetrain.MM_PIDF.getI(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
         talon.config_kD(PIDF.TALON_MOTIONMAGIC_SLOT, RobotMap.Drivetrain.MM_PIDF.getD(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
@@ -152,6 +148,11 @@ public class DrivetrainSubsystem extends Subsystem {
         talon.config_kF(PIDF.TALON_GYRO_SLOT, RobotMap.Drivetrain.GYRO_PIDF.getF(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
         talon.configClosedLoopPeakOutput(PIDF.TALON_GYRO_SLOT, 0.5, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
 
+        talon.config_kP(PIDF.TALON_GYROTURN_SLOT, RobotMap.Drivetrain.MMT_PIDF.getP(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        talon.config_kI(PIDF.TALON_GYROTURN_SLOT, RobotMap.Drivetrain.MMT_PIDF.getI(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        talon.config_kD(PIDF.TALON_GYROTURN_SLOT, RobotMap.Drivetrain.MMT_PIDF.getD(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        talon.config_kF(PIDF.TALON_GYROTURN_SLOT, RobotMap.Drivetrain.MMT_PIDF.getF(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+
         talon.config_kP(PIDF.TALON_MOTIONPROFILE_SLOT, RobotMap.Drivetrain.TRAJ_PIDF.getP(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
         talon.config_kI(PIDF.TALON_MOTIONPROFILE_SLOT, RobotMap.Drivetrain.TRAJ_PIDF.getI(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
         talon.config_kD(PIDF.TALON_MOTIONPROFILE_SLOT, RobotMap.Drivetrain.TRAJ_PIDF.getD(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
@@ -160,7 +161,7 @@ public class DrivetrainSubsystem extends Subsystem {
         talon.enableVoltageCompensation(true);
         talon.configVoltageCompSaturation(RobotMap.Robot.TALON_NOMINAL_OUTPUT_VOLTAGE, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
         talon.configOpenloopRamp(RobotMap.Drivetrain.TALON_RAMP_RATE, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        talon.configClosedloopRamp(RobotMap.Drivetrain.TALON_RAMP_RATE, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        // talon.configClosedloopRamp(RobotMap.Drivetrain.TALON_RAMP_RATE, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
     }
 
     private void configureMasterTalon(TalonSRX talon) {
@@ -178,8 +179,38 @@ public class DrivetrainSubsystem extends Subsystem {
         talon.configSelectedFeedbackCoefficient(1, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
         talon.configSelectedFeedbackCoefficient(3600.0 / RobotMap.Robot.PIDGEON_UNITS_PER_ROTATION, PIDF.AUXILIARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
 
+        talon.configMotionAcceleration(Converter.inchesToTicks(RobotMap.Drivetrain.MM_MAX_ACCELERATION, RobotMap.Drivetrain.WHEEL_DIAMETER) / 10, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        talon.configMotionCruiseVelocity(Converter.inchesToTicks(RobotMap.Drivetrain.MM_MAX_VELOCITY, RobotMap.Drivetrain.WHEEL_DIAMETER) / 10, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        talon.configMotionProfileTrajectoryPeriod(20, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+
         talon.selectProfileSlot(PIDF.TALON_MOTIONMAGIC_SLOT, PIDF.PRIMARY_LOOP);
         talon.selectProfileSlot(PIDF.TALON_GYRO_SLOT, PIDF.AUXILIARY_LOOP);
+
+        talon.setSensorPhase(false);
+    }
+
+    /**
+     * Configure master talons for turning
+     */
+    public void configTalonTurning() {
+        this.leftTalons[0].configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        this.leftTalons[0].configMotionCruiseVelocity(Converter.degreesToPidgeonTicks(RobotMap.Drivetrain.MMT_MAX_VELOCITY), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        this.leftTalons[0].configMotionCruiseVelocity(Converter.degreesToPidgeonTicks(RobotMap.Drivetrain.MMT_MAX_ACCELERATION), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        this.leftTalons[0].selectProfileSlot(PIDF.TALON_GYROTURN_SLOT, PIDF.PRIMARY_LOOP);
+        this.leftTalons[0].setSensorPhase(true);
+
+        this.rightTalons[0].configSelectedFeedbackSensor(RemoteFeedbackDevice.RemoteSensor0, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        this.rightTalons[0].configMotionCruiseVelocity(Converter.degreesToPidgeonTicks(RobotMap.Drivetrain.MMT_MAX_VELOCITY), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        this.rightTalons[0].configMotionCruiseVelocity(Converter.degreesToPidgeonTicks(RobotMap.Drivetrain.MMT_MAX_ACCELERATION), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        this.rightTalons[0].selectProfileSlot(PIDF.TALON_GYROTURN_SLOT, PIDF.PRIMARY_LOOP);
+    }
+
+    /**
+     * Configure master talons for driving
+     */
+    public void configTalonDriving() {
+        this.configureMasterTalon(this.leftTalons[0]);
+        this.configureMasterTalon(this.rightTalons[0]);
     }
 
 }

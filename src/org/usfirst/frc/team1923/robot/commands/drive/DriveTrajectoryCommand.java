@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Command;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 
@@ -119,7 +120,7 @@ public class DriveTrajectoryCommand extends Command {
         TrajectoryPoint point = new TrajectoryPoint();
 
         point.position = Converter.inchesToTicks(Converter.feetToInches(segment.position), RobotMap.Drivetrain.WHEEL_DIAMETER);
-        point.auxiliaryPos = Pathfinder.boundHalfDegrees(Pathfinder.r2d(segment.heading)) * 10.0;
+        point.auxiliaryPos = Pathfinder.r2d(segment.heading) * 10.0;
         point.headingDeg = Pathfinder.r2d(segment.heading);
         point.profileSlotSelect0 = PIDF.TALON_MOTIONPROFILE_SLOT;
         point.profileSlotSelect1 = PIDF.TALON_GYRO_SLOT;

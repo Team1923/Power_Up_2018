@@ -6,15 +6,16 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Vector;
+import java.util.function.BooleanSupplier;
 
 public class QueueCommand extends Command {
 
     private Command command;
-    private QueueCommandConditional conditional;
+    private BooleanSupplier conditional;
 
     private boolean executed;
 
-    public QueueCommand(Command command, QueueCommandConditional conditional) {
+    public QueueCommand(Command command, BooleanSupplier conditional) {
         if (command == null) {
             throw new NullPointerException("Command cannot be null.");
         }
@@ -50,7 +51,7 @@ public class QueueCommand extends Command {
 
     @Override
     protected void execute() {
-        if (this.conditional.isTrue() && !this.executed) {
+        if (this.conditional.getAsBoolean() && !this.executed) {
             try {
                 Method clearRequirements = Command.class.getDeclaredMethod("clearRequirements");
 
@@ -82,12 +83,6 @@ public class QueueCommand extends Command {
     @Override
     protected void interrupted() {
         this.end();
-    }
-
-    public interface QueueCommandConditional {
-
-        public boolean isTrue();
-
     }
 
 }

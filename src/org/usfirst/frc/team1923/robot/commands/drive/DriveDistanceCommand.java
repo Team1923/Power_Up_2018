@@ -56,9 +56,12 @@ public class DriveDistanceCommand extends Command {
 
     @Override
     protected boolean isFinished() {
-        return this.isTimedOut()
-                || Math.abs(this.leftTarget - Robot.drivetrainSubsystem.getLeftEncoderPosition()) < RobotMap.Drivetrain.MM_ALLOWABLE_ERROR
-                && Math.abs(this.rightTarget - Robot.drivetrainSubsystem.getRightEncoderPosition()) < RobotMap.Drivetrain.MM_ALLOWABLE_ERROR;
+        return this.isTimedOut() || this.isAlmostFinished(RobotMap.Drivetrain.MM_ALLOWABLE_ERROR);
+    }
+
+    public boolean isAlmostFinished(int encoderTicks) {
+        return Math.abs(this.leftTarget - Robot.drivetrainSubsystem.getLeftEncoderPosition()) < encoderTicks
+                && Math.abs(this.rightTarget - Robot.drivetrainSubsystem.getRightEncoderPosition()) < encoderTicks;
     }
 
     @Override

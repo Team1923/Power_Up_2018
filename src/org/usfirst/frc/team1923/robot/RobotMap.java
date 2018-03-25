@@ -55,7 +55,7 @@ public abstract class RobotMap {
         /**
          * Configuration for TalonSRX Gyro (Pigeon IMU)
          */
-        public static final PIDF GYRO_PIDF = new PIDF(5, 0.0, 0.0, 0.0);
+        public static final PIDF GYRO_PIDF = new PIDF(6.5, 0.0, 0.0, 0.0);
 
         /**
          * Configuration for TalonSRX Motion Magic Following
@@ -67,6 +67,12 @@ public abstract class RobotMap {
 
         public static final int MM_ALLOWABLE_ERROR = 400; // encoder ticks
 
+        public static final int MMT_MAX_VELOCITY = 600; // degrees per second
+        public static final int MMT_MAX_ACCELERATION = 600; // degrees per second
+        public static final int MMT_ALLOWABLE_ERROR = 3; // degrees
+
+        public static final PIDF MMT_PIDF = new PIDF(0.255, 0.0, 0.0, 0.2);
+
         /**
          * Configuration for Pathfinder Trajectory following
          */
@@ -74,7 +80,7 @@ public abstract class RobotMap {
         public static final double TRAJ_MAX_ACCELERATION = 84; // inches per second^2
         public static final double TRAJ_MAX_JERK = 144; // inches per second^3
 
-        public static final PIDF TRAJ_PIDF = new PIDF(0.485, 0.0, 0.0, 0.35); // TODO: Old F = 0.04 when using ticks / sec for velocity
+        public static final PIDF TRAJ_PIDF = new PIDF(0.225, 0.0, 0.0, 0.35); // TODO: Old F = 0.04 when using ticks / sec for velocity
         // TODO: Old: 0.485, 0.0, 0.0, 0.25
 
         public static final String TRAJECTORY_STORE_DIR = "/home/lvuser/trajectories";
@@ -82,7 +88,7 @@ public abstract class RobotMap {
         /**
          * Physical Dimensions
          */
-        public static final double WHEELBASE_WIDTH = 25.5; // inches, empirically calculated
+        public static final double WHEELBASE_WIDTH = 48.5; // inches, empirically calculated
         public static final double WHEEL_DIAMETER = 6; // inches
 
         /**

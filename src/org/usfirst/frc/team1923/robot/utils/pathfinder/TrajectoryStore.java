@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1923.robot.utils.pathfinder;
 
 import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.PathfinderJNI;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 
@@ -19,7 +20,7 @@ public class TrajectoryStore {
     private static final Waypoint CENTER_STARTING_POSITION = new Waypoint(1.65, 13, 0);
     private static final Waypoint RIGHT_STARTING_POSITION = new Waypoint(1.65, 3.94, 0);
 
-    private static final Waypoint LEFT_SCALE_POSITION = new Waypoint(23, 19.7, Pathfinder.d2r(-35));
+    private static final Waypoint LEFT_SCALE_POSITION = new Waypoint(23.6, 21.3, Pathfinder.d2r(-35));
     private static final Waypoint RIGHT_SCALE_POSITION = new Waypoint(22.5, 9.5, Pathfinder.d2r(35));
 
     public static Trajectory loadTrajectory(Path path) {
@@ -73,6 +74,8 @@ public class TrajectoryStore {
     public static Waypoint distanceAtAngle(double x, double y, double distance, double angle) {
         angle = Math.toRadians(angle);
 
+        System.out.println("(" + (x + distance * Math.cos(angle)) + ", " + (y + distance * Math.sin(angle)) + ", " + (Pathfinder.r2d(angle - Math.PI)));
+
         return new Waypoint(x + distance * Math.cos(angle), y + distance * Math.sin(angle), angle - Math.PI);
     }
 
@@ -111,7 +114,7 @@ public class TrajectoryStore {
         LEFT_LSCALE(new Waypoint[]{
                 LEFT_STARTING_POSITION,
                 LEFT_SCALE_POSITION
-        });
+        }, 96.0),
 //
 //        RIGHT_LSCALE(new Waypoint[] {
 //                RIGHT_STARTING_POSITION,
@@ -125,12 +128,12 @@ public class TrajectoryStore {
 //                new Waypoint(10.536220, 21.058780, Pathfinder.d2r(-45))
 //        }),
 //
-//        LEFT_RSCALE(new Waypoint[] {
-//                LEFT_STARTING_POSITION,
-//                new Waypoint(10, 24, 0),
-//                new Waypoint(19.5, 7, Pathfinder.d2r(-90)),
-//                new Waypoint(22.122346, 5.228935, Pathfinder.d2r(15))
-//        });
+        LEFT_RSCALE(new Waypoint[] {
+                LEFT_STARTING_POSITION,
+                new Waypoint(10, 24, 0),
+                new Waypoint(19.5, 7, Pathfinder.d2r(-90)),
+                //new Waypoint(22.122346, 5.228935, Pathfinder.d2r(15))
+        });
 
         private final Waypoint[] waypoints;
 
@@ -210,6 +213,10 @@ public class TrajectoryStore {
             );
         }
 
+    }
+
+    public static void main(String[] args) {
+        distanceAtAngle(25, 21, 0.5, 145);
     }
 
 }
