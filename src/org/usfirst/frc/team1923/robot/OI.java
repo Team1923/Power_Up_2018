@@ -35,7 +35,7 @@ public class OI {
         this.operator.dPad.left.whileHeld(new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.BOTTOM));
         this.operator.dPad.right.whileHeld(new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.TOP));
 
-        this.driver.circle.whileHeld(new TurnGyroCommand(90, false));
+        this.driver.circle.whileHeld(new DriveTrajectoryCommand(TrajectoryStore.Path.LEFT_RSCALE));
     }
 
 }

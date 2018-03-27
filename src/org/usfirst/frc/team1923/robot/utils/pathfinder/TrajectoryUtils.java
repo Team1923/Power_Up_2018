@@ -1,50 +1,11 @@
 package org.usfirst.frc.team1923.robot.utils.pathfinder;
 
-import jaci.pathfinder.Pathfinder;
-import jaci.pathfinder.PathfinderJNI;
+import com.ctre.phoenix.motion.TrajectoryPoint;
 import jaci.pathfinder.Trajectory;
 
-public class TankModifier {
+public class TrajectoryUtils {
 
-    private Trajectory source;
-    private Trajectory leftTrajectory;
-    private Trajectory rightTrajectory;
-
-    private boolean inverted;
-
-    public TankModifier(Trajectory source) {
-        this.source = source;
-    }
-
-    public void setInverted(boolean inverted) {
-        this.inverted = inverted;
-    }
-
-    public boolean isInverted() {
-        return this.inverted;
-    }
-
-    public TankModifier modify(double wheelbaseWidth) {
-        Trajectory[] trajectories = PathfinderJNI.modifyTrajectoryTank(this.source, wheelbaseWidth);
-
-        this.leftTrajectory = trajectories[0];
-        this.rightTrajectory = trajectories[1];
-
-        this.correctHeadings(this.leftTrajectory);
-        this.correctHeadings(this.rightTrajectory);
-
-        return this;
-    }
-
-    public Trajectory getLeftTrajectory() {
-        return this.inverted ? this.invertTrajectory(this.rightTrajectory) : this.leftTrajectory;
-    }
-
-    public Trajectory getRightTrajectory() {
-        return this.inverted ? this.invertTrajectory(this.leftTrajectory) : this.rightTrajectory;
-    }
-
-    protected Trajectory invertTrajectory(Trajectory trajectory) {
+    public static Trajectory invert(Trajectory trajectory) {
         trajectory = trajectory.copy();
 
         for (Trajectory.Segment segment : trajectory.segments) {
@@ -57,9 +18,11 @@ public class TankModifier {
         return trajectory;
     }
 
-    private void correctHeadings(Trajectory trajectory) {
+    public static Trajectory correctHeadings(Trajectory trajectory) {
+        trajectory = trajectory.copy();
+
         if (trajectory.segments.length < 2) {
-            return;
+            return trajectory;
         }
 
         double initialHeading = trajectory.segments[0].heading;
@@ -94,6 +57,8 @@ public class TankModifier {
 
             trajectory.segments[i].heading = continuousHeading - initialHeading;
         }
+
+        return trajectory;
     }
 
 }

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import jaci.pathfinder.Trajectory;
 import org.usfirst.frc.team1923.robot.autonomous.AutonManager;
 import org.usfirst.frc.team1923.robot.commands.auton.*;
 import org.usfirst.frc.team1923.robot.commands.auton.center.CenterLSwitchAuton;
@@ -100,7 +101,6 @@ public class Robot extends TimedRobot {
         Scheduler.getInstance().run();
 
         SmartDashboard.putString("Match Time Remaining", Math.round(DriverStation.getInstance().getMatchTime()) + "");
-        SmartDashboard.putNumber("Heading", Robot.drivetrainSubsystem.getHeading());
     }
 
 }

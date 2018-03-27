@@ -8,7 +8,6 @@ import org.usfirst.frc.team1923.robot.autonomous.Autonomous;
 import org.usfirst.frc.team1923.robot.commands.QueueCommand;
 import org.usfirst.frc.team1923.robot.commands.drive.DriveDistanceCommand;
 import org.usfirst.frc.team1923.robot.commands.drive.DriveTrajectoryCommand;
-import org.usfirst.frc.team1923.robot.commands.drive.TurnEncoderCommand;
 import org.usfirst.frc.team1923.robot.commands.elevator.ElevatorPositionCommand;
 import org.usfirst.frc.team1923.robot.commands.intake.IntakeLowerCommand;
 import org.usfirst.frc.team1923.robot.commands.intake.IntakeRaiseCommand;
@@ -27,7 +26,7 @@ public class LeftLScaleAuton extends CommandGroup {
 
     public LeftLScaleAuton() {
         final DriveTrajectoryCommand drive = new DriveTrajectoryCommand(TrajectoryStore.Path.LEFT_LSCALE);
-        final DriveDistanceCommand driveReverse = new DriveDistanceCommand(-20, -20, 72, 72, Integer.MAX_VALUE);
+        final DriveDistanceCommand driveReverse = new DriveDistanceCommand(-20, 72, 72, Integer.MAX_VALUE);
         final ElevatorPositionCommand elevator = new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.TOP);
 
         this.addSequential(CGUtils.parallel(
@@ -54,19 +53,19 @@ public class LeftLScaleAuton extends CommandGroup {
                         () -> driveReverse.isAlmostFinished(Converter.inchesToTicks(4, RobotMap.Drivetrain.WHEEL_DIAMETER))
                 )
         ));
-        this.addSequential(new TurnEncoderCommand(-75));
+        // this.addSequential(new TurnEncoderCommand(-75));
         this.addSequential(CGUtils.parallel(
-                new DriveDistanceCommand(50, 50, 84, 84, Integer.MAX_VALUE),
+                new DriveDistanceCommand(50, 84, 84, Integer.MAX_VALUE),
                 new IntakeTimeCommand(-0.70, 2.5)
         ));
         this.addSequential(CGUtils.parallel(
-                new DriveDistanceCommand(-50, -50, 84, 84, Integer.MAX_VALUE),
+                new DriveDistanceCommand(-50, 84, 84, Integer.MAX_VALUE),
                 CGUtils.sequential(
                         new WaitCommand(0.5),
                         new IntakeRaiseCommand()
                 )
         ));
-        this.addSequential(new TurnEncoderCommand(70));
+        // this.addSequential(new TurnEncoderCommand(70));
         this.addSequential(CGUtils.parallel(
                 new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.TOP),
                 new DriveDistanceCommand(20)

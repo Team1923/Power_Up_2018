@@ -21,7 +21,7 @@ public abstract class Converter {
     }
 
     public static int degreesToPidgeonTicks(double degrees) {
-        return (int) (RobotMap.Robot.PIDGEON_UNITS_PER_ROTATION * degrees / 360.0);
+        return (int) (degrees * 10);
     }
 
 }

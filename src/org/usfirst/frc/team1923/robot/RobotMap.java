@@ -55,7 +55,7 @@ public abstract class RobotMap {
         /**
          * Configuration for TalonSRX Gyro (Pigeon IMU)
          */
-        public static final PIDF GYRO_PIDF = new PIDF(6.5, 0.0, 0.0, 0.0);
+        public static final PIDF GYRO_PIDF = new PIDF(3.5, 0.0, 8.0, 0.0);
 
         /**
          * Configuration for TalonSRX Motion Magic Following
@@ -63,15 +63,13 @@ public abstract class RobotMap {
         public static final double MM_MAX_VELOCITY = 72; // inches per second
         public static final double MM_MAX_ACCELERATION = 32; // inches per second^2
 
-        public static final PIDF MM_PIDF = new PIDF(0.455, 0.0, 0.0, 0.0);
+        public static final PIDF MM_PIDF = new PIDF(0.185, 0.0, 0.0, 0.35);
 
-        public static final int MM_ALLOWABLE_ERROR = 400; // encoder ticks
+        public static final int MM_ALLOWABLE_ERROR = 200; // encoder ticks
 
-        public static final int MMT_MAX_VELOCITY = 600; // degrees per second
-        public static final int MMT_MAX_ACCELERATION = 600; // degrees per second
+        public static final int MMT_MAX_VELOCITY = 10; // degrees per second
+        public static final int MMT_MAX_ACCELERATION = 10; // degrees per second
         public static final int MMT_ALLOWABLE_ERROR = 3; // degrees
-
-        public static final PIDF MMT_PIDF = new PIDF(0.255, 0.0, 0.0, 0.2);
 
         /**
          * Configuration for Pathfinder Trajectory following
@@ -138,9 +136,9 @@ public abstract class RobotMap {
         public static final double PRIMARY_STAGE_TRAVEL = 74; // inches
         public static final double SECONDARY_STAGE_TRAVEL = 0; // inches
 
-        // Calculated Value
-        //public static final double PULLEY_DIAMETER = ((PRIMARY_STAGE_TRAVEL + SECONDARY_STAGE_TRAVEL) * Converter.millimetersToInches(BELT_PITCH_MM) * PULLY_TOOTH_COUNT) / (Math.PI * SECONDARY_STAGE_TRAVEL);
+        // Calculated Valueinal double PULLEY_DIAMETER = ((PRIMARY_STAGE_TRAVEL + SECONDARY_STAGE_TRAVEL) * Converter.millimetersToInches(BELT_PITCH_MM) * PULLY_TOOTH_COUNT) / (Math.PI * SECONDARY_STAGE_TRAVEL);
 
+        //public static f
         public static final double PULLEY_DIAMETER = 3.735095379620145; // TODO: Recalculate accurately
 
         // carr: 46 in

@@ -81,6 +81,12 @@ public class TrajectoryStore {
 
     public enum Path {
 
+        TESTING(new Waypoint[] {
+                new Waypoint(0, 0, 0),
+                new Waypoint(3, 3, Math.toRadians(90)),
+                new Waypoint(0, 6, Math.toRadians(180))
+        }, 36),
+
         CENTER_RSWITCHLAYUP(new Waypoint[]{
                 CENTER_STARTING_POSITION,
                 new Waypoint(10, 8.5, 0)
@@ -132,8 +138,8 @@ public class TrajectoryStore {
                 LEFT_STARTING_POSITION,
                 new Waypoint(10, 24, 0),
                 new Waypoint(19.5, 7, Pathfinder.d2r(-90)),
-                //new Waypoint(22.122346, 5.228935, Pathfinder.d2r(15))
-        });
+                new Waypoint(22.122346, 5.228935, Pathfinder.d2r(15))
+        }, 60);
 
         private final Waypoint[] waypoints;
 
@@ -213,10 +219,6 @@ public class TrajectoryStore {
             );
         }
 
-    }
-
-    public static void main(String[] args) {
-        distanceAtAngle(25, 21, 0.5, 145);
     }
 
 }

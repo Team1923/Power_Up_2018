@@ -7,7 +7,6 @@ import org.usfirst.frc.team1923.robot.autonomous.Autonomous;
 import org.usfirst.frc.team1923.robot.commands.QueueCommand;
 import org.usfirst.frc.team1923.robot.commands.drive.DriveDistanceCommand;
 import org.usfirst.frc.team1923.robot.commands.drive.DriveTrajectoryCommand;
-import org.usfirst.frc.team1923.robot.commands.drive.TurnEncoderCommand;
 import org.usfirst.frc.team1923.robot.commands.elevator.ElevatorTimeCommand;
 import org.usfirst.frc.team1923.robot.commands.elevator.ElevatorPositionCommand;
 import org.usfirst.frc.team1923.robot.commands.intake.IntakeLowerCommand;
@@ -45,7 +44,7 @@ public class LeftLScaleLSwitchAuton extends CommandGroup {
         this.addSequential(new DriveDistanceCommand(-12.0));
         this.addSequential(new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.BOTTOM));
         this.addSequential(CGUtils.parallel(
-                new TurnEncoderCommand(-155),
+                //new TurnEncoderCommand(-155),
                 new IntakeLowerCommand(),
                 new ElevatorTimeCommand(-0.1, 0.8)
         ));
