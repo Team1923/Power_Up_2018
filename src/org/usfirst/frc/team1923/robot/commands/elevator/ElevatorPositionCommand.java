@@ -51,6 +51,7 @@ public class ElevatorPositionCommand extends Command {
 
     @Override
     protected void end() {
+        System.out.println("Terminate EPC @ " + System.currentTimeMillis());
         Robot.elevatorSubsystem.stop();
     }
 
@@ -64,6 +65,8 @@ public class ElevatorPositionCommand extends Command {
         BOTTOM(-2),
 
         SWITCH(20),
+
+        NEUTRAL_SCALE(55),
 
         TOP(RobotMap.Elevator.PRIMARY_STAGE_TRAVEL + RobotMap.Elevator.SECONDARY_STAGE_TRAVEL + 1);
 

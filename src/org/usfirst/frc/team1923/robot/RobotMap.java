@@ -47,28 +47,44 @@ public abstract class RobotMap {
         /**
          * Ports
          */
-        public static final int[] LEFT_TALON_PORTS = {3, 2, 1};
-        public static final int[] RIGHT_TALON_PORTS = {10, 11, 12};
+        public static final int[] LEFT_TALON_PORTS = {1, 2, 3};
+        public static final int[] RIGHT_TALON_PORTS = {12, 11, 10};
 
-        public static final int PIGEON_IMU_PORT = 12;
+        public static final int LEFT_ENCODER_PORT = 3;
+        public static final int RIGHT_ENCODER_PORT = 10;
+        public static final int SUM_ENCODER_PORT = 11;
+
+        public static final int PIGEON_IMU_PORT = 2;
 
         /**
          * Configuration for TalonSRX Gyro (Pigeon IMU)
          */
-        public static final PIDF GYRO_PIDF = new PIDF(3.5, 0.0, 8.0, 0.0);
+        // public static final PIDF GYRO_PIDF = new PIDF(7.0, 0.0, 8.0, 0.0);
+
+       // TURN:  public static final PIDF GYRO_PIDF = new PIDF(3.5, 0.0, 8.0, 0.0);
+
+        public static final PIDF GYRO_PIDF = new PIDF(7.0, 0.0, 8.0, 0.0);
+
+        public static final PIDF TURN_PIDF = new PIDF(3.0, 0, 10.0, 0);
+        //
+
+        // last: 5.0, 6.0
+
+        // d = 8
+        // 6.5 p for crossover
 
         /**
          * Configuration for TalonSRX Motion Magic Following
          */
         public static final double MM_MAX_VELOCITY = 72; // inches per second
-        public static final double MM_MAX_ACCELERATION = 32; // inches per second^2
+        public static final double MM_MAX_ACCELERATION = 46; // inches per second^2
 
         public static final PIDF MM_PIDF = new PIDF(0.185, 0.0, 0.0, 0.35);
 
         public static final int MM_ALLOWABLE_ERROR = 200; // encoder ticks
 
-        public static final int MMT_MAX_VELOCITY = 10; // degrees per second
-        public static final int MMT_MAX_ACCELERATION = 10; // degrees per second
+        public static final int MMT_MAX_VELOCITY = 150; // degrees per second
+        public static final int MMT_MAX_ACCELERATION = 300; // degrees per second
         public static final int MMT_ALLOWABLE_ERROR = 3; // degrees
 
         /**
@@ -83,10 +99,10 @@ public abstract class RobotMap {
 
         public static final String TRAJECTORY_STORE_DIR = "/home/lvuser/trajectories";
 
-        /**
+        /*
          * Physical Dimensions
          */
-        public static final double WHEELBASE_WIDTH = 48.5; // inches, empirically calculated
+        public static final double WHEELBASE_WIDTH = 27.5; // inches, empirically calculated
         public static final double WHEEL_DIAMETER = 6; // inches
 
         /**
@@ -95,7 +111,7 @@ public abstract class RobotMap {
         public static final double TALON_RAMP_RATE = 0.125; // seconds
 
         public static final int TALON_STATUS_FRAME_PERIOD_MS = 10; // milliseconds
-        public static final int TALON_CONTROL_FRAME_PERIOD_MS = 5; // milliseconds
+        public static final int TALON_CONTROL_FRAME_PERIOD_MS = 10; // milliseconds
 
     }
 

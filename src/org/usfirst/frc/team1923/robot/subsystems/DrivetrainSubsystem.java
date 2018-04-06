@@ -3,8 +3,8 @@ package org.usfirst.frc.team1923.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.PigeonIMU;
-
 import com.ctre.phoenix.sensors.PigeonIMU_StatusFrame;
+
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -13,6 +13,8 @@ import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.commands.drive.DriveControlCommand;
 import org.usfirst.frc.team1923.robot.utils.Converter;
 import org.usfirst.frc.team1923.robot.utils.PIDF;
+
+import java.util.Arrays;
 
 public class DrivetrainSubsystem extends Subsystem {
 
@@ -26,15 +28,15 @@ public class DrivetrainSubsystem extends Subsystem {
         this.rightTalons = this.initializeTalons(RobotMap.Drivetrain.RIGHT_TALON_PORTS);
 
         this.configureTalons();
+        this.configureDriving();
 
-        this.pigeon = new PigeonIMU(this.rightTalons[2]); // TODO: Use PigeonIMU port in RobotMap
-        this.pigeon.setStatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_2_Gyro,5, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.pigeon.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_1_General, 5, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.pigeon.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_3_GeneralAccel, 5, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        for (TalonSRX talon : this.getTalons()) {
+            if (talon.getDeviceID() == RobotMap.Drivetrain.PIGEON_IMU_PORT) {
+                this.pigeon = new PigeonIMU(talon);
+            }
+        }
+
         this.pigeon.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, 5, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-
-        Notifier notifier = new Notifier(() -> this.getRightMaster().processMotionProfileBuffer());
-        notifier.startPeriodic(0.005);
     }
 
     public void drive(double leftOutput, double rightOutput) {
@@ -57,40 +59,82 @@ public class DrivetrainSubsystem extends Subsystem {
      * Configure talons for normal driving use (or MotionMagic)
      */
     public void configureDriving() {
-        this.stop(); // Clears any follower cases on the master talons
-        this.configureTalons();
-
-        this.getLeftMaster().follow(this.getRightMaster(), FollowerType.AuxOutput1);
-    }
-
-    /**
-     * Configure talons for MotionMagic turning with PigeonIMU
-     */
-    public void configureTurning() {
         for (TalonSRX talon : this.leftTalons) {
-            talon.setInverted(false);
+            talon.setInverted(true);
         }
 
-        this.getRightMaster().configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor1, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().configSelectedFeedbackSensor(FeedbackDevice.SensorSum, PIDF.AUXILIARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().configSelectedFeedbackCoefficient(3600.0 / RobotMap.Robot.PIDGEON_UNITS_PER_ROTATION, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().configSelectedFeedbackCoefficient(1.0, PIDF.AUXILIARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        for (TalonSRX talon : this.getTalons()) {
+            int deviceId = talon.getDeviceID();
 
-        this.getRightMaster().configMotionAcceleration(Converter.degreesToPidgeonTicks(RobotMap.Drivetrain.MMT_MAX_ACCELERATION) / 10, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().configMotionCruiseVelocity(Converter.degreesToPidgeonTicks(RobotMap.Drivetrain.MMT_MAX_VELOCITY) / 10, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+            if (deviceId == RobotMap.Drivetrain.LEFT_ENCODER_PORT || deviceId == RobotMap.Drivetrain.RIGHT_ENCODER_PORT) {
+                talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+                talon.configSelectedFeedbackCoefficient(1.0, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+                talon.setSensorPhase(true);
 
-        this.getRightMaster().selectProfileSlot(PIDF.TALON_GYRO_SLOT, PIDF.PRIMARY_LOOP);
-        this.getRightMaster().selectProfileSlot(PIDF.TALON_MOTIONMAGIC_SLOT, PIDF.AUXILIARY_LOOP);
+                talon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, RobotMap.Drivetrain.TALON_STATUS_FRAME_PERIOD_MS, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+            }
 
-        this.getLeftMaster().follow(this.getRightMaster(), FollowerType.AuxOutput1);
+            if (deviceId == RobotMap.Drivetrain.SUM_ENCODER_PORT) {
+                talon.configRemoteFeedbackFilter(RobotMap.Drivetrain.LEFT_ENCODER_PORT, RemoteSensorSource.TalonSRX_SelectedSensor, 0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+                talon.configRemoteFeedbackFilter(RobotMap.Drivetrain.RIGHT_ENCODER_PORT, RemoteSensorSource.TalonSRX_SelectedSensor, 1, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+
+                talon.configSensorTerm(SensorTerm.Sum0, FeedbackDevice.RemoteSensor0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+                talon.configSensorTerm(SensorTerm.Sum1, FeedbackDevice.RemoteSensor1, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+
+                talon.configSelectedFeedbackSensor(FeedbackDevice.SensorSum, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+                talon.configSelectedFeedbackCoefficient(1.0, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+
+                talon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, RobotMap.Drivetrain.TALON_STATUS_FRAME_PERIOD_MS, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+            }
+
+            if (deviceId == RobotMap.Drivetrain.LEFT_TALON_PORTS[0] || deviceId == RobotMap.Drivetrain.RIGHT_TALON_PORTS[0]) {
+                talon.configRemoteFeedbackFilter(RobotMap.Drivetrain.SUM_ENCODER_PORT, RemoteSensorSource.TalonSRX_SelectedSensor, 0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+                talon.configRemoteFeedbackFilter(RobotMap.Drivetrain.PIGEON_IMU_PORT, RemoteSensorSource.GadgeteerPigeon_Yaw, 1, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+
+                talon.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+                talon.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor1, PIDF.AUXILIARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+                talon.configSelectedFeedbackCoefficient(1.0, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+                talon.configSelectedFeedbackCoefficient(3600.0 / RobotMap.Robot.PIDGEON_UNITS_PER_ROTATION, PIDF.AUXILIARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+
+                talon.selectProfileSlot(PIDF.TALON_MOTIONMAGIC_SLOT, PIDF.PRIMARY_LOOP);
+                talon.selectProfileSlot(PIDF.TALON_GYRO_SLOT, PIDF.AUXILIARY_LOOP);
+
+                talon.configMotionAcceleration(Converter.inchesToTicks(RobotMap.Drivetrain.MM_MAX_ACCELERATION, RobotMap.Drivetrain.WHEEL_DIAMETER) / 10, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+                talon.configMotionCruiseVelocity(Converter.inchesToTicks(RobotMap.Drivetrain.MM_MAX_VELOCITY, RobotMap.Drivetrain.WHEEL_DIAMETER) / 10, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+                talon.configMotionProfileTrajectoryPeriod(20, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+            }
+
+            if (deviceId == RobotMap.Drivetrain.RIGHT_TALON_PORTS[0]) {
+                talon.setSensorPhase(true);
+                talon.configAuxPIDPolarity(false, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+            }
+
+            if (deviceId == RobotMap.Drivetrain.LEFT_TALON_PORTS[0]) {
+                talon.setSensorPhase(false);
+                talon.configAuxPIDPolarity(true, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+            }
+        }
+    }
+
+    public void configureSensorSum() {
+        this.getLeftMaster().configRemoteFeedbackFilter(RobotMap.Drivetrain.SUM_ENCODER_PORT, RemoteSensorSource.TalonSRX_SelectedSensor, 0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        this.getRightMaster().configRemoteFeedbackFilter(RobotMap.Drivetrain.SUM_ENCODER_PORT, RemoteSensorSource.TalonSRX_SelectedSensor, 0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+    }
+
+    public void configureIndividualSensor() {
+        this.getLeftMaster().configRemoteFeedbackFilter(RobotMap.Drivetrain.LEFT_ENCODER_PORT, RemoteSensorSource.TalonSRX_SelectedSensor, 0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        this.getRightMaster().configRemoteFeedbackFilter(RobotMap.Drivetrain.RIGHT_ENCODER_PORT, RemoteSensorSource.TalonSRX_SelectedSensor, 0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
     }
 
     public void resetPosition() {
-        this.getLeftMaster().getSensorCollection().setQuadraturePosition(0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().getSensorCollection().setQuadraturePosition(0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        for (TalonSRX talon : this.getTalons()) {
+            int deviceId = talon.getDeviceID();
 
-        this.getLeftMaster().setSelectedSensorPosition(0, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().setSelectedSensorPosition(0, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+            if (deviceId == RobotMap.Drivetrain.LEFT_ENCODER_PORT || deviceId == RobotMap.Drivetrain.RIGHT_ENCODER_PORT) {
+                talon.getSensorCollection().setQuadraturePosition(0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+                talon.setSelectedSensorPosition(0, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+            }
+        }
     }
 
     public void resetHeading() {
@@ -104,8 +148,30 @@ public class DrivetrainSubsystem extends Subsystem {
         return this.leftTalons[0];
     }
 
+    public TalonSRX[] getLeftTalons() {
+        return this.leftTalons;
+    }
+
     public TalonSRX getRightMaster() {
         return this.rightTalons[0];
+    }
+
+    public TalonSRX[] getRightTalons() {
+        return this.rightTalons;
+    }
+
+    public TalonSRX[] getMasterTalons() {
+        return new TalonSRX[]{
+                this.getLeftMaster(),
+                this.getRightMaster()
+        };
+    }
+
+    public TalonSRX[] getTalons() {
+        TalonSRX[] talons = Arrays.copyOf(this.leftTalons, this.leftTalons.length + this.rightTalons.length);
+        System.arraycopy(this.rightTalons, 0, talons, this.leftTalons.length, this.rightTalons.length);
+
+        return talons;
     }
 
     public double getHeading() {
@@ -129,15 +195,6 @@ public class DrivetrainSubsystem extends Subsystem {
             if (i > 0) {
                 talons[i].set(ControlMode.Follower, talonPorts[0]);
             }
-
-            talons[i].configNominalOutputForward(0.0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-            talons[i].configNominalOutputReverse(0.0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-            talons[i].configPeakOutputForward(1.0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-            talons[i].configPeakOutputReverse(-1.0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-
-            talons[i].enableVoltageCompensation(true);
-            talons[i].configVoltageCompSaturation(RobotMap.Robot.TALON_NOMINAL_OUTPUT_VOLTAGE, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-            talons[i].configOpenloopRamp(RobotMap.Drivetrain.TALON_RAMP_RATE, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
         }
 
         return talons;
@@ -145,54 +202,32 @@ public class DrivetrainSubsystem extends Subsystem {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Aux PID", this.getRightMaster().getSelectedSensorPosition(PIDF.AUXILIARY_LOOP));
+        SmartDashboard.putNumber("Sensor Sum", this.getLeftMaster().getSelectedSensorPosition(PIDF.PRIMARY_LOOP));
+        SmartDashboard.putNumber("RSensor Sum", this.getRightMaster().getSelectedSensorPosition(PIDF.PRIMARY_LOOP));
+        SmartDashboard.putNumber("Heading", this.getLeftMaster().getSelectedSensorPosition(PIDF.AUXILIARY_LOOP));
+        SmartDashboard.putNumber("RHeading", this.getRightMaster().getSelectedSensorPosition(PIDF.AUXILIARY_LOOP));
     }
 
     private void configureTalons() {
-        // Invert Talons
-        for (TalonSRX talon : this.leftTalons) {
-            talon.setInverted(true);
+        for (TalonSRX talon : this.getTalons()) {
+            talon.configNominalOutputForward(0.0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+            talon.configNominalOutputReverse(0.0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+            talon.configPeakOutputForward(1.0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+            talon.configPeakOutputReverse(-1.0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+
+            talon.enableVoltageCompensation(true);
+            talon.configVoltageCompSaturation(RobotMap.Robot.TALON_NOMINAL_OUTPUT_VOLTAGE, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+            talon.configOpenloopRamp(RobotMap.Drivetrain.TALON_RAMP_RATE, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
         }
 
-        // Control/Status Frames Configuration
-        this.getRightMaster().setStatusFramePeriod(StatusFrame.Status_2_Feedback0, RobotMap.Drivetrain.TALON_STATUS_FRAME_PERIOD_MS, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().setStatusFramePeriod(StatusFrame.Status_12_Feedback1, RobotMap.Drivetrain.TALON_STATUS_FRAME_PERIOD_MS, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().setStatusFramePeriod(StatusFrame.Status_13_Base_PIDF0, RobotMap.Drivetrain.TALON_STATUS_FRAME_PERIOD_MS, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().setStatusFramePeriod(StatusFrame.Status_14_Turn_PIDF1, RobotMap.Drivetrain.TALON_STATUS_FRAME_PERIOD_MS, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().setStatusFramePeriod(StatusFrame.Status_10_MotionMagic, RobotMap.Drivetrain.TALON_CONTROL_FRAME_PERIOD_MS, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().setControlFramePeriod(ControlFrame.Control_3_General, RobotMap.Drivetrain.TALON_CONTROL_FRAME_PERIOD_MS);
-        this.getRightMaster().changeMotionControlFramePeriod(RobotMap.Drivetrain.TALON_CONTROL_FRAME_PERIOD_MS);
+        for (TalonSRX talon : this.getMasterTalons()) {
+            talon.changeMotionControlFramePeriod(RobotMap.Drivetrain.TALON_CONTROL_FRAME_PERIOD_MS);
 
-        this.getLeftMaster().setStatusFramePeriod(StatusFrame.Status_2_Feedback0, RobotMap.Drivetrain.TALON_STATUS_FRAME_PERIOD_MS, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-
-        // Sensor Configuration
-        this.getLeftMaster().configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getLeftMaster().configSelectedFeedbackSensor(FeedbackDevice.None, PIDF.AUXILIARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getLeftMaster().configSelectedFeedbackCoefficient(1.0, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getLeftMaster().configSelectedFeedbackCoefficient(1.0, PIDF.AUXILIARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-
-        this.getRightMaster().configRemoteFeedbackFilter(this.getLeftMaster().getDeviceID(), RemoteSensorSource.TalonSRX_SelectedSensor, 0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().configRemoteFeedbackFilter(RobotMap.Drivetrain.PIGEON_IMU_PORT, RemoteSensorSource.GadgeteerPigeon_Yaw, 1, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().configSensorTerm(SensorTerm.Sum0, FeedbackDevice.RemoteSensor0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().configSensorTerm(SensorTerm.Sum1, FeedbackDevice.CTRE_MagEncoder_Relative, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().configSelectedFeedbackSensor(FeedbackDevice.SensorSum, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor1, PIDF.AUXILIARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().configSelectedFeedbackCoefficient(1.0, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().configSelectedFeedbackCoefficient(3600.0 / RobotMap.Robot.PIDGEON_UNITS_PER_ROTATION, PIDF.AUXILIARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-
-        // PIDF Configuration
-        this.configurePIDF(this.getRightMaster(), PIDF.TALON_MOTIONPROFILE_SLOT, RobotMap.Drivetrain.TRAJ_PIDF);
-        this.configurePIDF(this.getRightMaster(), PIDF.TALON_GYRO_SLOT, RobotMap.Drivetrain.GYRO_PIDF);
-        this.configurePIDF(this.getRightMaster(), PIDF.TALON_MOTIONMAGIC_SLOT, RobotMap.Drivetrain.MM_PIDF);
-        this.getRightMaster().configClosedLoopPeakOutput(PIDF.TALON_GYRO_SLOT, 0.35, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-
-        this.getRightMaster().selectProfileSlot(PIDF.TALON_MOTIONMAGIC_SLOT, PIDF.PRIMARY_LOOP);
-        this.getRightMaster().selectProfileSlot(PIDF.TALON_GYRO_SLOT, PIDF.AUXILIARY_LOOP);
-
-        // Motion Profiling Configuration
-        this.getRightMaster().configMotionAcceleration(Converter.inchesToTicks(RobotMap.Drivetrain.MM_MAX_ACCELERATION, RobotMap.Drivetrain.WHEEL_DIAMETER) / 10, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().configMotionCruiseVelocity(Converter.inchesToTicks(RobotMap.Drivetrain.MM_MAX_VELOCITY, RobotMap.Drivetrain.WHEEL_DIAMETER) / 10, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.getRightMaster().configMotionProfileTrajectoryPeriod(20, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+            this.configurePIDF(talon, PIDF.TALON_MOTIONMAGIC_SLOT, RobotMap.Drivetrain.MM_PIDF);
+            this.configurePIDF(talon, PIDF.TALON_GYRO_SLOT, RobotMap.Drivetrain.GYRO_PIDF);
+            this.configurePIDF(talon, PIDF.TALON_MOTIONPROFILE_SLOT, RobotMap.Drivetrain.TRAJ_PIDF);
+            this.configurePIDF(talon, PIDF.TALON_TURN_SLOT, RobotMap.Drivetrain.TURN_PIDF);
+        }
     }
 
     private void configurePIDF(TalonSRX talon, int slotId, PIDF pidf) {
@@ -200,6 +235,7 @@ public class DrivetrainSubsystem extends Subsystem {
         talon.config_kI(slotId, pidf.getI(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
         talon.config_kD(slotId, pidf.getD(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
         talon.config_kF(slotId, pidf.getF(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+        talon.configClosedLoopPeakOutput(slotId, 1.0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
     }
 
 }

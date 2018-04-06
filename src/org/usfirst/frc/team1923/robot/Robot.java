@@ -4,11 +4,11 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import jaci.pathfinder.Trajectory;
 import org.usfirst.frc.team1923.robot.autonomous.AutonManager;
 import org.usfirst.frc.team1923.robot.commands.auton.*;
 import org.usfirst.frc.team1923.robot.commands.auton.center.CenterLSwitchAuton;
@@ -19,7 +19,7 @@ import org.usfirst.frc.team1923.robot.commands.auton.right.RightRSwitchAuton;
 import org.usfirst.frc.team1923.robot.subsystems.DrivetrainSubsystem;
 import org.usfirst.frc.team1923.robot.subsystems.ElevatorSubsystem;
 import org.usfirst.frc.team1923.robot.subsystems.IntakeSubsystem;
-import org.usfirst.frc.team1923.robot.subsystems.LEDSubsystem;
+import org.usfirst.frc.team1923.robot.utils.PIDF;
 import org.usfirst.frc.team1923.robot.utils.pathfinder.TrajectoryStore;
 
 public class Robot extends TimedRobot {
@@ -27,12 +27,13 @@ public class Robot extends TimedRobot {
     public static DrivetrainSubsystem drivetrainSubsystem;
     public static ElevatorSubsystem elevatorSubsystem;
     public static IntakeSubsystem intakeSubsystem;
-    public static LEDSubsystem ledSubsystem;
 
     public static OI oi;
 
     public static AutonManager autonManager;
     private Command autonCommand;
+
+    public static double time;
 
     @Override
     public void robotInit() {
@@ -41,15 +42,15 @@ public class Robot extends TimedRobot {
         drivetrainSubsystem = new DrivetrainSubsystem();
         elevatorSubsystem = new ElevatorSubsystem();
         intakeSubsystem = new IntakeSubsystem();
-        ledSubsystem = new LEDSubsystem();
 
         oi = new OI();
 
         autonManager = new AutonManager();
         autonManager.add(new LeftLSwitchAuton())
                 .add(new LeftLScaleAuton())
-                .add(new LeftLScaleLSwitchAuton())
+                .add(new LeftLScaleBAuton())
                 .add(new LeftRScaleAuton())
+                .add(new LeftParkCenterAuton())
                 .add(new CenterLSwitchAuton())
                 .add(new CenterRSwitchAuton())
                 .add(new RightRSwitchAuton())
@@ -70,6 +71,8 @@ public class Robot extends TimedRobot {
         if (this.autonCommand != null) {
             this.autonCommand.start();
         }
+
+        time = Timer.getFPGATimestamp();
     }
 
     @Override
@@ -85,6 +88,14 @@ public class Robot extends TimedRobot {
         if (this.autonCommand != null) {
             this.autonCommand.cancel();
         }
+
+        Robot.drivetrainSubsystem.getLeftMaster().clearStickyFaults(15);
+        Robot.drivetrainSubsystem.getLeftMaster().setIntegralAccumulator(0, PIDF.PRIMARY_LOOP, 15);
+        Robot.drivetrainSubsystem.getLeftMaster().setIntegralAccumulator(0, PIDF.AUXILIARY_LOOP, 15);
+
+        Robot.drivetrainSubsystem.getRightMaster().clearStickyFaults(15);
+        Robot.drivetrainSubsystem.getRightMaster().setIntegralAccumulator(0, PIDF.PRIMARY_LOOP, 15);
+        Robot.drivetrainSubsystem.getRightMaster().setIntegralAccumulator(0, PIDF.AUXILIARY_LOOP, 15);
     }
 
     @Override
@@ -101,6 +112,7 @@ public class Robot extends TimedRobot {
         Scheduler.getInstance().run();
 
         SmartDashboard.putString("Match Time Remaining", Math.round(DriverStation.getInstance().getMatchTime()) + "");
+        SmartDashboard.putNumber("Sensor Sum", Robot.drivetrainSubsystem.getLeftMaster().getSelectedSensorPosition(PIDF.PRIMARY_LOOP));
     }
 
 }

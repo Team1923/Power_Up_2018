@@ -1,9 +1,7 @@
 package org.usfirst.frc.team1923.robot.commands.auton.left;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.command.PrintCommand;
 import edu.wpi.first.wpilibj.command.WaitCommand;
-
 import org.usfirst.frc.team1923.robot.RobotMap;
 import org.usfirst.frc.team1923.robot.autonomous.Autonomous;
 import org.usfirst.frc.team1923.robot.commands.QueueCommand;
@@ -18,18 +16,17 @@ import org.usfirst.frc.team1923.robot.commands.intake.IntakeTimeCommand;
 import org.usfirst.frc.team1923.robot.utils.CGUtils;
 import org.usfirst.frc.team1923.robot.utils.Converter;
 import org.usfirst.frc.team1923.robot.utils.pathfinder.TrajectoryStore;
-import org.usfirst.frc.team1923.robot.utils.pathfinder.modifier.TrimPathModifier;
 
 @Autonomous(
-        name = "L > LScale (x2)",
+        name = "L > LScale > Back",
         startingPosition = Autonomous.Side.LEFT,
         fieldConfigurations = { Autonomous.FieldConfiguration.LLL, Autonomous.FieldConfiguration.RLR },
         defaultPriority = 50
 )
-public class LeftLScaleAuton extends CommandGroup {
+public class LeftLScaleBAuton extends CommandGroup {
 
-    public LeftLScaleAuton() {
-        final DriveTrajectoryCommand drive = new DriveTrajectoryCommand(TrajectoryStore.Path.LEFT_LSCALE).modify(new TrimPathModifier(5));
+    public LeftLScaleBAuton() {
+        final DriveTrajectoryCommand drive = new DriveTrajectoryCommand(TrajectoryStore.Path.LEFT_LSCALE);
         final DriveDistanceCommand driveReverse = new DriveDistanceCommand(-20, -20, 84, 84, Integer.MAX_VALUE);
         final ElevatorPositionCommand elevator = new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.TOP);
 
@@ -45,36 +42,14 @@ public class LeftLScaleAuton extends CommandGroup {
                         () -> drive.isAlmostFinished(80)
                 ),
                 new QueueCommand(
-                        new IntakeTimeCommand(0.65, 0.40),
+                        new IntakeTimeCommand(0.65, 0.45),
                         () -> drive.isAlmostFinished(25) && elevator.isAlmostFinished(5)
                 )
         ));
         this.addSequential(CGUtils.parallel(
                 new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.BOTTOM),
-                driveReverse,
-                new QueueCommand(
-                        new IntakeLowerCommand(),
-                        () -> driveReverse.isAlmostFinished(Converter.inchesToTicks(4, RobotMap.Drivetrain.WHEEL_DIAMETER))
-                )
+                new DriveDistanceCommand(-60, -60, 96, 108, Integer.MAX_VALUE)
         ));
-        this.addSequential(new TurnGyroCommand(-105));
-        this.addSequential(CGUtils.parallel(
-                new DriveDistanceCommand(43, 43, 84, 84, Integer.MAX_VALUE),
-                new IntakeTimeCommand(-0.50, 2.0)
-        ));
-        this.addSequential(CGUtils.parallel(
-                new DriveDistanceCommand(-43, -43, 118, 118, Integer.MAX_VALUE),
-                CGUtils.sequential(
-                        new IntakeTimeCommand(-0.5, 1.0),
-                        new IntakeRaiseCommand()
-                )
-        ));
-        this.addSequential(new TurnEncoderCommand(145));
-        this.addSequential(CGUtils.parallel(
-                new DriveDistanceCommand(32, 32, 36, 36, Integer.MAX_VALUE),
-                new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.TOP)
-        ));
-        this.addSequential(new IntakeTimeCommand(0.40, 0.40));
 
 
 

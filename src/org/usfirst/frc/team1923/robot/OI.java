@@ -1,14 +1,12 @@
 package org.usfirst.frc.team1923.robot;
 
 import org.usfirst.frc.team1923.robot.commands.drive.DriveTrajectoryCommand;
-import org.usfirst.frc.team1923.robot.commands.drive.TurnGyroCommand;
 import org.usfirst.frc.team1923.robot.commands.elevator.ElevatorPositionCommand;
 import org.usfirst.frc.team1923.robot.commands.intake.IntakeLowerCommand;
 import org.usfirst.frc.team1923.robot.commands.intake.IntakeRaiseCommand;
 import org.usfirst.frc.team1923.robot.commands.intake.IntakeTimeCommand;
 import org.usfirst.frc.team1923.robot.utils.controller.PS4Controller;
 import org.usfirst.frc.team1923.robot.utils.controller.XboxController;
-import org.usfirst.frc.team1923.robot.utils.pathfinder.TrajectoryStore;
 
 public class OI {
 
@@ -31,11 +29,6 @@ public class OI {
 
         this.operator.dPad.down.whenPressed(new IntakeLowerCommand());
         this.operator.dPad.up.whenPressed(new IntakeRaiseCommand());
-
-        this.operator.dPad.left.whileHeld(new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.BOTTOM));
-        this.operator.dPad.right.whileHeld(new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.TOP));
-
-        this.driver.circle.whileHeld(new DriveTrajectoryCommand(TrajectoryStore.Path.LEFT_RSCALE));
     }
 
 }

@@ -46,7 +46,7 @@ public class ElevatorSubsystem extends Subsystem {
 
         this.talons[0].configSetParameter(ParamEnum.eClearPositionOnLimitR, 1, 0, 0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
         this.talons[0].configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, PIDF.PRIMARY_LOOP, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
-        this.talons[0].setSensorPhase(true);
+        this.talons[0].setSensorPhase(false); // PBOT: true, CBOT: false
 
 
         this.talons[0].config_kP(PIDF.TALON_MOTIONMAGIC_SLOT, RobotMap.Elevator.MM_PIDF.getP(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);

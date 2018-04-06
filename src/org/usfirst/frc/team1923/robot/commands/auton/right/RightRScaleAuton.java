@@ -36,7 +36,7 @@ public class RightRScaleAuton extends CommandGroup {
                         () -> drive.isAlmostFinished(135)
                 )
         ));
-        this.addSequential(new IntakeTimeCommand(0.5, 0.5));
+        this.addSequential(new IntakeTimeCommand(0.65, 0.5));
     }
 
 }

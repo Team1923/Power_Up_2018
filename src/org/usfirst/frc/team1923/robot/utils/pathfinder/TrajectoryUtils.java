@@ -2,6 +2,10 @@ package org.usfirst.frc.team1923.robot.utils.pathfinder;
 
 import com.ctre.phoenix.motion.TrajectoryPoint;
 import jaci.pathfinder.Trajectory;
+import org.usfirst.frc.team1923.robot.Robot;
+import org.usfirst.frc.team1923.robot.RobotMap;
+import org.usfirst.frc.team1923.robot.utils.Converter;
+import org.usfirst.frc.team1923.robot.utils.PIDF;
 
 public class TrajectoryUtils {
 
@@ -57,6 +61,65 @@ public class TrajectoryUtils {
 
             trajectory.segments[i].heading = continuousHeading - initialHeading;
         }
+
+        return trajectory;
+    }
+
+    public static Trajectory addTurn(Trajectory trajectory, double target, double velocity, double acceleration, boolean invertVelocity) {
+        trajectory = trajectory.copy();
+
+        int startingHeading = (int) (Math.toDegrees(trajectory.segments[trajectory.segments.length - 1].heading) * 10);
+        acceleration /= 10;
+
+        boolean invert = target < 0;
+        target = Math.abs(target * 10);
+
+        int steps = (int) Math.round(velocity < Math.sqrt(acceleration * target) ? target / velocity + velocity / acceleration : 2 * Math.sqrt(target / acceleration));
+        double cutoff = Math.min(velocity / acceleration, steps / 2);
+
+        Trajectory.Segment[] segments = new Trajectory.Segment[trajectory.segments.length + steps * 5];
+
+        for (int i = 0; i < 5 * steps; ++i) {
+            Trajectory.Segment segment = new Trajectory.Segment(
+                    0.02,
+                    trajectory.segments[trajectory.segments.length - 1].x,
+                    trajectory.segments[trajectory.segments.length - 1].y,
+                    trajectory.segments[trajectory.segments.length - 1].position,
+                    0, 0, 0, 0
+            );
+
+            if ((i / 5.0) <= cutoff) {
+                segment.velocity = acceleration * (i / 5.0);
+                segment.heading = acceleration * (i / 5.0) * (i / 5.0) / 2;
+            } else if ((i / 5.0) >= steps - cutoff) {
+                segment.velocity = acceleration * (steps - (i / 5.0));
+                segment.heading = target - acceleration * Math.pow(steps - (i / 5.0), 2) / 2;
+            } else {
+                segment.velocity = velocity;
+                segment.heading = acceleration * cutoff * cutoff / 2 + velocity * ((i / 5.0) - cutoff);
+            }
+
+            if (invert) {
+                segment.velocity *= -1;
+                segment.heading *= -1;
+            }
+
+            segment.velocity *= 10;
+
+            segment.velocity = Converter.inchesToTicks(
+                    segment.velocity * Math.PI * RobotMap.Drivetrain.WHEELBASE_WIDTH / 3600 / 4.15,
+                    RobotMap.Drivetrain.WHEEL_DIAMETER
+            );
+            segment.heading = Math.toRadians(segment.heading / 10.0 + startingHeading);
+
+            if (invertVelocity) {
+                segment.velocity *= -1.0;
+            }
+
+            segments[i + trajectory.segments.length] = segment;
+        }
+
+        trajectory.segments = segments;
 
         return trajectory;
     }

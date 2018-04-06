@@ -7,7 +7,7 @@ import org.usfirst.frc.team1923.robot.Robot;
 public class IntakeRaiseCommand extends InstantCommand {
 
     public IntakeRaiseCommand() {
-        this.requires(Robot.intakeSubsystem);
+        // this.requires(Robot.intakeSubsystem);
     }
 
     @Override
