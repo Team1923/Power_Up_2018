@@ -66,6 +66,8 @@ public class IntakeSubsystem extends Subsystem {
         talon.configNominalOutputReverse(0, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
         talon.configPeakOutputForward(1, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
         talon.configPeakOutputReverse(-1, RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
+
+        talon.setInverted(true);
     }
 
 }

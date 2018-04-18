@@ -28,8 +28,8 @@ public class CalibrateWheelbaseCommand extends Command {
     protected void execute() {
         Robot.drivetrainSubsystem.drive((this.invert ? -1 : 1) * 0.4, (this.invert ? -1 : 1) * -0.4);
 
-        double effectiveWheelbaseL = (360.0 * Converter.ticksToInches(Math.abs(Robot.drivetrainSubsystem.getLeftEncoderPosition()), RobotMap.Drivetrain.WHEEL_DIAMETER)) / (Math.PI * Math.abs(Robot.drivetrainSubsystem.getHeading()));
-        double effectiveWheelbaseR = (360.0 * Converter.ticksToInches(Math.abs(Robot.drivetrainSubsystem.getRightEncoderPosition()), RobotMap.Drivetrain.WHEEL_DIAMETER)) / (Math.PI * Math.abs(Robot.drivetrainSubsystem.getHeading()));
+        double effectiveWheelbaseL = (360.0 * Converter.ticksToInches(Math.abs(Robot.drivetrainSubsystem.getLeftMaster().getSensorCollection().getQuadraturePosition()), RobotMap.Drivetrain.WHEEL_DIAMETER)) / (Math.PI * Math.abs(Robot.drivetrainSubsystem.getHeading()));
+        double effectiveWheelbaseR = (360.0 * Converter.ticksToInches(Math.abs(Robot.drivetrainSubsystem.getRightMaster().getSensorCollection().getQuadraturePosition()), RobotMap.Drivetrain.WHEEL_DIAMETER)) / (Math.PI * Math.abs(Robot.drivetrainSubsystem.getHeading()));
 
         System.out.println("Avg: " + round((effectiveWheelbaseL + effectiveWheelbaseR) / 2.0) + ", L: " + round(effectiveWheelbaseL) + ", R: " + round(effectiveWheelbaseR));
     }

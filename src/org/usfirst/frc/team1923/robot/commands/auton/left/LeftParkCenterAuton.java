@@ -3,8 +3,8 @@ package org.usfirst.frc.team1923.robot.commands.auton.left;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 import org.usfirst.frc.team1923.robot.autonomous.Autonomous;
-import org.usfirst.frc.team1923.robot.commands.drive.DriveDistanceCommand;
-import org.usfirst.frc.team1923.robot.commands.drive.TurnEncoderCommand;
+import org.usfirst.frc.team1923.robot.commands.drive.DriveTrajectoryCommand;
+import org.usfirst.frc.team1923.robot.utils.pathfinder.TrajectoryStore;
 
 @Autonomous(
         name = "L > Park Center",
@@ -14,9 +14,7 @@ import org.usfirst.frc.team1923.robot.commands.drive.TurnEncoderCommand;
 public class LeftParkCenterAuton extends CommandGroup {
 
     public LeftParkCenterAuton() {
-        this.addSequential(new DriveDistanceCommand(212));
-        this.addSequential(new TurnEncoderCommand(-105));
-        this.addSequential(new DriveDistanceCommand(80));
+        this.addSequential(new DriveTrajectoryCommand(TrajectoryStore.Path.LEFT_PARKCENTER));
     }
 
 }

@@ -26,7 +26,7 @@ public class CenterRSwitchAuton extends CommandGroup {
                 new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.SWITCH),
                 new QueueCommand(
                         new IntakeTimeCommand(0.5),
-                        () -> drive.isAlmostFinished(50)
+                        () -> drive.isAlmostFinished(30)
                 )
         ));
     }

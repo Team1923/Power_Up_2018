@@ -10,8 +10,7 @@ import java.util.List;
 import org.usfirst.frc.team1923.robot.Robot;
 import org.usfirst.frc.team1923.robot.commands.auton.CrossLineAuton;
 import org.usfirst.frc.team1923.robot.commands.auton.left.LeftLScaleAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.left.LeftRScaleAuton;
-import org.usfirst.frc.team1923.robot.commands.auton.right.RightRScaleAuton;
+import org.usfirst.frc.team1923.robot.commands.auton.left.LeftParkCenterAuton;
 
 public enum Preset {
 
@@ -25,8 +24,7 @@ public enum Preset {
     )
     PLAYOFF_SCALE(
             LeftLScaleAuton.class,
-            LeftRScaleAuton.class,
-            RightRScaleAuton.class,
+            LeftParkCenterAuton.class,
             CrossLineAuton.class
     );
 

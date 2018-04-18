@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1923.robot.commands.intake;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.TimedCommand;
 
 import org.usfirst.frc.team1923.robot.Robot;
@@ -21,6 +22,7 @@ public class IntakeTimeCommand extends TimedCommand {
 
     @Override
     protected void initialize() {
+        System.out.println("Start Eject @ " + (Timer.getFPGATimestamp() - Robot.time));
         Robot.intakeSubsystem.intake(this.power);
     }
 

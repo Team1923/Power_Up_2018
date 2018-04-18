@@ -20,4 +20,8 @@ public abstract class Converter {
         return ((double) ticks / RobotMap.Robot.ENCODER_TICKS_PER_ROTATION) * wheelDiameter * Math.PI;
     }
 
+    public static int degreesToPidgeonTicks(double degrees) {
+        return (int) (degrees * 10);
+    }
+
 }
