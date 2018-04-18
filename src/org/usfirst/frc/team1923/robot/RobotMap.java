@@ -59,13 +59,9 @@ public abstract class RobotMap {
         /**
          * Configuration for TalonSRX Gyro (Pigeon IMU)
          */
-        // public static final PIDF GYRO_PIDF = new PIDF(7.0, 0.0, 8.0, 0.0);
-
-       // TURN:  public static final PIDF GYRO_PIDF = new PIDF(3.5, 0.0, 8.0, 0.0);
-
         public static final PIDF GYRO_PIDF = new PIDF(7.0, 0.0, 8.0, 0.0);
 
-        public static final PIDF TURN_PIDF = new PIDF(3.0, 0, 10.0, 0);
+        public static final PIDF TURN_PIDF = new PIDF(3.0, 0, 8.0, 0);
         //
 
         // last: 5.0, 6.0
@@ -94,7 +90,7 @@ public abstract class RobotMap {
         public static final double TRAJ_MAX_ACCELERATION = 84; // inches per second^2
         public static final double TRAJ_MAX_JERK = 144; // inches per second^3
 
-        public static final PIDF TRAJ_PIDF = new PIDF(0.225, 0.0, 0.0, 0.35); // TODO: Old F = 0.04 when using ticks / sec for velocity
+        public static final PIDF TRAJ_PIDF = new PIDF(0.375, 0.0, 0.0, 0.35); // TODO: Old F = 0.04 when using ticks / sec for velocity
         // TODO: Old: 0.485, 0.0, 0.0, 0.25
 
         public static final String TRAJECTORY_STORE_DIR = "/home/lvuser/trajectories";
@@ -102,7 +98,7 @@ public abstract class RobotMap {
         /*
          * Physical Dimensions
          */
-        public static final double WHEELBASE_WIDTH = 27.5; // inches, empirically calculated
+        public static final double WHEELBASE_WIDTH = 24.33; // inches, empirically calculated (OLD: 27.5)
         public static final double WHEEL_DIAMETER = 6; // inches
 
         /**

@@ -39,6 +39,18 @@ public class DriveDistanceCommand extends Command {
         this.acceleration = acceleration;
     }
 
+    public DriveDistanceCommand setVelocity(double velocity) {
+        this.velocity = velocity;
+
+        return this;
+    }
+
+    public DriveDistanceCommand setAcceleration(double acceleration) {
+        this.acceleration = acceleration;
+
+        return this;
+    }
+
     @Override
     protected void initialize() {
         Robot.drivetrainSubsystem.resetPosition();

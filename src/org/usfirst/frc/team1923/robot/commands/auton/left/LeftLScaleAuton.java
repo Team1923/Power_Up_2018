@@ -74,38 +74,7 @@ public class LeftLScaleAuton extends CommandGroup {
                 new DriveDistanceCommand(32, 32, 36, 36, Integer.MAX_VALUE),
                 new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.TOP)
         ));
-        this.addSequential(new IntakeTimeCommand(0.40, 0.40));
-
-
-
-        //////////
-//        this.addSequential(CGUtils.parallel(
-//                new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.BOTTOM),
-//                driveReverse,
-//                new QueueCommand(
-//                        new IntakeLowerCommand(),
-//                        () -> driveReverse.isAlmostFinished(Converter.inchesToTicks(4, RobotMap.Drivetrain.WHEEL_DIAMETER))
-//                )
-//        ));
-
-//        // this.addSequential(new TurnEncoderCommand(-75));
-//        this.addSequential(CGUtils.parallel(
-//                new DriveDistanceCommand(50, 84, 84, Integer.MAX_VALUE),
-//                new IntakeTimeCommand(-0.70, 2.5)
-//        ));
-//        this.addSequential(CGUtils.parallel(
-//                new DriveDistanceCommand(-50, 84, 84, Integer.MAX_VALUE),
-//                CGUtils.sequential(
-//                        new WaitCommand(0.5),
-//                        new IntakeRaiseCommand()
-//                )
-//        ));
-//        // this.addSequential(new TurnEncoderCommand(70));
-//        this.addSequential(CGUtils.parallel(
-//                new ElevatorPositionCommand(ElevatorPositionCommand.ElevatorPosition.TOP),
-//                new DriveDistanceCommand(20)
-//        ));
-//        this.addSequential(new IntakeTimeCommand(0.5, 0.5));
+        this.addSequential(new IntakeTimeCommand(0.60, 0.40));
     }
 
 }

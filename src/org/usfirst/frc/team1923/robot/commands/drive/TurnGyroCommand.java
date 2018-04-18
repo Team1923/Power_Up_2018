@@ -38,13 +38,29 @@ public class TurnGyroCommand extends Command {
         this.degrees = degrees;
         this.velocity = velocity;
         this.acceleration = acceleration;
+
+        SmartDashboard.putNumber("Gyro_kP", RobotMap.Drivetrain.TURN_PIDF.getP());
+        SmartDashboard.putNumber("Gyro_kI", RobotMap.Drivetrain.TURN_PIDF.getI());
+        SmartDashboard.putNumber("Gyro_kD", RobotMap.Drivetrain.TURN_PIDF.getD());
     }
 
     @Override
     protected void initialize() {
+        Robot.drivetrainSubsystem.configurePIDF(Robot.drivetrainSubsystem.getLeftMaster(), PIDF.TALON_TURN_SLOT, new PIDF(
+                SmartDashboard.getNumber("Gyro_kP", 0),
+                SmartDashboard.getNumber("Gyro_kI", 0),
+                SmartDashboard.getNumber("Gyro_kD", 0),
+                0
+        ));
+        Robot.drivetrainSubsystem.configurePIDF(Robot.drivetrainSubsystem.getRightMaster(), PIDF.TALON_TURN_SLOT, new PIDF(
+                SmartDashboard.getNumber("Gyro_kP", 0),
+                SmartDashboard.getNumber("Gyro_kI", 0),
+                SmartDashboard.getNumber("Gyro_kD", 0),
+                0
+        ));
+
         Robot.drivetrainSubsystem.resetHeading();
         Robot.drivetrainSubsystem.resetPosition();
-        // Robot.drivetrainSubsystem.configureTurning();
         Robot.drivetrainSubsystem.getLeftMaster().clearMotionProfileTrajectories();
         Robot.drivetrainSubsystem.getRightMaster().clearMotionProfileTrajectories();
         Robot.drivetrainSubsystem.getLeftMaster().clearMotionProfileHasUnderrun(0);
@@ -102,6 +118,10 @@ public class TurnGyroCommand extends Command {
 
     @Override
     protected boolean isFinished() {
+        if (Robot.oi.driver.circle.get() || Robot.oi.driver.cross.get()) {
+            return false;
+        }
+
         return this.leftMPStatus.isLast && this.rightMPStatus.isLast && this.enabled;
     }
 
@@ -147,7 +167,7 @@ public class TurnGyroCommand extends Command {
             point.isLastPoint = i == 5 * steps - 1;
 
             point.velocity = Converter.inchesToTicks(
-                    point.velocity * Math.PI * RobotMap.Drivetrain.WHEELBASE_WIDTH / 3600 / 4.15,
+                    point.velocity * Math.PI * RobotMap.Drivetrain.WHEELBASE_WIDTH / 3600 / 7,
                     RobotMap.Drivetrain.WHEEL_DIAMETER
             );
 

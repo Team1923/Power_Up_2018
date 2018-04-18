@@ -33,6 +33,8 @@ public class DriveTrajectoryCommand extends Command {
     private double startTime;
 
     private boolean enabled;
+    private boolean leftDone;
+    private boolean rightDone;
 
     public DriveTrajectoryCommand(TrajectoryStore.Path path) {
         this(TrajectoryStore.loadTrajectory(path), path.getVelocityMultiplier());
@@ -127,6 +129,9 @@ public class DriveTrajectoryCommand extends Command {
             Robot.drivetrainSubsystem.getRightMaster().processMotionProfileBuffer();
         });
         this.notifier.startPeriodic(0.0025);
+
+        this.leftDone = false;
+        this.rightDone = false;
     }
 
     @Override
@@ -152,30 +157,47 @@ public class DriveTrajectoryCommand extends Command {
             }
         }
 
-        System.out.println("Points Left: " + (this.leftMPStatus.topBufferCnt + this.leftMPStatus.btmBufferCnt) + ", Status: " + this.leftMPStatus.outputEnable.name() + ":" + this.rightMPStatus.outputEnable.name()
-                + ", LO: " + Robot.drivetrainSubsystem.getLeftMaster().getMotorOutputPercent()
-                + ", RO: " + Robot.drivetrainSubsystem.getRightMaster().getMotorOutputPercent()
-                + ", Underrun: " + this.leftMPStatus.hasUnderrun + ":" + this.rightMPStatus.hasUnderrun
-                + ", Heading Err: " + headingError
-        );
+        if (!this.leftDone || !this.rightDone) {
+            System.out.println("Points Left: " + (this.rightMPStatus.topBufferCnt + this.rightMPStatus.btmBufferCnt) + ", Status: " + this.leftMPStatus.outputEnable.name() + ":" + this.rightMPStatus.outputEnable.name()
+                    + ", LO: " + Robot.drivetrainSubsystem.getLeftMaster().getMotorOutputPercent()
+                    + ", RO: " + Robot.drivetrainSubsystem.getRightMaster().getMotorOutputPercent()
+                    + ", Underrun: " + this.leftMPStatus.hasUnderrun + ":" + this.rightMPStatus.hasUnderrun
+                    + ", Heading Err: " + headingError
+                    + ", Error: " + Robot.drivetrainSubsystem.getLeftMaster().getClosedLoopError(PIDF.PRIMARY_LOOP) + ":" + Robot.drivetrainSubsystem.getRightMaster().getClosedLoopError(PIDF.PRIMARY_LOOP)
+            );
+        }
 
-        if (this.leftMPStatus.isLast && this.enabled && this.leftMPStatus.outputEnable == SetValueMotionProfile.Enable) {
+        if (this.leftMPStatus.isLast && this.enabled && this.leftMPStatus.outputEnable == SetValueMotionProfile.Enable && !this.leftDone) {
             Robot.drivetrainSubsystem.getLeftMaster().neutralOutput();
             Robot.drivetrainSubsystem.getLeftMaster().set(ControlMode.PercentOutput, 0);
+            this.leftDone = true;
 
             System.out.println("Left MP (" + this.leftTrajectory.length + " points) completed in " + (Timer.getFPGATimestamp() - this.startTime) + "s.");
         }
 
-        if (this.rightMPStatus.isLast && this.enabled && this.rightMPStatus.outputEnable == SetValueMotionProfile.Enable) {
+        if (this.rightMPStatus.isLast && this.enabled && this.rightMPStatus.outputEnable == SetValueMotionProfile.Enable && !this.rightDone) {
             Robot.drivetrainSubsystem.getRightMaster().neutralOutput();
             Robot.drivetrainSubsystem.getRightMaster().set(ControlMode.PercentOutput, 0);
+            this.rightDone = true;
 
             System.out.println("Right MP (" + this.rightTrajectory.length + " points) completed in " + (Timer.getFPGATimestamp() - this.startTime) + "s.");
         }
     }
 
+    public void print() {
+        int i = 1;
+
+        for (TrajectoryPoint point : this.rightTrajectory) {
+            System.out.println(i + " : " + point.velocity + " : " + point.position);
+        }
+    }
+
     @Override
     protected boolean isFinished() {
+        if (Robot.oi.driver.circle.get()) {
+            return false;
+        }
+
         return this.leftMPStatus.isLast && this.rightMPStatus.isLast && this.enabled;
     }
 

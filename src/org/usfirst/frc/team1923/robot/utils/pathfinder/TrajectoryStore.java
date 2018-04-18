@@ -131,13 +131,13 @@ public class TrajectoryStore {
 
         LEFT_PARKCENTER(new Waypoint[]{
                 LEFT_STARTING_POSITION,
-                new Waypoint(12, 23, 0),
-                new Waypoint(19, 14, -90)
+                new Waypoint(12, 23.5, 0),
+                new Waypoint(19, 14,-90)
         }, 120, 148, 1114, (i) -> 5.5),
 //
         LEFT_RSCALE(new Waypoint[]{
             LEFT_STARTING_POSITION,
-            new Waypoint(7, 23.5, 0),
+            new Waypoint(7.35, 23.5, 0),
             new Waypoint(19.5, 4.5, Pathfinder.d2r(-90)),
         }, 120, 148, 1114, (i) -> 7.50);
 //

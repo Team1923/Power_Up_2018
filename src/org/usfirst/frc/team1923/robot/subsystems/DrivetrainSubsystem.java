@@ -230,7 +230,7 @@ public class DrivetrainSubsystem extends Subsystem {
         }
     }
 
-    private void configurePIDF(TalonSRX talon, int slotId, PIDF pidf) {
+    public void configurePIDF(TalonSRX talon, int slotId, PIDF pidf) {
         talon.config_kP(slotId, pidf.getP(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
         talon.config_kI(slotId, pidf.getI(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
         talon.config_kD(slotId, pidf.getD(), RobotMap.Robot.CTRE_COMMAND_TIMEOUT_MS);
